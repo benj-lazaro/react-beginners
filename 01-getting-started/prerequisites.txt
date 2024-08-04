@@ -1,0 +1,16 @@
+Prerequisites
+--------------
+- You should have a good understanding of:
+    - HTML
+    - CSS
+    - JavaScript
+
+
+- Throughout the course
+    - TypeScript will be used 
+        - It is a superset of JavaScript
+        - It add static typing to the JavaScript language
+        - It helps catch errors early in the development process
+
+    - TypeScript will be taught from scratch
+    
