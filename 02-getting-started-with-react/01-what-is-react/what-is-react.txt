@@ -1,0 +1,32 @@
+What is React?
+--------------
+- React is a JavaScript library
+    - That is used for building dynamic & interactive user interfaces (UI)
+    - Created by Facebook (now Meta) in 2011
+    - Currently, the most used library of Front-end development
+
+
+- Why was React created
+    - When as a web app is loaded on the browser
+        - The browser parses through the HTML code 
+        - Simultaneously creates a tree-like structure referred to as the DOM (Document Object Model)
+        - The DOM allows to use JavaScript (w/o 3rd party tools)
+            - To change / update a web page's content, in response to a user's action
+        
+        - As a web app grows
+            - Working with the DOM becomes more complex and challenging to manage 
+
+        - With React
+            - There is no longer a need to worry about updating the DOM elements
+            - React "describes" a web app using small reusable components
+            - These components take care of creating and updating corresponding DOM elements
+
+
+- React components
+    - They help write reusable, module and better organized code
+        
+
+- React application
+    - It is essentially a tree of React components
+        - With "App" being the root 
+        - That brings everything (individual React component) together
