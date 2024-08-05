@@ -1,0 +1,15 @@
+Setting Up the Development Environment
+--------------------------------------
+- The course requires the following application installed
+    - VS Code
+        - Preferred code editor
+        - Any code editor is fine too
+
+    - VS Code Extension
+        - Prettier
+            - Enable VS Code's "format on save" option
+
+    - NodeJS
+        - At least version 16 or higher
+        - Website (https://nodejs.org/en)
+
