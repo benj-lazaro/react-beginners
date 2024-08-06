@@ -1,0 +1,46 @@
+Creating a React App
+--------------------
+- There are two ways to create a React app
+    - Create React App (CRA)
+        - Official tool provided by the React team 
+    
+    - Vite
+        - Increasing popular way of creating a React app
+        - It is much faster
+        - Provide smaller bundle sizes
+
+
+- To create using Vite
+    - Open temrinal, run the command
+
+        npm create vite@latest
+
+        npm create vite@4.1.0  (preferred for this course)
+
+    - Respond "y" for npm to proceed with the installation
+
+    - Provide the project name
+        - Answer "react-app"
+
+    - Select "React" when asked which framework to use
+        - Use arrow keys
+        - Use "return" to submit
+
+    - Select "TypeScript" when asked to the language (variant) to use
+        - Use arrow keys
+        - Use "return" to submit
+
+    - Scaffolding project is created
+        - Launch VS Code
+        - Open the project folder
+        - Launch the integrated terminal
+        - Run the following commands
+
+        npm i 
+        npm run dev
+
+        - Returns a local URL
+        - CTRL + click the URL to open on default browser
+
+    - To close Vite
+        - Press "q" on the integrated terminal
