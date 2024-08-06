@@ -1,0 +1,49 @@
+Project Structure
+-----------------
+- The following are key files and folders of a React app
+    - "node_modules" folder
+        - This where 3rd-party libraries and tools are installed
+
+    - "public" folder
+        - This is where the public of the application exists (e.g. images & video files)
+
+    - "src" folder
+        - This is where the source code of the application
+
+    - "App.tsx" file
+        - Stored within the "src" folder
+        - This is the "App" component
+
+    - "index.html" file
+        - This is a basic HTML template
+
+    - "<div id="root"></div>"
+        - Line of code within "index.html" file
+        - This is the container for the React application
+
+    - "<script type="module" src="/src/main.tsx"></script>"
+        - Line of code within "index.html" file
+        - This is the entry point to the React application
+
+    - "package.json" file
+        - Contains information about:
+            - Project details
+            - List of dependencies
+            - List of development dependencies
+                - ONLY used for development
+                - NOT to be deployed with the application in the future
+
+    - "tsconfig.json" file
+        - This is the TypeScript configuration file
+
+        - Contains settings that instructs the TypeScript compiler
+            - How to compile TypeScript code to JavaScript
+
+        - For most part, this file remains untouched
+            - Unless you're an advanced user
+
+
+    - "vite.config.ts" file
+        - This is the Vite configuration file
+
+        - For most part, this file remains untouched
