@@ -1,0 +1,57 @@
+Creating a React Component
+--------------------------
+- React components can be created using a function or class
+    - Function-based components are preferred
+        - They're more concise and easier to work with
+        - Recommended on newer React projects
+
+
+- Function-based React component
+    - Uses the Pascalcase naming convention
+
+    - Export the function-based component as a default object
+        - To be imported into the React App component
+
+        export default <function_name>;
+
+
+- JSX (JavaScript XML)
+    - A syntax that allows to write components
+    - Combines HTML and JavaScript in a readable & expressive way
+    - Makes it easier to create complex user interfaces (UI)
+
+    - Under the hood, TypeScript compiles JSX down to JavaScript code
+        - To see in action, visit website (https://babeljs.io/repl)
+        - Type JSX code to be converted into its equivalent JavaScript code
+
+    - Allows to easily create dyanamic content using {...}
+        - Insert any JavaScript expression within the {...}
+
+
+- To import the created React component into the React App component (App.tsx)
+    - Open "App.tsx"
+        - Delete the generated boilerplate code
+
+    - Import the recently created React component into the App.tsx
+        - Using the "import" statement
+
+    - Create a new App function-based component
+        - Inside the function
+            - Write a "return" statement 
+
+        - Insert the imported React component into the "return" statement
+            - Treat it like a self-closing HTML markup (e.g. <Message />)
+
+        - Export the React App component as a default object
+            - In order to be picked up & loaded by the index.html 
+
+            export default <function_name>;
+
+        - Save changes
+
+    - Run the App using Vite via npm (if previous session had been terminated)
+
+        npm run dev
+
+    - Click generated URL (terminal window)
+        - Launches the React app on the default browser
