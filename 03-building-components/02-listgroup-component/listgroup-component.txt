@@ -1,0 +1,112 @@
+Creating a ListGroup Component
+------------------------------
+- Before creating a basic ListGroup component
+    - Install Bootstrap, a popular CSS library (https://getbootstrap.com/)
+    - To add a modern look and feel to the component
+
+
+- Install Bootstrap (v.5.2.3) via integrated terminal using npm
+
+    npm i bootstrap@5.2.3
+
+
+- Import Bootstrap to the React app
+    - Open the file "App.css" 
+        - This contains the CSS styling for the React apps components
+        - Delete the Vite generated CSS code & save changes
+
+    - Delete the file "index.css"
+        - This contains the CSS styling for the React application
+    
+    - Open the file "main.tsx"
+        - Refactor the import statement:
+
+            import './index.css'
+
+        - With:
+
+            import 'bootstrap/dist/css/bootstrap.css
+
+        - Save changes
+
+
+- Verify Bootstrap installation
+    - Run React app via npm (if not running)
+
+        npm run dev
+    
+    - Click the generated local URL to load the React app in the default browser
+
+    - The React app's message "Hello World"
+        - Should be positioned at the top-left corner of the browser
+        - Displays a different font face
+
+
+- To create a ListGroup component
+    - Inside the "src" folder, create a new folder "components"
+        - By convention, all components are to be stored on this folder
+
+    - Inside the "components" folder, create a file "ListGroup.tsx"
+        - This is the ListGroup component
+    
+    - Open the "ListGroup.tsx"
+        - Define a function named ListGroup()
+        - It returns a JSX <h1> element
+
+            <h1>Hi World</h1>
+        
+    - Export the function as a default object from this module (component)
+
+        export default ListGroup;
+
+    - Save changes
+
+
+- Import the ListGroup component into the App component (App.tsx)
+    - Open App.tsx and import the ListGroup component
+
+        import ListGroup from "./components/ListGroup";
+
+    - Remove the import statement for the Message component
+
+    - Refactor the return statement of the function App()
+        - From: 
+ 
+            return <div><Message /></div>
+
+        To: 
+
+        return <div><ListGroup /></div>
+
+    - Save changes
+
+    - Verify changes in the browser
+        - The text content "Hello World" is replaced with "List Group"
+
+
+- Refactor the ListGroup component by borrowing code from Bootstrap's List Group component
+    - Copy the mark up code from Bootstrap's example
+    - Reference (https://getbootstrap.com/docs/5.3/components/list-group/)
+
+    - Open the file "ListGroup.tsx"
+        - Refactor the return statement of the function ListGroup()
+        - Paste the copied mark up code       
+
+            <ul class="list-group">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+            </ul>
+
+
+    - Rename the attribute "class" to "className"
+        - NOTE: "class" is considered a reserved word in TypeScript
+
+    - Save changes
+
+    - Format the codebase using Prettier (CTRL + SHIFT + I)
+        - If TypeScript code is NOT automatically formatted on save
+
+    - View the latest renedered ListGroup component on the browser
