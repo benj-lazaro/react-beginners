@@ -1,0 +1,21 @@
+React Ecosystem
+---------------
+- React is a JavaScript library 
+    - Specifically for building dynamic & interactive user interfaces 
+    
+    - Often will require additional 3rd-party tools for other tasks:
+        - Routing users from one page to another
+        - Making HTTP calls
+        - Manaing application state
+        - Internationalization
+        - Form validations
+        - Animations
+
+    - React does NOT have an opinion on the additional 3rd party tools
+        - Providing the freedom to choose the right tools for the job
+
+    
+- A library is a tool that provides SPECIFIC functionality
+    - While a framework is a set of tools & guidelines for building applications
+    - Both Angular and Vue are frameworks
+
