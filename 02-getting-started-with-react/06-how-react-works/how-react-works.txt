@@ -1,0 +1,25 @@
+How React Works
+---------------
+- When a React application starts
+    - The React library takes a tree of components
+
+    - Builds a JavaScript data structure called the "Virtual DOM"
+        - This is a lightweight in-memory representation of the component tree
+        - This is different from the actual DOM in the browser
+
+    - When the state or the data of a react component changes
+        - React updates the corresponding node in the Virtual DOM to reflect the new state
+
+    - Compares the current version of the Virtual DOM with the previous version
+        - To identify which nodes that should be updated
+
+    - Updates the identified nodes in the actual DOM
+
+
+- In browser-based apps
+    - Updating the DOM is done by a companion library ReactDOM
+    - This can be viewed in the generated "/src/main.tsx" file
+
+
+- In mobile apps
+    - React Native uses native components to render the user interface
