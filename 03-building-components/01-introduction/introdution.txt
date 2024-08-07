@@ -1,0 +1,8 @@
+Introduction
+------------
+- This section covers the fundamental concepts of React applications
+    - Building components
+    - Rendering markup with JSX
+    - Managing state
+    - Passing inputs to components via props
+    - Debugging React applications
