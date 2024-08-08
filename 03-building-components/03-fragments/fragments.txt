@@ -1,0 +1,30 @@
+Fragments
+---------
+- In React, a component can NOT return more than ONE (JSX) element
+    - To address this, use Fragments
+
+
+- To implement a Fragment
+    - Import it from React
+
+        import { Fragment } from "react";
+
+    - Enclose JSX elements within the pair of <Fragment>
+
+        <Fragment>
+        ...
+        </Fragment>
+
+    - Save changes
+
+
+- A shorter Fragment implementation
+    - Remove the previous import statement
+
+    - Enclose the JSX elements within the pair <>
+
+        <>
+        ...
+        </>
+
+    - Save changes
