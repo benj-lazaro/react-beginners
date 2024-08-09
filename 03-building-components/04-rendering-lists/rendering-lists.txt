@@ -1,0 +1,41 @@
+Rendering Lists
+---------------
+- To render a list dynamically in JSX
+    - Use the method array.map()
+        - To each each item as individual JSX elements
+
+    - Pass a callback arrow function as argument value to .map()
+        - To iterate each item of the array
+
+            <array_name>.map((<array_item>) => {
+                <JSX_element> <array_item> </JSX_element>
+            });
+
+    - Insert the code into the returned JSX element within a pair of { } 
+
+        { <array_name>.map((<array_item>) => {
+            <JSX_element> <array_item> </JSX_element>
+        }) };
+
+    - Save changes and check browser
+
+    - The broswer's JavaScript console reports the following warning:
+
+        Warning: Each child in a list should have a unique "key" prop
+
+        - Reference (https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
+
+
+- To add a unique key prop (property) that uniquely identifies each array item
+    - React NEEDS this to keep track of each item
+        - For adding or removing items dynamically
+        - In order for React to know which part of the page should be updated
+
+    - Think of the "key" property as an attribute to the JSX element
+
+    - For the presented example
+        - Each item in the array is a unique string
+        - So this will be used (assigned) as the unique key for each item
+
+    - On real-world application using APIs
+        - More often, each item has a property like "id"
