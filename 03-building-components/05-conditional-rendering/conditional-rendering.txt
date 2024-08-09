@@ -1,0 +1,14 @@
+Conditional Rendering
+---------------------
+- To dynamically render content based on certain conditions
+    - Use an "if" statement or "ternary" operator
+
+    - Alternatively, use a logical AND operator 
+        - If the condition of the 1st operand is true
+            - It returns the value of the 2nd operand
+            
+            - Otherwise, the result of the entire expression is false
+                - Nothing will be rendered on the web page
+
+        - NOTE: This is a common technique to render dynamic content
+    
