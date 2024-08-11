@@ -1,0 +1,95 @@
+Managing State
+---------------
+- In order to highlight a rendered JSX <li> element when clicked
+    - Bootstrap's "active" class is required
+        - Adding this class into the JSX element's "className" property
+        - However, this results to ALL JSX <li> element being highlighted
+
+    - To address this, assign a ternary condition in the "className" property
+        - First, declare the variable selectedIndex outside of the return statement
+            - This variable will keep track of clicked JSX <li> element's index value
+
+            - Initialize the variable with the value of -1
+                - This meant that no JSX <li> elment is selected upon loading this component
+                - As the value of 0 refers to the index value of the 1st JSX <li> element
+
+    - Refactor the "className" property in order to dynamically load the Bootstrap classes
+        - By assigning a pair of { } 
+            - Implement a ternary statement inside the { }
+
+        - When the variable selectedIndex === index value of the clicked JSX <li> element
+            - Dynamically add the Bootstrap "active" to the "className" property
+            - Otherwise, load the Bootstrap class without the "active" class
+
+                className = {selectedIndex === index ? "list-group-item active": "list-group-item" }
+
+            - NOTE: This is a simple way to add/remove Bootstrap classes dynamically
+
+    - Refactor the JSX <li> element's "onClick" property
+        - In order to change the value assign to the variable selectedIndex
+            - When a JSX <li> element is clicked
+
+        - Remove the "handleClick" function from the "onClick" property
+            - Remove the associated event handler code & import (MouseEvent) statement
+
+        - Replace "handleClick" function with a simple arrow function
+            - The variable selectedIndex get assigned 
+                - With the clicked JSX <li> element's index value
+
+                    onClick = {() => selectedIndex = index}
+
+            - Save changes but nothing happened
+                - The variable selectedIndex is LOCAL ONLY to the component's function
+                - The React library is NOT aware of its existence
+                    - Making it unable implement the dynamic changes in the Virtual DOM
+
+            - To address this issue is to inform React
+                - That the component has data or state that MIGHT change over time
+
+                - By using the React built-in function "useState()"
+                    - Along with its associated import statement
+
+                        import { useState } from "react";
+
+            - The useState() function is called a Hook
+                - This is a function that allows you to tap into React's built-in features
+                - This is a State Hook
+
+    - To implement a State Hook using useState()
+        - Pass the value of -1 to useState()
+
+        - The useState() function returns an array with two elements
+            - 1st element   = State variable; assigns the argument value passed to the function
+            - 2nd element   = Updater function; updates the State variable's state (value)
+
+        - Destructure the returned array of useState() into individual constants
+            - 1st element assigned to selectedIndex (state variable) 
+            - 2nd element assigned to setSelectedIndex (updater function)
+            
+                const [selectedIndex, setSelectedIndex] = useState(-1);
+
+            - NOTE: This is a convention followed in React applications
+
+        - Delete the variable selectedIndex
+
+    - Refactor the assigned value to the "onClick" property
+        - Call the updater function setSelectedIndex()
+        - Pass the index value of the clicked JSX <li> element as an argument value
+
+            onClick = {() => setSelectedIndex(index); }
+
+        - Save changes
+
+        - When an JSX <li> element is clicked
+            - Loads the corresponding Bootstrap class "active" on the "className" property
+            - Informs the React library of the component's change of state
+            - React updates component in the Virtual DOM
+
+
+- NOTE: Each React component is going to have its own state
+    - To demonstrate, open App.tsx
+    - Duplicate the <ListGroup /> component twice
+    - React updates the Virtual DOM with two <ListGroup /> component
+    
+    - Clicking individual <li> elements from each <ListGroup />
+        - Are independent of each other
