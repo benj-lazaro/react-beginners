@@ -1,0 +1,66 @@
+Passing Data via Props
+----------------------
+- Using props (properties) to make a React component reusable
+    - Props are the "inputs" to a component
+
+
+- To make the React component <ListGroup /> reusable
+    - Design the shape (interface) of the input of the component
+
+    - Use TypeScript's "interface" keyword
+        - Followed by a name; by convention the name "Props" is used
+        - Then a pair of { }
+
+    - Inside the interface's { }, define the name and their corresponding types 
+        - items     = an array of string
+        - heading   = a string
+
+            interface Props {
+                items: string[];
+                heading: heading;
+            }
+
+    - Refactor the function ListGroup()
+        - Define a parameter named "props" of type "Props"
+        
+            function ListGroup(props: Props) { 
+                ... 
+            }
+
+        - Save changes
+
+        - TypeScript complier throws an error
+            - Reminding that the <ListGroup /> component in App.tsx
+                - Is expecting an argument value of props: Props to be passed 
+
+    - Move the line of code declaring the variable "items"
+        - From ListGroup.tsx to App.tsx
+        - Paste it within the function App(); just above the "return" statement
+
+    - Still in App.tsx, refactor the <ListGroup /> component 
+        - By passing the interface Props' properties 
+        - Implement it similarly to setting attributes of an HTML element 
+
+            <ListGroup <Prop_name>={<dynamic_value>} <Prop_name>="<static_value>"/>
+
+            OR
+
+            <ListGroup items={items} heading="Cities"/>
+
+
+    - In the ListGroup.tsx, refactor the <ListGroup /> component
+        - Replace the parameter name "props" with the property names of interface Props
+            - By destructuring them within a pair of { }
+
+                function ListGroup({items, heading}: Props) {
+                    ...
+                }
+        
+
+        - Within the return statement
+            - Replace the static content of the JSX element <h1> 
+
+                <h1>List</h1>
+
+            - With the dynamic content from the interface Props' property "heading"
+                <h1>{ heading }</h1>
