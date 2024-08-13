@@ -1,0 +1,120 @@
+Passing Children
+----------------
+- To create a React component that can accept children components
+    - Similar to how the <ListGroup /> component is passed to a JSX <li> element
+
+
+- To make coding a React component easier and painless
+    - Install the VS Code extension "ES7+ React/Redux/React-Native snippets"
+    - Published by dsznajde
+    
+    - To activate
+        - Create a .tsx file
+        - Type "rafce" (stands for "react Arrow Function Component Export")
+        - Followed by pressing ENTER
+        - Generates a boilerplate code for writing React components
+
+
+- Create a new React component and named it Alert.tsx within the components folder
+    - Type "rafce" to generate boilerplate code
+    
+    - Remove the "import" statement for React from the top of the code
+
+        import React from 'react'
+
+
+    - Refactor App.tsx
+        - Remove the <ListGroup /> component & associated "import" statement
+        - Replace it with the recently created <Alert /> component
+
+            import Alert from "./components/Alert";
+
+            function App() {
+            return (
+                <div>
+                <Alert />
+                </div>
+            );
+            }
+
+            export default App;
+
+    - Back in the Alert.tsx
+        - Implement Bootstrap's Alerts component mark-up
+        - Reference (https://getbootstrap.com/docs/5.3/components/alerts/)
+
+            const Alert = () => {
+            return <div className="alert alert-primary">Alert</div>;
+            };
+
+            export default Alert;
+
+    - Make the content of the <Alert /> dynamic
+        - Define the interface of the component using Props
+
+            interface Props {
+                text: string;
+            }
+
+        - Save changes
+
+    - Refactor the <Alert /> component in App.tsx
+        - Implement the property "text" of the Props like that of an HTML element's attribute
+        - Assign the content as a string value
+
+            function App() {
+                return (
+                    <div>
+                        <Alert text="Hello World" />
+                    </div>
+                );
+            }
+
+        - Save changes
+
+        - However, passing content this way is unfavorable
+            - Particularly is the content quite long or contain HTML mark-up
+    
+    - To address this concern
+        - Is to pass the content as a "child" to the <Alert /> component
+            - Instead of as an attribute of the JSX element
+
+    - Refactor the interface
+        - Replace  the property "text"
+        - With a built-in prop called "children"
+            - This prop is supported by all React components
+
+        - Replace all instances of "text" with "children"
+        - Save changes
+
+    - Refactor the <Alert /> component in App.tsx
+        - Place the content as a child to the <Alert> component
+
+            function App() {
+                return (
+                    <div>
+                        <Alert>Hello World</Alert>
+                    </div>
+                );
+            }
+        
+        - Save changes
+
+    - In order to pass HTML mark-up as content to the <Alert /> component
+
+            function App() {
+                return (
+                    <div>
+                        <Alert><h1>Hello World</h1></Alert>
+                    </div>
+                );
+            }        
+        
+        - Refactor the interface Props of Alert.tsx
+            - Change the type of "children" from "string" to "ReactNode"
+    
+                interface Props {
+                    children: ReactNode;
+                }
+
+            - Save changes
