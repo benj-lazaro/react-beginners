@@ -1,0 +1,93 @@
+Passing Functions via Props
+---------------------------
+- In a real-world situation, a corresponding action is expected
+    - After an item in the <ListGroup /> component is selected (clicked)
+
+    - Implementing a piece of logic inside the <ListGroup /> component
+        - Makes the component NOT reusable anymore
+
+    - Requires a mechanism to inform the consumer / parent component (App component)
+        - That an item within the child component has been selected (clicked)
+
+
+- To address this requirement, open the file ListGroup.tsx
+    - Add a new property to the "Props" object (of type interface)
+        - This property is of a function type
+            - Takes an argument value of string (i.e. selected item from the list)
+            - Returns void (i.e. does NOT return a value)
+
+        - NOTE: By convention, naming a property of type "function" inside the "Props" object
+            - Begins with the word "on"
+            - Followed by the type of event e.g. "SelectItem"
+            - e.g. "onSelectItem"
+            
+        - The property "onSelectItem" is assigned with an anonymous arrow function
+            - Takes a parameter "item" of type "string"
+            - Return "void"
+
+                interface Props {
+                    items: string[];
+                    heading: string;
+                    onSelectItem: (item: string) => void;
+                }
+
+        - Save changes
+            - A reported compilation error on the parent component App.tsx
+
+    - Open the file App.tsx
+        - Implement the additional property of the "Props" object in the <ListGroup /> component
+            - Implement it similarly to setting attributes of an HTML element
+            - Assign a separate event handler (to be written)
+
+            <ListGroup items={items} heading="Cities" onSelectItem={}/>
+
+
+        - Define a function expression that works as an event handler of type constant
+            - Placed outside the parent component's "return" statement
+
+            - NOTE: Event handler begins with the word "handle"
+            - Followed by the type of event e.g. "SelectItem"
+            - e.g. "handleSelectItem"
+
+            - It has a paremter "item" of type "string"
+            - It returns nothing (void)
+                - For this example, a console.log() statement is return
+                - Containing the name of the selected item
+
+                    const handleSelectItem = (item: string) => {
+                        console.log(item);
+                    };
+
+        - Update the <ListGroup /> component
+            - By assigning the event handler "onSelectItem" to "onSelectItem" property
+            - Save changes
+
+    - Move back to ListGroup.tsx
+        - Update the parameter of the function ListGroup()
+            - By adding the property "onSelectItem"
+
+                function ListGroup({ items, heading, onSelectItem }: Props) {
+                    ...
+                }
+
+        - On the "onClick" property
+            - Add a call to the property "onSelectItem" (w/c is a function)
+            - Then passing the "item" (clicked/selected item) as an argument value
+
+                <li
+                    className={
+                    selectedIndex === index
+                        ? "list-group-item active"
+                        : "list-group-item"
+                    }
+                    key={item}
+                    onClick={() => {
+                        setSelectedIndex(index);
+                        onSelectItem(item);
+                    }}
+                >
+                    {item}
+                </li>
+
+            - Save changes
+
