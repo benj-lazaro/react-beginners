@@ -1,0 +1,7 @@
+Exercise: Building a Button Component
+-------------------------------------
+- Create a Bootstrap button component
+    - Use the example button mark-up (under the Variants section)
+        - Reference (https://getbootstrap.com/docs/5.3/components/buttons/)
+
+    - Encapsulate these buttons within a resuable React component
