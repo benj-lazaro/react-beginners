@@ -1,0 +1,9 @@
+Exericse: Showing an Alert
+--------------------------
+- Render a Bootstrap Button using primary colors
+    - When clicked renders a dismissable Alert
+    - When the Alert's close button is clicked, it disappears
+
+    - Alerts component (https://getbootstrap.com/docs/5.3/components/alerts/)
+    - Alerts dismissing (https://getbootstrap.com/docs/5.3/components/alerts/#dismissing)
+    
