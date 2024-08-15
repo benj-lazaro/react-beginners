@@ -1,0 +1,8 @@
+Introduction
+------------
+- This section explore various techniques for styling a component
+    - Vanilla CSS
+    - CSS modules
+    - CSS-in-JS
+    - Using CSS libraries
+
