@@ -1,0 +1,88 @@
+CSS Modules
+-----------
+- The problem with implementing styles on component using vanilla CSS
+    - It is prone to style clash
+    - Due to stylesheet of other components sharing the same CSS class selector name
+
+
+- To demonstrate
+    - Open the file "App.css"
+        - Stylesheet for the <App /> component
+
+    - Add a new CSS class selector named "list-group"
+        - Define the property "background-color"
+        - Assign it with the value of "red"
+
+            .list-group {
+            background-color: red;
+            }
+
+        - Save changes
+
+    - Open the component "App.tsx"
+
+    - Import the corresponding CSS file
+
+        import "./App.css";
+
+        - Save changes
+
+    - Browser reloads
+        - Styling for <App /> and <ListGroup /> components clashes (merged)
+        - Due to sharing the identical CSS class selector name "list-group"
+            - On their respective CSS stylesheet
+
+
+- To address this problem
+    - A CSS module is basically a file on which defined class selector(s) are SCOPED LOCALLY
+    - Allows other CSS stylesheets to use identical class selector names
+
+    - Behind the scenes
+        - As part of bundling the React application
+        - Vite takes all CSS modules
+        - Then individually create unique names; eliminating styling clash
+
+
+- To implement CSS modules
+    - Rename the stylesheet of the component
+        - Inserting the word "module"
+        - Between the stylesheet's filename and filename extension ".css"
+        - e.g. ListGroup.module.css
+
+    - Open the component's corresponding stylesheet (ListGroup.css)
+        - Rename the class selector using the Camelcase naming convention
+            - From ".list-group" to ".listGroup"
+
+        - This is due to TypeScript NOT considering "-" as a valid property name
+            - A workaround do exists but makes the code "noisy" and ugly
+
+    - Open the corresponding component (ListGroup.tsx)
+        - Update the import statement of the corresponding component
+
+            import styles from "./ListGroup.module.css";
+
+        - The "styles" is a regular JavaScript object
+            - Wherein every defined class selector becomes a property
+
+        - Updateh the JSX <ul> "className" property
+            - Assigning the object "styles.listGroup" as value
+
+                <ul className={styles.listGroup}>
+                    ..
+                </ul>
+
+        - Save changes
+
+
+- To assign multiple CSS class selectors
+    - Place each "style.<class_selector>" object inside an array
+    - Then call chain the method .join()
+        - Passing " " (space) as argument value
+    
+    - This allows multiple CSS class selectors to be assigned for the "className" property
+
+        <ul className={[styles.listGroup, styles.container].join(" ")}>
+            ...
+        </ul>
+    
+    - Save changes
