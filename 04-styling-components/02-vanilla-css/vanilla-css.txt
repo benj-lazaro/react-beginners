@@ -1,0 +1,71 @@
+Vanilla CSS
+-----------
+- To implement CSS styling on a React component using vanilla CSS
+    - Open the file "main.tsx"
+        - Remove the earlier import statement to load the Bootstrap CSS library
+
+            import 'bootstrap/dist/css/bootstrap.css'
+
+        - Save changes
+
+    - Open the "components" folder
+
+    - Create a new folder named "ListGroup"
+        - Move the file "ListGroup.tsx" (component) to the folder
+        - To store related files inside the same folder
+
+    - Inside the folder "ListGroup"
+        - Create a new file named "ListGroup.css"
+        - This is where vanilla CSS will be stored to style the <ListGroup /> component
+
+    - Open "ListGroup.css"
+        - Define a CSS class selector named "list-group"
+            - Referencing the value assigned in the "className" attribute of the JSX <ul> element
+        
+                <ul className="list-group">
+                    ...
+                </ul>
+
+        - Implement the corresponding "list-style" & "padding" properties
+
+            .list-group {
+                list-style: none;
+                padding: 0;
+            }
+
+        - Save changes
+
+    - Create a new file named "index.ts"
+        - Import the component ListGroup
+
+            import ListGroup from "./ListGroup";
+
+        - Export the component as a default object
+
+            export default ListGroup
+
+        - This functions as an index file
+            - When the TypeScript compiler encounters a missing file from an import statement
+            - It looks up on this file on a local folder to check on exported default object(s)
+
+        - Save changes
+
+    - Open the file "App.tsx"
+        - Refactor the import statement for the <ListGroup /> component
+        
+            import ListGroup from "./components/ListGroup";
+    
+        - When the TypeScript compiler encouners this statement
+            - It searches for the file "index.ts"
+            - Loads the export default object (i.e. <ListGroup />)
+            - This is done to make the import statement cleaner
+
+
+    - Open the component "ListGroup.tsx"
+        - Import the CSS file "ListGroup.css"
+
+            import "./ListGroup.css";
+
+        - Save changes
+    
+               
