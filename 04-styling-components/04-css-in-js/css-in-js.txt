@@ -1,0 +1,117 @@
+CSS in JS
+---------
+- Styling components called "CSS-in-JS"
+    - The idea is to write all of the styles for a component next to its definition 
+        - Within a JavaScript / TypeScript file
+    
+    - Provides the following benefits:
+        - Scoped styles (similar to that of the CSS modules)
+        - All the CSS & JavaScript/TypeScript code in one place (in a single file)
+        - Easier to delete a component
+        - Easier to style based on props / state
+
+    - There are different libraries that implement this concept
+        - Styled Components (preferred by author)
+        - Emotion
+        - Polished
+
+
+- To implement CSS-in-JS using the "styled-components" library
+    - For this example, open the component "ListGroup.tsx"
+    - Refactor the import statement for the  CSS module implemented in the previous section
+
+        import "./ListGroup.css";
+
+    - Install the library named "styled-components" via npm
+
+        npm i styled-components
+
+    - Import the "styled-components" library
+
+        import styled from "styled-components";
+
+    - NOTE: In the event that "styled-components" of the import statement issued a warning
+        - TypeScript compiler could not find a declaration file for module "styled-components"
+        - To resolve this issue, install the type definitions of this library via npm
+
+            npm i @types/styled-components
+
+        - The "@types" is a repository that contains type definitions for various popular JavaScript libraries
+
+    - The styled components is NO longer dependent on the "className" property for styling a JSX markup
+        - Instead, it returns a component that contains the styles
+
+    - To define a styled component for the JSX markup <ul>
+        - Outside the function ListGroup()
+        - Define a styled component and save it to a constant named "List"
+
+            const List = styled.ul`
+                list-style: none;
+                padding: 0;
+            `;
+
+        - The "List" is a component that contains the defined CSS styling
+
+    - Replace the JSX markup <ul> with the <List> component
+
+        <List>
+            {items.map((item, index) => (
+            <li
+                className={selectedIndex === index ? "list-group-item active" : "list-group=item"}
+                key={item}
+                onClick={() => {
+                setSelectedIndex(index);
+                onSelectItem(item);
+                }}
+            >
+                {item}
+            </li>
+            ))}
+        </List>    
+
+    - Define a styled component for the JSX markup <li>
+        - Save it to a constant named "ListItem"
+
+            const ListItem = styled.li`
+                padding$: 5px 0;
+            `;
+    
+    - Replace the JSX markup <li> with <ListItem> component
+        - Remove the "className" prop
+
+            <List>
+                {items.map((item, index) => (
+                <ListItem
+                    key={item}
+                    onClick={() => {
+                    setSelectedIndex(index);
+                    onSelectItem(item);
+                    }}
+                >
+                    {item}
+                </ListItem>
+                ))}
+            </List>    
+
+- Style the <ListItem> component based on its props
+    - Give it a prop "active" and set it to a boolean expression
+
+        <ListItem
+            active={index === selectedIndex}
+            ...
+        </ListItem>
+
+    - Define the shape of the props named "ListItemProps"; place it before the <ListItem> component
+
+        interface ListItemProps {
+            active: boolean;
+        }
+
+    - Refactor the styled-component <ListItem> to accept the props & add a dynamic property "background"
+
+        const ListItem = styled.li<ListItemProps>`
+            padding$: 5px 0;
+            background: ${(props) => (props.active ? "blue" : "none")};
+        `;
+
+    - Save changes
