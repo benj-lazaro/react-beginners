@@ -1,0 +1,19 @@
+Separation of Concerns
+----------------------
+- Separation of concerns is an important software design principle
+    - Divide a program into distinct sections (functional areas)
+    - Each section handles a specific functionality
+    - Than have eveything in one place
+
+
+- This will make an app
+    - Modular
+        - Build and test modules independently
+        - Reuse modules in other programs
+        - Each module is responsible for a SINGLE concern
+        - Implementation is hidden behind a well-defined interface
+
+    - Easier to understand
+    - Easier to maintain
+    - Easier to modify
+
