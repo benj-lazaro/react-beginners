@@ -1,0 +1,25 @@
+Inline Styles
+-------------
+- CSS inline styles can also be used for styling components
+    - Similar to how they are implemeneted in HTML documents
+
+    - Uses the JSX element's prop "style"
+        - Similar to that of the HTML element's "style" attribute
+
+        - The CSS property is named using camelcase convention
+            - e.g. "background-color" to "backgroundColor"
+
+        - The value is expressed as an object instead of a string
+            - Enclosed within a pair of {..}
+
+            - The object can also be defined outside the JSX markup
+
+                <ul className="list-group" style={{ backgroundColor: "yellow" }}>
+                    ...
+                </ul>
+
+    - This form of styling is NOT recommended
+        - It makes the codebase hard to read and to maintain
+        - It is considered a bad practice
+        - ONLY to be used on special cases (i.e. troubleshooting styles) or as a last resort
+
