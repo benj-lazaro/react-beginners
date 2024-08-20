@@ -1,0 +1,7 @@
+Building a Like Component
+-------------------------
+- Build a reusable "Like" component (heart-shaped icon)
+    - It has a prop onClick
+    - Passes the message "clicked" to the JavaScript console when clicked
+    - Changes the icon's color from White to Pink
+
