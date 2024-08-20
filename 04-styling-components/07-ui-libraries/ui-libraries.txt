@@ -1,0 +1,34 @@
+Popular UI Libraries
+--------------------
+- Among the popular UI libraries that help quickly build beautiful & modern apps
+    - Bootstrap
+        - Offers a bunch of useful components
+        - Really easy to use
+
+    - Material UI
+        - An open-source React component library
+        - It has influenced Google's material design
+        - It is the design language used in Google products
+        - It help to ship products (apps) faster instead of writing UI by hand
+
+    - Tailwind CSS
+        - A utility-first CSS framework
+        - It provides a bunch of small utility classes for styling components
+            - Instead of fully-fleshed UI components
+        
+        - It eliminates the need to write CSS by hand
+
+        - However, as the styles get more complicated
+            - The component's markup ends up with a lot of utility classes
+
+    - Daisy UI
+        - Provides fully-fleshed components with cleaner markup
+        - A good alternative to Tailwind CSS
+
+    - Chakra UI
+        - A React component library built on top of Tailwind CSS
+            - Similar to Material UI
+            - BUT NOT as comprehensive
+            - It has all the essential UI components
+            - It is very easy to learn
+            - Will be used on the course's projects
