@@ -1,0 +1,28 @@
+Adding Icons
+------------
+- To add icons to a component, use a popular library called React Icons
+    - It is a package of different icon libraries
+
+
+- To install via npm
+    - For this course, version 4.7.1 will be installed
+
+        npm i react-icons@4.7.1
+
+
+- To use
+    - Proceed to the React Icons website (https://react-icons.github.io/react-icons/)
+
+    - Search for preferred icon
+        - Click the desired icon
+
+        - A new window will slide-in containing
+            - The "import" statement
+            - Name of the component
+
+        - Copy the import statement & component name
+
+    - Paste the import statement & component name on React app
+
+    - Save changes
+
