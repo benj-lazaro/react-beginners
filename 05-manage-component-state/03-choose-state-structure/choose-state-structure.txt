@@ -1,0 +1,66 @@
+Choosing the State Structure
+----------------------------
+- The following are best practices for choosing the State Structure
+
+
+- AVOID redundant state variables that can be taken from existing variables
+    - Alternatively, store the values of State Variables inside a constant
+    - Then render the constant in the JSX mark-up
+    
+        function App() {
+            // State Hooks for user information
+            const [firstName, setFirstName] = useState("Mosh");
+            const [lastName, setLastName] = useState("Hamedani");
+            
+            // Store the values of State Variables of corresponding State Hooks in a constant
+            const fullName = firstName + " " + lastName;
+
+            return (
+                <div>
+                    {/* Render the value of the constant variable */}
+                    {fullName}
+                </div>
+            );
+        }    
+
+
+- Group related State Variables inside an object
+
+    function App() {
+        // State hooks for user information stored in an object
+        const [person, setPerson] = useState({
+            firstName:"Mosh",
+            lastName: "Hamedani"
+        });
+            
+        // Unrelated State Hook
+        const [isLoading, setIsLoading] = useState(false);
+
+        return (
+            <div>
+                {/* Render the object's properties */}
+                { person.firstName } { person.lastName}
+            </div>
+            );
+        } 
+
+
+- When group related State Variables inside an object
+    - Avoid using deeply nested structures
+    - As they're difficult to update
+    - Preferably use a flat structure instead 
+
+        function App() {
+            // Deeply nested structure
+            const [person, setPerson] = useState({
+                firstName:"Mosh",
+                lastName: "Hamedani",
+                contact: {
+                    address: {
+                        street: ""
+                    }
+                }
+            });
+
+            ...
+        }
