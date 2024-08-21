@@ -1,0 +1,7 @@
+Introduction
+------------
+- This section explores State Management
+    - This is a fundamental concept in React
+
+    - Dives in and understand how Component State is stored and updated
+        - Crucial for building complex applications
