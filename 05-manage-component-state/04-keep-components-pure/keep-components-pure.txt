@@ -1,0 +1,68 @@
+Keeping Components Pure
+-----------------------
+- The fundamental concept in React called Purity
+    - In Computer Science, a Pure Function is a function
+        - Given the same input
+        - ALWAYS RETURNS the same result
+
+
+- React is designed around the concept of Purity
+    - It expects every Component created to be a Pure Function
+
+    - Given the same input (props)
+        - It should always return (render) the same JSX mark-up
+
+    - This is done for performance reasons
+        - If the props of a Component have NOT changed
+        - React skips re-rendering the Component
+
+
+- To keep a Component pure
+    - Keep changes out of the render phase
+
+        let count = 0;
+
+        const Message = () => {
+            return (
+                // The value of variable count ALWAYS return the same value of 0
+                <div>Message {count}</div>
+            )
+        }
+
+        export default Message
+
+
+    - Implementing changes in an object or variable in the render phase
+        - Makes the Component impure
+        - As it returns different a value whenever a Component is rendered
+
+        let count = 0;
+
+        const Message = () => {
+            count++; // Increments the value of the variable count
+
+            return (
+                // Returns a different value everytime the Component is rendered
+                <div>Message {count}</div>
+            )
+        }
+
+        export default Message
+
+
+- It is totally fine to update an object or value of a variable as part of rendering
+    - Moving the variable declaration inside the function
+    - ALWAYS returns the same incrmented value
+    - Everytime the Component is rendered
+
+        const Message = () => {
+            let count = 0;
+            count++; // Consistently returns the value of 1 everytime the Component is rendered
+
+            return (
+                <div>Message {count}</div>
+            )
+        }
+
+        export default Message
+
