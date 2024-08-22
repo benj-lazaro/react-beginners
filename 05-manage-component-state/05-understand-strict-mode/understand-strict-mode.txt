@@ -1,0 +1,24 @@
+Understanding the Strict Mode
+-----------------------------
+- Strict mode helps catch potential problems (e.g. impure components)
+    - This is ENABLED by DEFAULT starting React 18
+    - This is validated by the following line of code in "main.tsx"    
+
+        ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>
+        );
+
+    - This enables React to RENDER components TWICE in development mode
+        - 1st render    = detect potential issues in the code
+        - 2nd render    = update the user interface (UI)
+
+    - When building the app for production
+        - The Strict mode checks will NOT be included
+        - Components will RENDER only ONCE
+
+
+- The <React.StrictMode> is a built-in component in React
+    - It does NOT have a visual representation
+    - It's ONLY purpose is to catch potential problems (e.g. impure components)
