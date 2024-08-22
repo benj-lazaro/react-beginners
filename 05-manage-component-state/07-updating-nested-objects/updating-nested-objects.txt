@@ -1,0 +1,62 @@
+Updating Nested Objects
+-----------------------
+- When updating the state of a nested object
+    - Using the spread operator (...) to copy the existing object's properties
+        - Performs a shallow copy
+        - It references to the same address in memory
+        - Updating the state of a property will "mutate" the existing object
+
+            function App() {
+            // State Hook of a nested object
+            const [customer, setCustomer] = useState({
+                name: "John",
+                address: {
+                    city: "San Francisco",
+                    zipCode: 94111
+                }
+            });
+
+            // Event handler to update the property zipCode
+            const handleClick = () => {
+                setCustomer({...customer})  // Performs a shallow copy of the existing object
+            };
+            ...
+            }
+
+
+- When updating the state of a React application
+    - The State Object MUST be completely INDEPENDENT of the existing object
+
+
+- To update the state of a nested object
+    - Use the spread operator (...) to copy the existing object's properties
+
+    - Followed by a new property based on the parent property of the targeted nested property
+
+    - Pass an object to the new property containing
+        - Use the spread operator (...) parent property of the targeted nested property
+
+    - Then assign the updated value to the targeted nested property
+
+        function App() {
+        // State Hook of a nested object
+        const [customer, setCustomer] = useState({
+            name: "John",
+            address: {
+                city: "San Francisco",
+                zipCode: 94111
+            }
+        });
+
+        // Event handler to update the property zipCode
+        const handleClick = () => {
+            setCustomer({...customer, address: {...customer.address, zipCode: 94222}})
+        };
+        ...
+        }
+    
+
+- When working with State Objects, avoid using deeply nested structures
+    - The deeper the structure, the more complicated the logic to update the object
+
+    - Prefer a more flat structure over deeply nested ones
