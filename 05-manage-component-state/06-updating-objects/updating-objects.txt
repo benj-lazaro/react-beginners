@@ -1,0 +1,47 @@
+Updating Objects
+----------------
+- When updating an object or array
+    - Treat them as Immutable; similar to props
+
+
+- To update an object or array
+    - Create a new object / array instead of mutating them
+    - Copy the properties of the 1st object
+    - Add the targeted property assigned with an updated value
+
+    // State Hook
+    const [drink, setDrink] = useState({
+        title: "Americano",
+        price: 5
+    });
+
+    // Update state by creating a new object
+    const handleClick = () => {
+        const newDrink = {
+            title: drink.title,     // Copies the original property
+            price: 6                // Targeted property with the updated value
+        };
+
+        setDrink(newDrink);
+    };
+
+
+- Alternatively, the State Hook's 2nd argument (sets the state) can used to
+    - Create a new object and update the state of the original object
+        - This way of creating a new object is preferable
+        - If the original object has numerous properties
+
+    - Uses the spread operator (...) to copy the original object's properties
+        - Followed by the targeted property with an updated value
+
+
+    // State Hook
+    const [drink, setDrink] = useState({
+        title: "Americano",
+        price: 5
+    });
+
+    // Update state by creating a new object
+    const handleClick = () => {
+        setDrink({...drink, price: 6});
+    };
