@@ -1,0 +1,40 @@
+Updating Arrays
+---------------
+- The concept of updating the state of an object applies to an array
+    
+
+- To add an element into the primary array
+    - Instead of working directly on the primary array
+        
+    - Use the 2nd parameter method
+        - Pass a new array as argument
+        - Use the spread operator (...) to copy the contents of the primary array
+        - Followed by the new item to be added into the new array
+
+
+- To remove an element from the primary array
+    - Instead of working directly on the primary array
+        
+    - Use the 2nd parameter method
+        - Call the .filter() method on the primary array
+
+        - Pass an arrow function as an argument value to .filter()
+            - Pass an argument variable (representing an array element)
+            - In the body of the function
+                - The value in the argument variable !== targeted element to be removed
+
+    
+- To update an element on the primary array
+    - Instead of working directly on the primary array
+        
+    - Use the 2nd parameter method
+        - Call the .map() method on the primary array
+            - NOTE: There are other ways; this is the preference of the author
+
+        - Pass an arrow function as an argument value to .map()
+            - Pass an argument variable (representing an array element)
+            - In the body of the function
+                - Implement an ternary operation
+                - If the value of the argument variable === targeted element to be updated
+                    - Then update it with a new value
+                    - Otherwise assign the same value of the argument variable
