@@ -1,0 +1,5 @@
+Updating Array of Objects
+-------------------------
+- When updating an object's property (state) inside an array of Objects
+    - There is NO need to create a brand new copy of every object
+    - Instead copy ONLY the object whose property is intended to be updated
