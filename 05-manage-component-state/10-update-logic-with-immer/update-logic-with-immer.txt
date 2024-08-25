@@ -1,0 +1,48 @@
+Simplifying Update Logic with Immer
+-----------------------------------
+- Updating the state of objects in an array without mutation
+    - Can be complicated and repetitive
+    - To simplify the update logic, use the "Immer" library
+    
+    - Behind the scenes
+        - Immer keeps track of the changes 
+        - It creates a copy of the array with the changes applied
+
+
+- To install Immer via npm
+    - For this course, version 9.0.19 is used
+
+        npm i immer@9.0.19
+
+
+- Refactor the update logic of the <App /> component
+    - Import the produce() function from Immer library
+
+        import { produce } from "immer";
+
+
+- Refactor the event handler "handleClick"
+    - Call the 2nd parameter function
+    
+    - Pass the produce() function as an argument value
+
+    - Pass an arrow function to the produce() function as an argument value
+        - Pass the parameter "draft"
+
+    - Within the arrow function
+        - The "draft" object calls the .find() method
+        - Passes another arrow function to find the matching object
+            - Based on its identifier property (e.g. id)
+        
+        - Stores the result in a constant
+
+
+- Write an if statement to check if a matching object array element is found
+    - If it does, directly update the targeted property of the object
+
+
+- To verify that the refactored update logic is working
+    - Render the corresponding JSX mark-up
+    - Just above the line calling the event handler "handleClick"
+
+        { bugs.map(bug => <p key={bug.id}> {bug.title} {bug.fixed ? "Fixed" : "New"} </p>) }
