@@ -1,0 +1,10 @@
+Sharing State between Components
+--------------------------------
+- When sharing state between (child) components
+    - The State Hook MUST be placed on the nearest parent component 
+    - The parent component shares the state to its children component using props
+    
+
+- All the changes in the state SHOULD be done in the parent component
+    - The component that holds the state (i.e. parent component) 
+        - Is the one responsible for updating it
