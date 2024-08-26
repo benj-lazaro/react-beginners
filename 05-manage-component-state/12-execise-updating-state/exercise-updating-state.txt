@@ -1,0 +1,20 @@
+Exercise: Updating State
+------------------------
+- Implement code that updates the state of a nested object
+
+
+- Exercise 01
+    - When the user clicks the button
+    - It instructs React to change the value of the nested property "name"
+    - Located under the property "player"
+
+
+- Exercise 02
+    - When the user clicks the button
+    - It pushes a new ingredient into the "toppings" property w/c is an array
+
+
+- Exercise 03
+    - When the user clicks the button
+    - Increments the value of "quantity" property by 1
+    - Of the 1st element (product) of the array "items"
