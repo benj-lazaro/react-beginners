@@ -1,0 +1,66 @@
+Building a Form
+---------------
+- Use Bootstrap classes to create forms in a React app
+    - To provide a form a nice, modern look & feel
+
+
+- Open the file "main.tsx", add the following import statement
+
+    import "bootstrap/dist/css/bootstrap.css"
+
+
+- Create a component named "Form.tsx"
+    - Save the file within the folder "components"
+
+    - Use "rafce" to render the component template
+
+    - Replace the rendered JSX mark-up <div> with <form>
+
+    - Within the <form>, add the following mark-up
+
+        <form>
+            <div className="mb-3">
+                <label htmlFor="name" className="form-label">Name</label>
+                <input id="name" type="text" className="form-control" />
+            </div>
+        </form>
+
+    - Open the main component "App.tsx"
+        - Add the <Form /> component
+        - Save changes
+
+
+- Add some padding around the rendered <body> mark-up
+    - Create a new file "index.css"
+        - Within the folder "src"
+        - This is where the global CSS styles are declared
+
+
+    - Declare the CSS element selector <body>
+        - Give the "padding" property, a value of 20px
+
+            body {
+            padding: 20px;
+            }
+
+    - Import the "index.css" to the "main.tsx" file
+
+        import "./index.css";
+
+
+- Back to the file "Form.tsx"
+    - Implement another <input> mark-up that accepts numbers
+    - Lastly, a submit <buttom> with the attribute "type" of submit
+
+      <div className="mb-3">
+        <label htmlFor="age" className="form-label">
+          Age
+        </label>
+        <input id="age" type="number" className="form-control" />
+      </div>
+
+      <button className="btn btn-primary" type="submit">
+        Submit
+      </button>
+
+    - Save changes
