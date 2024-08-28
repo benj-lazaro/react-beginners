@@ -1,0 +1,69 @@
+Controlled Components
+---------------------
+- Alternative to using the Ref Hook "useRef()"
+    - To access the value of <input> fields in a form
+    - Use the State Hook "useState()"
+
+
+- On the JSX mark-up <input>
+    - The <input> element has an attribute named "onChange"
+    - Triggered a user types a keystroke
+
+    - Assign an arrow function to this attribute
+        - Accepts an "event" object as an argument  
+
+        - Calls the function that sets the corresponding State Variable
+            - Pass an object
+                - Use the spread operator "..." to reference the current object
+                - Followed by the object property to be updated
+                - Assigned the corresponding value using "event.target.value"
+
+
+- On the Event Handler
+    - Display the content of the object in the browser's JavaScript console
+
+
+- A caveat using this approach
+    - Every time a user types a single character on an <input> field
+        - React re-renders the component
+        - Possibly affecting the performance of the app
+        - Better off using Reference Hook "useRef()" instead
+
+    - On MOST cases, this is NOT an issue
+        - Using State Hook "useState()" is ok
+
+    - Remember:
+        "Premature optimization is the root of all evil!"
+        -- Donald Knuth
+        
+
+- A tiny problem on this example's implementation
+    - All JSX <input> element has a attribute / property named "value"
+        - That is used for maintaining their own state
+
+    - The State Hook has its own State Variable
+        - Used for maintaining its own state
+        - This may get out-of-sync with the state of the <input> element
+
+    - To address this, make React (not the DOM) as a "single source of truth"
+        - The ONLY source assign to the corresponding "value" attribute of <input> element(s)
+
+        - Assign the object's property (managed by the State Hook)
+            - To the "value" attribute / property of the associated <input> element
+
+                <input 
+                    value={person.name}
+                    onChange={(event) =>
+                        setPerson({ ...person, name: event.target.value })
+                    }
+                    id="name"
+                    type="text"
+                    className="form-control"
+                />
+
+
+    - The <input> element's "value" attribute is NOT managed by the DOM anymore
+        - Instead it is managed (stored & updated) in a Component State
+        
+        - This element is now referred as a Controlled Component
+            - It's state is entirely CONTROLLED by React
