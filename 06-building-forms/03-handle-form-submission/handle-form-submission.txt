@@ -1,0 +1,13 @@
+Handling Form Submission
+------------------------
+- To handle form submissions 
+    - Use the JSX mark-up attribute "onSubmit" in the <Form /> component
+        - Assign / reference an Event Handlder to "onSubmit"
+
+    - The Event Handlder accepts an "event" object as argument
+        - By default, the form posts the data to a server
+        - Then reloads the HTML document (along with the component(s))
+
+        - To prevent this default behavior
+            - Call the function event.preventDefault()
+            - Within the Event Handlder
