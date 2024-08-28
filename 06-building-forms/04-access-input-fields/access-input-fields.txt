@@ -1,0 +1,64 @@
+Accessing Input Fields
+----------------------
+- To access DOM elements (e.g. input fields)
+    - Use the built-in React Hook called "useRef()"
+    - It returns a reference object
+        - The targeted DOM element
+
+
+- Import the React Hook "useRef" in the <Form /> component
+
+    import React, { FormEvent, useRef } from "react";
+
+
+- To implement the React hook "useRef()"
+    - Initially pass a "null" value as argument to useRef()
+    - Save the returned reference object to a constant
+
+        const nameRef = useRef(null);
+
+
+- Inform the TypeScript compiler that useRef() is referencing an <input> element
+    - Place "<HTMLInputElement>" in-between "useRef" and its ()
+
+        const nameRef = useRef<HTMLInputElement>(null);
+
+    - NOTE: The "<HTMLInputElement>" is one of the standard interfaces defined in browsers
+        - This represents an <input> element
+
+
+- On the JSX mark-up <input>
+    - Associate the React hook to the targeted <input> element
+    - Using the attribute "ret"
+    - Assign the associated constant variable
+
+        <input ref={nameRef} id="name" type="text" className="form-control" />
+
+
+- On the Event Handler
+    - To access the value of the targeted <input> element
+        - By referencing the associated constant
+        - Then access the returned reference object's property named "current"
+        - Finally, access the reference object's prperty named "value"
+
+            console.log(nameRef.current.value);
+
+    - NOTE: An <input> element has an attribute named "value"
+        - Referencing the user provided input
+
+
+- Repeat the aforementioned steps for each <input> field
+
+
+- Create an object in the <Form /> component
+    - Where the collected value(s) of <input> element(s) will be stored
+
+        const person = { name: "", age: 0 };
+
+
+- Refactor the Event Handler
+    - Assign the collected <input> value to the correponding object property
+    - Display the content of the object into the browser's JavaScript console
+
+        if (nameRef.current !== null) person.name = nameRef.current.value;
+        if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
