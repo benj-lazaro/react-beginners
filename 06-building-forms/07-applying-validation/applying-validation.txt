@@ -1,0 +1,125 @@
+Applying Validation
+-------------------
+- Applying validation roles using React Hook Form
+    - Based on the given example code
+
+    - Ensure the a user enters a value on the "name" field
+        - The value should at least be 3 characters long
+
+
+- Implement validation on the targeted <input> element (i.e. name field)
+    - On the function "register()"
+    
+    - Pass an object as a 2nd argument
+
+    - Inside the object, add the standard HTML attributes for data validation
+        - "required: true"
+        - "minLength: 3"
+
+    - Save changes and test code
+
+
+- Implement error detection whenever the validation requirements are NOT minLength
+    - Grab the function "formState" from the form object returned by the React Hook Form
+
+        const { register, handleSubmit, formState } = useForm();
+
+    - The "formState" returns an object that contains
+        - Related validation error properties 
+    
+    - The "formState.errors" property returns an object that contain
+        - A property "type" that provides info on validation error 
+        - e.g. required, minLength
+
+
+- Implement code the displays the corresponding message to the validation error
+    - Destructure the "formState" to grad the "errors" property
+
+        const { register, handleSubmit, formState: { errors} } = useForm();
+
+        - This provide direct access to the object returned by "errors"
+            - The object has a property "type" that provides infor on the validation error 
+
+    - Just beneath the <input> element for the "name" field
+        - Declare an empty object { }
+
+        - Inside the empty object declare an expression that
+            - Checks if the returned "error" object has the property of "name"
+            
+            - Check if the object assigned to the property "name"
+                - Has a property named "type"
+                - With the value of "required"
+            
+            - Followed by a logical && operator
+
+            - Then a <p> element with the corresponding error message as content
+                - The <p> element will be returned
+                - If the earlier condition is truthy
+                    - i.e. type === "required"
+
+                {errors.name?.type === "required" && <p>The name field is required.</p>}
+
+            - NOTE: The "?" operator is called "Optional Chaining" in JavaScript
+                - The property "type" is ONLY checked
+                - When the property "name" is present in the "errors" object
+                - Otherwise, this check is ignored
+
+        - Declare another empty object { }
+
+        - Inside the empty object declare an expression that
+            - Checks if the returned "error" object has the property of "name"
+            
+            - Check if the object assigned to the property "name"
+                - Has a property named "type"
+                - With the value of "minLength"
+
+            - Followed by a logical && operator
+
+            - Then a <p> element with the corresponding error message as content
+                - The <p> element will be returned
+                - If the earlier condition is truthy
+                    - i.e. type === "minLength"
+
+                {errors.name?.type === "minLength" && <p>The name must be at least 3 characters.</p>}
+
+        - Style the text content of the corresponding error messages using Bootstrap
+            - On the <p> element
+            - Assign the value "text-danger" to the attribute className
+
+
+- To make the TypeScript compiler aware of the added properties in the <input> elements
+    - To recap
+        - This was done by calling the function register() in an empty object
+        - And part of the JSX mark-up <input>
+
+            <input
+                {...register("name", { required: true, minLength: 3 })}
+                ...
+            />
+            ...
+            <input
+                {...register("age")}
+                ...
+            />
+    
+    - To make the TypeScript compiler aware
+        - Declare an interface outside the <Form /> component
+        - In order to define the shape of the form
+        - Name the interface "FormData"
+
+            interface FormData {
+                name: string;
+                age: number;
+            }
+
+    - When calling the Form Hook
+        - Pass the interface "FormData"
+        - Enclosed within a pair of < >
+
+            const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+
+        - This informs the TypeScript compiler
+            - The "shape" of the form
+
+        - TypeScript compiler provides direct access
+            - To the additional properties added into the <input> elements when coding
