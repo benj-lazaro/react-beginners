@@ -1,0 +1,128 @@
+Managing Forms with React Hook Form
+-----------------------------------
+- As the <Form /> component gets complex; managing the form state using State Hook
+    - Can become time-consuming & error prone
+    - For each <input> element, requires setting two (2) attributes
+        - onChange
+        - value
+
+    - Alternatively, a popular library React Hook Form
+        - Quickly build forms with less code
+
+
+- To install via npm (specific version 7.43)
+
+        npm i react-hook-form@7.43
+
+
+- Post-installation verification
+    - Open the file "package.json"
+    - Under "dependencies"
+    - Check for the line
+
+        "react-hook-form": "7.43",
+
+
+- To use React Hook Form
+    - Import the "useForm" hook from the library into the <Form /> component
+
+        import { useForm } from "react-hook-form";
+
+    - The "useForm" hook returns an object
+        - This object contains form related properties & methods
+        - Destructure the returned object and grab the functions
+            - register()
+            - handleSubmit()
+
+                const { register, handleSubmit } = useForm();
+
+    - When calling the function "register()"
+        - It returns an object with following properties
+            - "name" property
+
+            - Built-in methods
+                - onBlur()
+                - onChange()
+                - ref()
+
+        - This function uses "reference objects"
+            - To retrieve value(s) from <input> element(s)
+            - There is NO re-rendering of the component involved
+
+    - On the corresponding JSX mark-up <input> elements
+        - Remove the attributes "onChange" and "value"
+
+            <input
+                value={person.name}
+                onChange={(event) =>
+                    setPerson({ ...person, name: event.target.value })
+                }
+                id="name"
+                type="text"
+                className="form-control"
+            />
+
+        - Replace it with an empty object { }
+            - Call the function register() from within the empty object
+            - Pass a key value of "name" (for the Name field)
+
+                <input
+                    {...register("name")}
+                    id="name"
+                    type="text"
+                    className="form-control"
+                />
+
+                ...
+
+                <input
+                    {...register("age")}
+                    id="age"
+                    type="text"
+                    className="form-control"
+                />
+
+        - Use the spread operator on the function "register()"
+            - In order to include the returned object properties with the <input> element
+
+    - Remove the State Hook (i.e. useState())
+
+    - Remove the Event Handler "handleSubmit"
+
+    - On the "onSubmit" attribute of the <form> element
+        - Refactor the "handleSubmit()"
+
+        - Pass a "Submit Handler" as argument
+            - In the form of an anonymous arrow function
+            - This function receives user-input data from the form's <input> elements
+
+        - In the arrow function declaration
+            - Declare a parameter variable named "data"
+
+        - Inside the "Submit Handler" (arrow function) body
+            - Display the content of the variable "data" on the browser's console
+
+                <form onSubmit={handleSubmit((data) => console.log(data))}>
+                ...
+                </form>
+
+        - Save changes and test the code
+
+    - To accomodate scalability 
+        - Move the "Submit Handler" code into a separate function
+        
+        - Save the function to a constant named "onSubmit"
+
+            const onSubmit = (data: FieldValues) => console.log(data);
+
+    - Back to the "onSubmit" attribute of the <form> element
+        - Refactor the "handleSubmit()"
+
+        - Replace the "Submit Handler" arrow function 
+            - With the "onSubmit" function
+    
+            <form onSubmit={handleSubmit(onSubmit)}>
+            ...
+            </form>
+
+    - Save changes and test the code
