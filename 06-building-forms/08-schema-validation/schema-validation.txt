@@ -1,0 +1,167 @@
+Schema-based Validation with Zod
+--------------------------------
+- Based on the previous code example
+    - Form validation rules are implement within the JSX mark-up <input>
+    
+    - As the form gets more complex
+        - The validation rules will be all over the place
+        - To address this concern, use a technique called schema-based valiation
+ 
+    - Zod is one of the many 3rd-party libraries
+        - That allows to define form validation rules in a single place (schema)
+
+
+- To install Zod via npm
+
+    npm i zod@3.20.6
+
+    - In the event that Zod does NOT get included in the "package.json" file
+        - Run the command
+        
+            npm cache clean --force
+
+        - To clear the npm cache that MIGHT have been corrupted
+        
+
+- To define a schema for the project's form
+    - Import the Zod library in the <Form /> component
+
+        import { z } from "zod";
+
+    - Using "z" to define the schema of the form & all of its validation rules
+        - Call z.object()
+
+        - Pass a "configuration object" to the ".object()" method
+            - This object contains the properties that represents the form fields
+        
+            - The shape of the configuration object is as follows
+                - "name"    = type string with a minimum number of characters of 3
+                - "age"     = type number with a minimum value of 18
+
+        - Save the returned object from the method .object()" to a constant variable
+            - Commonly the constant is named "schema"
+
+        - Delete the "inteface FormData" from the codebase
+            - Zod has a method that allows to extract the type from a schema object
+            - Keeping the former line of code will be redundant 
+
+        - Replace it by calling "z.infer<typeof schema>"
+            - This returns a TypeScript type
+            - A TypeScript type is similar to using an "interface"
+
+        - Store the returned value to a type called "FormData"
+
+
+- To integrate React Hook Forms with Zod
+    - Install resolvers for various schema-based validation libraries via npm
+
+        npm i @hookform/resolvers@2.9.11
+
+    - Import zodResolver into the <Form /> component
+
+        import { zodResolver } from "@hookform/resolvers/zod";
+
+    - When calling the Form Hook (i.e. useForm<FormData>())
+        - Pass a configuration object as argument
+
+            = useForm<FormData>({ });
+
+        - Inside the configuraton object
+            - Set the property "resolver" to "zodResolver()"
+
+        - Pass the configuration object stored in "schema" as argument to "zodResolver()"
+        
+            = useForm<FormData>({ resolver: zodResolver(schema) });
+
+
+- Consolidate error messages
+    - Remove the embedded validation rules from the <input> elements
+        
+        <input
+          {...register("name")}
+          id="name"
+          type="text"
+          className="form-control"
+        />
+
+    - Delete the 2nd JSX mark-up <p> element
+        - To consolidate error messages within a single <p> element
+    
+    - Refactor the boolean expression and make the error message dynamic
+        - The "errors.name.message" instructs Zod to dynamically generate default error messages
+        - Based on the defined schema stored in the constant "schema"
+       
+            {errors.name && <p className="text-danger">{errors.name.message}</p>}
+
+        - Copy the previous statement
+            - Paste it right after the <input> element for the "age" field
+            - Replace the "name" property to "age"
+
+            {errors.age && <p className="text-danger">{errors.age.message}</p>}
+
+    - Save changes and test code
+
+
+- To define a custom error message
+    - Go back to the defined schema stored in the constant "schema"
+
+    - In the associated ".min()" method of the "name" property
+        - Pass an object as a 2nd argument value
+
+    - Inside the object, assign a custom error message as value to the property "message"
+
+        const schema = z.object({
+            name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+            age: z.number().min(18),
+        });
+    
+
+- The <input> element of the "age" field
+    - Returns the default error message "Expected number, received string"
+    
+    - This is due to the fact that the attribute "value" of JSX <input> elements
+        - ALWAYS return a string
+
+    - To address this concern
+        - Instruct React HooK Form to return the attribute "value" as a number
+
+    - In the corresponding "register()" function call for the age field
+        - Pass an object as a 2nd argument
+        - In the object pass the boolean value "true" to the property "valueAsNumber"
+
+            <input
+            {...register("age", { valueAsNumber: true })}
+            id="age"
+            type="number"
+            className="form-control"
+            />
+
+    - Save changes and test code
+
+    - The <input> element of the "age" field
+        - Now returns an error message "Expected number, received nan"
+
+
+- To define a custom error message for the <input> element of the "age" field
+    - Go back to the defined schema stored in the constant "schema"
+        - In the associated ".number()" method of the "age" property
+        - Pass an object as a 2nd argument value
+
+     - Inside the object, assign a custom error message to the property "invalid_type_error"
+
+        const schema = z.object({
+            name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+            age: z.number({ invalid_type_error: "Age field is required."}).min(18),
+        });
+
+    - In the associated ".min()" method of the "age" property
+        - Pass an object as a 2nd argument value
+
+    - Inside the object, assign a custom error message to the property "message"
+
+        const schema = z.object({
+            name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+            age: z
+                .number({ invalid_type_error: "Age field is required." })
+                .min(18, { message: "Age must be at least 18." }),
+        });

@@ -1,17 +1,10 @@
+import React, { FormEvent, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-// Define the schema
-const schema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-  age: z
-    .number({ invalid_type_error: "Age field is required." })
-    .min(18, { message: "Age must be at least 18." }),
-});
-
-// Get the TypeScript type of the form fields
-type FormData = z.infer<typeof schema>;
+interface FormData {
+  name: string;
+  age: number;
+}
 
 const Form = () => {
   // Get a form object
@@ -19,7 +12,7 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  } = useForm<FormData>();
 
   // Submit handler
   const onSubmit = (data: FieldValues) => console.log(data);
@@ -32,14 +25,20 @@ const Form = () => {
         </label>
 
         <input
-          {...register("name")}
+          {...register("name", { required: true, minLength: 3 })}
           id="name"
           type="text"
           className="form-control"
         />
 
-        {/* Validation check error message */}
-        {errors.name && <p className="text-danger">{errors.name.message}</p>}
+        {/* Validation check error messages */}
+        {errors.name?.type === "required" && (
+          <p className="text-danger">The name field is required.</p>
+        )}
+
+        {errors.name?.type === "minLength" && (
+          <p className="text-danger">The name must be at least 3 characters.</p>
+        )}
       </div>
 
       <div className="mb-3">
@@ -47,14 +46,11 @@ const Form = () => {
           Age
         </label>
         <input
-          {...register("age", { valueAsNumber: true })}
+          {...register("age")}
           id="age"
           type="number"
           className="form-control"
         />
-
-        {/* Validation check error message */}
-        {errors.age && <p className="text-danger">{errors.age.message}</p>}
       </div>
 
       <button className="btn btn-primary" type="submit">
