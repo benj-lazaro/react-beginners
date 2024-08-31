@@ -1,10 +1,14 @@
 import React, { FormEvent, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
+import { z } from "zod";
 
-interface FormData {
-  name: string;
-  age: number;
-}
+// Define the schema by passing a configuration object
+const schema = z.object({
+  name: z.string().min(3),
+  age: z.number().min(18),
+});
+
+type FormData = z.infer<typeof schema>;
 
 const Form = () => {
   // Get a form object

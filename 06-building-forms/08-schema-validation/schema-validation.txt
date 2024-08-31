@@ -5,22 +5,23 @@ Schema-based Validation with Zod
     
     - As the form gets more complex
         - The validation rules will be all over the place
-        - To address this concern, use a technique called schema-based valiation
+        - To address this concern
+            - Use a technique called "schema-based valiation"
  
-    - Zod is one of the many 3rd-party libraries
-        - That allows to define form validation rules in a single place (schema)
+    - Zod is one of the many 3rd-party libraries that
+        - Allows to define all form validation rules in a single place (i.e. schema)
 
 
 - To install Zod via npm
 
     npm i zod@3.20.6
 
-    - In the event that Zod does NOT get included in the "package.json" file
-        - Run the command
-        
+    - In the event that Zod does NOT get included in the file "package.json"
+        - Clear the npm cache
+            
             npm cache clean --force
 
-        - To clear the npm cache that MIGHT have been corrupted
+        - Try to install Zod again
         
 
 - To define a schema for the project's form
@@ -28,18 +29,36 @@ Schema-based Validation with Zod
 
         import { z } from "zod";
 
-    - Using "z" to define the schema of the form & all of its validation rules
-        - Call z.object()
+    - Use "z" to define the form's schema and all of its validation rules
+        - Call the method ".object()" of z
 
-        - Pass a "configuration object" to the ".object()" method
-            - This object contains the properties that represents the form fields
-        
-            - The shape of the configuration object is as follows
-                - "name"    = type string with a minimum number of characters of 3
-                - "age"     = type number with a minimum value of 18
+        - Pass a "configuration object" as argument value to the method
+            - This contains the properties that represents the form's fields
+                - "name"    = of type "string" with a minimum number of characters of 3
+                - "age"     = of type "number" with a minimum value of 18
 
-        - Save the returned object from the method .object()" to a constant variable
-            - Commonly the constant is named "schema"
+        - The method ".object()" returns an object
+            - Save the object to a constant named "schema"
+            - "This object contains the form's schema"
+
+                const schema = z.object({
+                    name: z.string().min(3),
+                    age: z.number().min(18),
+                });
+
+        - The chained methods ".string()" and ".min()" are referred as "helper method"
+            - They help define validation rules in a form
+
+
+    - Remove the previously defined FormData "interface"
+        - Zod has a method ".infer" that allows to extract the data type from a schema object
+
+    - Call method .infer
+        - Followed by <typeof schema>
+        - This returns a TypeScript "type"
+        - Function similarly to an "interface"
+        - Store the returned result in a "type" named "FormData"
+
 
         - Delete the "inteface FormData" from the codebase
             - Zod has a method that allows to extract the type from a schema object
