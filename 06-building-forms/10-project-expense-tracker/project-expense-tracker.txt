@@ -1,0 +1,29 @@
+Project: Expense Tracker
+------------------------
+- Build a mini project, an Expense Tracker
+    - It has a form with the following fields
+        - Description
+        - Amount
+        - Category (drop-down list)
+            - Groceries
+            - Utilities
+            - Entertainment
+
+    - It has a Submit button
+        - Submitting a form without any values triggers custom error messages
+            - Description   = Description should at least be 3 characters
+            - Amount        = Amount is required
+            - Category      = Category is required
+
+    - It has another Category drop-down menu; filetered by the following
+        - All categories
+        - Groceries
+        - Utilities
+        - Entertainment
+
+        - Displays the list of expenses based on selected Category
+        - Each item has its own "Delete" button
+
+        - Bottom row displays the "Total" amount of expenses
+            - Dynamically updates
+            - When an item is added or deleted from the list
