@@ -1,0 +1,45 @@
+Disabling the Submit Button
+---------------------------
+- Last implementation for the section project
+    - Disable the Submit button
+    - When the data in the <Form /> component's fields are invalid
+    - Implemented using React Form Hook's property "isValid"
+    
+
+- Open the <Form /> component (Form.tsx)
+    - On the line code of that generates a form object using React Form Hook
+    - Pull the property "isValid" from "fromState" object
+    
+        const Form = () => {
+
+        const {
+            register,
+            handleSubmit,
+            formState: { errors, isValid },
+        } = useForm<FormData>({ resolver: zodResolver(schema) });
+        ...
+        }
+
+
+- Move to the JSX mark-up <button>
+    - Add the attribute "disabled"
+    - Assign the object {!sValid} as value
+
+        <button disabled={!isValid} className="btn btn-primary" type="submit">
+            Submit
+        </button>
+
+    - Save changes and test the code
+    
+
+- The Submit button remains disabled when
+    - The form fields are blank
+    - The form fields are filled with data that violates the validation rules
+
+    
+- NOTE: It is observed that the property "isValid" from the React Form Hook
+    - Prevents the custom error messages from appearing
+
+    - The custom error messages ONLY appear
+        - AFTER successfully submitting a set of correct data
+        - THEN folllowed by an entry with errornous data that violates the validation rules
