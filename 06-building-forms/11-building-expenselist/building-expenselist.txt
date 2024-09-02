@@ -1,0 +1,25 @@
+Building ExpenseList
+--------------------
+- Build the easiest component in the project
+    - Under the folder "src"
+        - Create a new folder named "expense-tracker"
+        - This folder will contain all the building blocks for the Expense Tracker app
+
+    - Inside the folder "expense-list"
+        - Create a new folder named "components"
+
+    - Inside the "components" folder
+        - Create a new file "ExpenseList.tsx"
+        - This component handles the
+            - Rendering of each item (expense) passed as Props (properties)
+            - Dynamically compute the total amount of the items
+
+    - On the <App /> component
+        - Import the <ExpenseList /> component
+
+        - Defines the dummy data (array of objects) 
+            - Passed as Props to the <ExpenseList /> component
+
+        - Handles the deletion of items from the dummy data
+            - Using State Hook
+            - Filters the array of dummy data except the targeted one for deletion
