@@ -1,41 +1,92 @@
 Rendering Lists
 ---------------
-- To render a list dynamically in JSX
-    - Use the method array.map()
-        - To each each item as individual JSX elements
-
-    - Pass a callback arrow function as argument value to .map()
-        - To iterate each item of the array
-
-            <array_name>.map((<array_item>) => {
-                <JSX_element> <array_item> </JSX_element>
-            });
-
-    - Insert the code into the returned JSX element within a pair of { } 
-
-        { <array_name>.map((<array_item>) => {
-            <JSX_element> <array_item> </JSX_element>
-        }) };
-
-    - Save changes and check browser
-
-    - The broswer's JavaScript console reports the following warning:
-
-        Warning: Each child in a list should have a unique "key" prop
-
-        - Reference (https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
+- In order to render a list of items dynamically in the JSX mark-up 
 
 
-- To add a unique key prop (property) that uniquely identifies each array item
-    - React NEEDS this to keep track of each item
-        - For adding or removing items dynamically
-        - In order for React to know which part of the page should be updated
+- Outside the "return" statement of the <ListGroup /> component
+    - Declare a constant named "items"
+        - Assign it with an array of string type
+        - Based on popular city names e.g. New York
 
-    - Think of the "key" property as an attribute to the JSX element
+            const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
-    - For the presented example
-        - Each item in the array is a unique string
-        - So this will be used (assigned) as the unique key for each item
+    - JSX does NOT have a for loop
+        - To iterate through the array items stored in the constant "items"
 
-    - On real-world application using APIs
-        - More often, each item has a property like "id"
+    - In JavaScript, an array has a method ".map()"
+        - That converts each item into an item of a different type
+
+
+- Implementing the array method ".map()" 
+    - To iterate through the items in the array
+        - Convert each item into a JSX mark-up with the array item embedded as content
+
+    - Pass an anonymous callback function as argument to the method ".map()"
+
+    - The callback function accepts individual array item as argument value 
+        - Under the variable name "item"
+
+    - Each "item" is then converted into individual JSX mark-up <li> element
+        - Inside the <li> element
+        - The value of each item stored in the variable "item" is dynamically rendered
+            - By enclosing the variable "item" within a pair of { }
+
+            items.map((item) => <li>{item}</li>)
+
+    - Move back to the content of the "return" statement
+        - Delete the hard-coded <li> elements
+
+    - Move the line of code that call the method ".map()" on the array "items"
+        - Within the <ul> elements
+
+        - Enclose the expression with a pair of { }
+            - As this is NOT allowed in the middle of a JSX mark-up
+            - EXCEPT for JSX elements or other React components
+
+                <ul className="list-group">
+                    {items.map((item) => (
+                    <li>{item}</li>
+                    ))}
+                </ul>
+
+    - Save changes
+        - Dynamically renders each array item into individual <li> element
+        - HOWEVER, the broswer reported the following JavaScript warning
+
+            Warning: Each child in a list should have a unique "key" prop
+
+
+- To address the reported JavaScript warning
+    - The warning meant that each JSX element <li> should have a "key" property
+        - The "key" property uniquely identifies each rendered array item
+    
+    - The React library NEEDS this to keep track of each item
+        - For adding or removing an item dynamically
+        - To know which part of the DOM (or page) should be updated
+
+    - Think of the JSX "property" similar like an HTML element's attribute
+
+    - When dynamically rendering array items using the ".map()" method
+        - Assign each item a "key" property a unique key
+        
+        - Since the items of the array are unique string values
+        - Assign the value of the variable "item"
+        - As value to the property "key"
+
+            <ul className="list-group">
+                {items.map((item) => (
+                <li key={item}>{item}</li>
+                ))}
+            </ul>
+
+    - Save changes
+
+    - On a real-world application where retrieved items is from an API 
+        - Each item is likely have a property named "id"
+        - That uniquely identifies the item
+    
+            <ul className="list-group">
+                {items.map((item) => (
+                <li key={item.id}>{item}</li>
+                ))}
+            </ul>

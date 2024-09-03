@@ -1,30 +1,40 @@
 Fragments
 ---------
-- In React, a component can NOT return more than ONE (JSX) element
-    - To address this, use Fragments
+- In React, a component is NOT ALLOWED to return more than one JSX element
+    - There are two ways to solve this problem
+        - Wrapping the multiple JSX elements w/in a pair of <div> elements
+            - However this adds one extra element in the DOM just to make React happy
+            - This is unnecessary
+
+        - Use a Fragment
+            - Similar to wrapping multiple JSX elements w/in a pair of <div> elements
+            - EXCEPT it does NOT render an extra element in the DOM
 
 
-- To implement a Fragment
-    - Import it from React
-
+- To import Fragments into a component
+    - Use the "import" statement
+    - To specifically import "Fragment" from the React library
+    
         import { Fragment } from "react";
 
-    - Enclose JSX elements within the pair of <Fragment>
+
+- To implement Fragments on a multiple JSX elements
+    -  Wrap the multiple JSX elements w/in a pair of <Fragment> elements
 
         <Fragment>
-        ...
+            {/* Multiple JSX elements here */}
         </Fragment>
 
-    - Save changes
 
+- An alternative implement
+    - Remove the recently defined "import" statement
+    
+    - Omit the word "Fragment" 
+        - Leaving behind an empty <> tags
 
-- A shorter Fragment implementation
-    - Remove the previous import statement
-
-    - Enclose the JSX elements within the pair <>
+        - Informs the React library to a Fragment
+            - On the enclosed multiple JSX elements
 
         <>
-        ...
+            {/* Multiple JSX elements here */}
         </>
-
-    - Save changes

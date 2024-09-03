@@ -1,8 +1,9 @@
 function ListGroup() {
   return (
+    // Fragment implementation
     <>
-      <h1>List</h1>
       <ul className="list-group">
+        <h1>List</h1>
         <li className="list-group-item">An item</li>
         <li className="list-group-item">A second item</li>
         <li className="list-group-item">A third item</li>
@@ -13,4 +14,5 @@ function ListGroup() {
   );
 }
 
+// Export the function as a default object from this module (i.e. component)
 export default ListGroup;

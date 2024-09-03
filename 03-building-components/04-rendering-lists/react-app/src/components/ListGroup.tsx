@@ -2,6 +2,7 @@ function ListGroup() {
   const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
   return (
+    // Fragment implementation
     <>
       <h1>List</h1>
       <ul className="list-group">
@@ -13,4 +14,5 @@ function ListGroup() {
   );
 }
 
+// Export the function as a default object from this module (i.e. component)
 export default ListGroup;

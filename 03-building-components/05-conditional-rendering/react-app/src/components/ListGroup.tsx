@@ -2,24 +2,13 @@ function ListGroup() {
   let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
   items = [];
 
-  // Using if statement
-  // if (items.length === 0)
-  //   return (
-  //     <>
-  //       <h1>List</h1>
-  //       <p>No item found</p>
-  //     </>
-  //   );
-
   return (
+    // Fragment implementation
     <>
       <h1>List</h1>
 
-      {/* Using Ternary operator */}
-      {/* {items.length === 0 ? <p>No item found</p> : null} */}
-
-      {/* Using logical AND technique */}
-      {items.length === 0 && <p>No item found</p>}
+      {/* Conditional rendering using a Logical AND operator */}
+      {items.length === 0 && <p>No items found</p>}
 
       <ul className="list-group">
         {items.map((item) => (
@@ -30,4 +19,5 @@ function ListGroup() {
   );
 }
 
+// Export the function as a default object from this module (i.e. component)
 export default ListGroup;

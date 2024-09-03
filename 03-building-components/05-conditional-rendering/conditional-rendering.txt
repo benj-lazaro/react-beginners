@@ -1,14 +1,133 @@
 Conditional Rendering
 ---------------------
 - To dynamically render content based on certain conditions
-    - Use an "if" statement or "ternary" operator
+    - Use an if statement to render the corresponding content
 
-    - Alternatively, use a logical AND operator 
-        - If the condition of the 1st operand is true
-            - It returns the value of the 2nd operand
-            
-            - Otherwise, the result of the entire expression is false
-                - Nothing will be rendered on the web page
+        // Conditional rendering using an if statement
+        if (items.length === 0)
+            return (
+            <>
+                <h1>List</h1>
+                <p>No item found</p>
+            </>
+            );
 
-        - NOTE: This is a common technique to render dynamic content
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+                <ul className="list-group">
+                    {items.map((item) => (
+                    <li key={item}>{item}</li>
+                    ))}
+                </ul>
+            </>
+        );
+
+    - This implementation introduces two <h1> elements
+        - That has serves the same purpose (i.e. list heading)
+        - Resulting to code duplication
+
+
+- To address this concern is by conditionally rendering content w/in the JSX mark-up
+    - Using the ternary operator 
+        - Enclosed within a pair of { }
+        - This allows the expression to run w/in the JSX mark-up
     
+    - It checks if the stated condition is true
+        - If it is, it renders the corresponding content
+        - Otherwise, returns "null" and nothing will be rendered
+
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+
+                {/* Conditional rendering using ternary operator */}
+                {items.length === 0 ? <p>No items found</p> : null}
+
+                <ul className="list-group">
+                    {items.map((item) => (
+                    <li key={item}>{item}</li>
+                    ))}
+                </ul>
+            </>
+        );
+
+    - Sometimes the implemented logic for the ternary operator may be too complicated
+        - It is also susceptible to "polluting" the JSX mark-up
+
+    - To address this concern
+        - Move the ternary operator's logic into a constant
+
+    - Then replace the former ternary operator logic with the constant
+
+        const message = items.length === 0 ? <p>No items found</p> : null;
+
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+
+                {/* Conditional rendering using ternary operator */}
+                {message}
+
+                <ul className="list-group">
+                    {items.map((item) => (
+                    <li key={item}>{item}</li>
+                    ))}
+                </ul>
+            </>
+        );
+
+
+    - Alternatively, the ternary operator's logic can be moved to an arrow function
+        - The benefit of using a function is that it can have parameters
+        - It can render different messages based on different conditions
+
+        const getMessage = () => (items.length === 0 ? <p>No items found</p> : null);
+
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+
+                {/* Conditional rendering using ternary operator */}
+                {getMessage()}
+
+                <ul className="list-group">
+                    {items.map((item) => (
+                    <li key={item}>{item}</li>
+                    ))}
+                </ul>
+            </>
+        );
+
+
+- There is a more concise way of rendering dynamic content conditionally
+    - Using the && operator (logical AND)
+
+    - If the condition evaluates to "true" (1st operand)
+        - The 2nd operand is returned
+
+    - If the condition evaluates to "false" (1st operand)
+        - The entire expresion evaluates to false
+        - Nothing will be rendered
+
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+
+                {/* Conditional rendering using a Logical AND operator */}
+                {items.length === 0 && <p>No items found</p>}
+
+                <ul className="list-group">
+                    {items.map((item) => (
+                    <li key={item}>{item}</li>
+                    ))}
+                </ul>
+            </>
+        );
+
+    - NOTE: This is a COMMON TECHNIQUE when rendering dynamic content conditionally
