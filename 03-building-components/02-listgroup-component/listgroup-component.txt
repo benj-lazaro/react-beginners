@@ -1,101 +1,103 @@
 Creating a ListGroup Component
 ------------------------------
-- Before creating a basic <ListGroup /> component
-    - Install Bootstrap
-        - A popular CSS library
-        - Provides a bunch of styling classes for styling the application
-        - Adds a modern look & feel to the component
-        - Website (https://getbootstrap.com/))
+- Install the Bootstrap library first
+    - Bootstrap is a popular CSS library
+        - It offers a bunch of styling classes
+        - It offers a modern look & feel on React components 
+        - Website (https://getbootstrap.com/)
+
+    - To install via npm
+
+        npm i bootstrap@5.2.3
 
 
-- Install Bootstrap (v.5.2.3) via npm
+- To import Bootstrap to the Vite-generated React application
+    - Open the folder named "src"
 
-    npm i bootstrap@5.2.3
+    - Open the file named "App.css"
+        - This contains the CSS styling for React components
+    
+    - Delete the generated CSS content
+        - Save changes
 
+    - Open the file named "main.tsx"
+        - This is where the Bootstrap library will be imported
 
-- To import Bootstrap into the React application
-    - Open the folder "src" 
-    - Open the file "App.css"
-        - This file contain the CSS styling for the React components
-        
-        - Delete the Vite-generated CSS
-        - Save changs
+    - Replace the Vite-generated "import" statement
 
-    - Delete the generated file "index.css"
-        - This file contains the CSS styling for the React application
+        import './index.css'
 
-    - Open the file "main.tsx"
-        - This is a TypeScript file
-        - Refactor the Vite-generated "import" statement
+    - With the following "import" statement
 
-            import './index.css'
-
-        - With:
-
-            import 'bootstrap/dist/css/bootstrap.css
+        import 'bootstrap/dist/css/bootstrap.css
 
         - Save changes
 
 
-- To verify Bootstrap installation & import
-    - Run the React app via npm
+- To verify Bootstrap installation
+    - Launcn the integrated terminal & run the React app via npm
 
         npm run dev
     
-    - Click (CTRL + left mouse click) the generated local URL
-        - To load and run the React app in the browser
-
+    - Perform a CTRL + <left-mouse click> on the generated Local URL address
+        
         VITE v4.5.3  ready in 828 ms
 
         ➜  Local:   http://localhost:5173/
         ➜  Network: use --host to expose
         ➜  press h to show help
 
-    - On the browser
-        - The message "Hello World" is positioned at the top-left corner
-        - Using a different font face
+    - Automatically launches the default browser
+        - Loads the React application
+
+        - The message "Hello World" is displayed
+            - Positioned at the top-left corner
+            - Rendered in a different font face
 
 
-- To create a ListGroup component
-    - Inside the folder "src"
-        - Create a new folder named "components"
-        - By convention, all components are to be stored here
+- To create a new React component named "ListGroup"
+    - Open the folder named "src"
 
-    - Inside the folder "components"
-        - Create a new file named "ListGroup.tsx"
-        - This is the <ListGroup /> component
+    - Create a new folder named "components"
+        - By convention, all React components will be placed here
 
-    - Open the file "ListGroup.tsx"
-        - Define a regular function named "ListGroup()"
-        - Inside the body
-            - Use a "return" statement 
-            - To return a JSX mark-up <h1> element
-            - The <h1> element contains the string "Hi World"
+    - Open the folder named "components"
+    
+    - Create a new file named "ListGroup.tsx"
+        - This is the source file of the <ListGroup /> component
 
-            <h1>Hi World</h1>
-        
-        - Use the "export" statement
-            - To export the function as a "default" object
-            - From this module (i.e. component)
+    - Open the file named "ListGroup.tsx"
+
+    - Declare a function named "ListGroup()"
+
+    - Inside the function
+        - Declare a "return" statement that returns a JSX element <h1>
+        - The JSX element <h1> contains the string "Hi World"
+
+            function ListGroup() {
+                return (
+                    <h1>Hi World</h1>
+                );
+            }
+
+    - Next line after the function "ListGroup()"
+        - Declare an "export" statement 
+        - Export the function "ListGroup()" as a "default object" from this module
 
             export default ListGroup;
 
-        - Save changes
 
+- To import the created component <ListGroup /> into the Vite-generated React application
+    - Open the file named "App.tsx"
 
-- Import the <ListGroup /> component into the <App />
-    - Open the file "App.tsx"
+    - Declare a new "import" statement
+        - To import the default object "ListGroup" from the module located at "./components/ListGroup"
+        - Remove the previous "import" statement for the component <Message />
 
-    - Use the import statement to import the <ListGroup /> component
-        - Technically it imports the exported object "ListGroup"
-        - From the module (or component) located in "./components/ListGroup"
+            import ListGroup from "./components/ListGroup";       
 
-            import ListGroup from "./components/ListGroup";
-
-    - Remove the previous example's import statemetn for the <Message /> component
-
-    - Refactor the "return" statement of the <App /> component's function "App()"
-        - Replacing the previous <Message /> component with <ListGroup />
+    - On the "return" statement of the function "App()"
+        - Replace the component <Message /> with <ListGroup />
 
             function App() {
                 return (
@@ -105,30 +107,34 @@ Creating a ListGroup Component
                 );
             }
 
-    - Save changes
-        - The <Message /> component's "Hi World" is replaced with <ListGroup /> component's "List Group"
+    - Save the changes
+        - The browser displays the content "Hi World"
+        - Replacing the <Message /> component's "Hello World"
 
 
-- Implement Bootstrap's component "List Group" into the <ListGroup /> component
-    - Copying the associated HTML mark-up and Bootstrap classes from their official website
+- To implement Bootstrap's own "List Group" component in the React component <ListGroup />
+    - Copy Bootstrap's "List Group" component's HTML mark-up 
         - Reference (https://getbootstrap.com/docs/5.3/components/list-group/)
 
     - Open the file "ListGroup.tsx"
-        - Refactor the "return" statement of the function "ListGroup()"
-        - Replace the content "List Group" by pasting the example code from Bootstrap website
 
-            <ul class="list-group">
-                <li class="list-group-item">An item</li>
-                <li class="list-group-item">A second item</li>
-                <li class="list-group-item">A third item</li>
-                <li class="list-group-item">A fourth item</li>
-                <li class="list-group-item">And a fifth one</li>
-            </ul>
+    - Delete the JSX <h1> element from the "return" statement
 
-    - Rename the HTML attribute "class" to "className"
-        - The "class" is a reserved keyword in TypeScript
+    - Paste Bootstrap's HTML mark-up
+        - Rename the HTML attribute "class" to "className"
+        - The name "class" is a reserved word in TypeScript
 
-    - Save changes
-        - Format the code using Prettier (CTRL + SHIFT + I)
-        - If TypeScript code is NOT automatically formatted on save
+        function ListGroup() {
+            return (
+                <ul className="list-group">
+                <li className="list-group-item">An item</li>
+                <li className="list-group-item">A second item</li>
+                <li className="list-group-item">A third item</li>
+                <li className="list-group-item">A fourth item</li>
+                <li className="list-group-item">And a fifth one</li>
+                </ul>
+            );
+        }
 
+    - Save the changes
+        - The browser displays nicely formatted list of items

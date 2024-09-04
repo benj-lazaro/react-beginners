@@ -6,6 +6,7 @@ function ListGroup() {
     <>
       <h1>List</h1>
       <ul className="list-group">
+        {/* Dynamically renders array items as an unordered list */}
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}

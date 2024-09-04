@@ -1,92 +1,131 @@
 Rendering Lists
 ---------------
-- In order to render a list of items dynamically in the JSX mark-up 
+- To render a list of items dynamically in the JSX mark-up of the <ListGroup /> component
+    - Open the file named "ListGroup.tsx"
 
 
-- Outside the "return" statement of the <ListGroup /> component
-    - Declare a constant named "items"
-        - Assign it with an array of string type
-        - Based on popular city names e.g. New York
+- Declare a constant named "items"
+    - Assign an array of items, each with the data type of string
+    - This serves as the source of the items list that will be dynamically rendered
+    
+        const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
-            const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
-    - JSX does NOT have a for loop
-        - To iterate through the array items stored in the constant "items"
+- In JSX, it does NOT have a for loop 
+    - To iterate through the items of the array
+        - A different approach is needed
 
     - In JavaScript, an array has a method ".map()"
-        - That converts each item into an item of a different type
+        - It iterates through the items of an array
+        - Then converts each item into a different type
 
 
-- Implementing the array method ".map()" 
-    - To iterate through the items in the array
-        - Convert each item into a JSX mark-up with the array item embedded as content
+- Call the method ".map()" on the array stored in the constant "items"
 
-    - Pass an anonymous callback function as argument to the method ".map()"
+    items.map()
 
-    - The callback function accepts individual array item as argument value 
-        - Under the variable name "item"
+    
+- Pass an arrow function as argument to the method ".map()"
 
-    - Each "item" is then converted into individual JSX mark-up <li> element
-        - Inside the <li> element
-        - The value of each item stored in the variable "item" is dynamically rendered
-            - By enclosing the variable "item" within a pair of { }
 
-            items.map((item) => <li>{item}</li>)
+- Declare the parameter variable "item" to the arrow function
+    - This holds the current item read from the array
 
-    - Move back to the content of the "return" statement
-        - Delete the hard-coded <li> elements
 
-    - Move the line of code that call the method ".map()" on the array "items"
-        - Within the <ul> elements
+- In the body of the arrow function, convert each item into a JSX element <li>
+    - Declare a JSX element <li>
 
-        - Enclose the expression with a pair of { }
-            - As this is NOT allowed in the middle of a JSX mark-up
-            - EXCEPT for JSX elements or other React components
+    - Embed the parameter variable "item" enclosed w/in a pair of {} as content to the JSX element <li>
 
+        items.map((item) => <li>{item}</li>)
+
+        
+    - NOTE: To render data dynamically in JSX
+        - Embed the source of data (i.e. variable) w/in a pair of {}
+
+
+- Within the <ListGroup /> component's "return" statement
+    - Delete all of the hard-coded <li> elements
+
+    - Declare a { }
+    
+    - Cut and paste the declared expression involing the method ".map()" w/in the pair of { }
+
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
                 <ul className="list-group">
-                    {items.map((item) => (
-                    <li>{item}</li>
-                    ))}
-                </ul>
 
-    - Save changes
-        - Dynamically renders each array item into individual <li> element
-        - HOWEVER, the broswer reported the following JavaScript warning
+                    {/* Dynamically renders array items as an unordered list */}
+                    {items.map((item) => (
+                        <li>{item}</li>
+                    ))}
+
+                </ul>
+            </>
+        );
+
+   - Save the changes
+        - The browser dynamically renders a list 
+            - Based on the contents of the array stored in the constant "items"
+
+        - HOWEVER, it reported the following JavaScript warning
 
             Warning: Each child in a list should have a unique "key" prop
 
+        - The warning meant that each JSX element <li> should have with a property "key"
+            - The property "key" uniquely identifies an array item
 
-- To address the reported JavaScript warning
-    - The warning meant that each JSX element <li> should have a "key" property
-        - The "key" property uniquely identifies each rendered array item
+        - React needs the property "key" in order to keep track of each item
+            - For adding / removing an item from the list dynamically
+            - To know which part of the DOM should be updated (and re-rendered)
+
+
+- To address the reported warning message
+    - Declare the property "key" in the JSX element <li>
+
+    - Assign the parameter variable "item" w/in the pair of { } as value
+        - The items in the array are unique string values 
+        - Sufficient to be considered as unique identifiers
     
-    - The React library NEEDS this to keep track of each item
-        - For adding or removing an item dynamically
-        - To know which part of the DOM (or page) should be updated
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+                <ul className="list-group">
 
-    - Think of the JSX "property" similar like an HTML element's attribute
+                    {/* Dynamically renders array items as an unordered list */}
+                    {items.map((item) => (
+                        <li key={item}>{item}</li>
+                    ))}
 
-    - When dynamically rendering array items using the ".map()" method
-        - Assign each item a "key" property a unique key
-        
-        - Since the items of the array are unique string values
-        - Assign the value of the variable "item"
-        - As value to the property "key"
-
-            <ul className="list-group">
-                {items.map((item) => (
-                <li key={item}>{item}</li>
-                ))}
-            </ul>
-
-    - Save changes
-
-    - On a real-world application where retrieved items is from an API 
-        - Each item is likely have a property named "id"
-        - That uniquely identifies the item
+                </ul>
+            </>
+        );
     
-            <ul className="list-group">
-                {items.map((item) => (
-                <li key={item.id}>{item}</li>
-                ))}
-            </ul>
+
+   - Save the changes
+        - The browser dynamically renders a list
+        - The JavaScript warning addressed
+
+
+- On a real-world application
+    - Where items are received from an remote API
+
+    - Each item will likely to have a property "id" that contains a unique identification
+
+        return (
+            // Fragment implementation
+            <>
+                <h1>List</h1>
+                <ul className="list-group">
+
+                    {/* Dynamically renders array items as an unordered list */}
+                    {items.map((item) => (
+                        <li key={item.id}>{item}</li>
+                    ))}
+
+                </ul>
+            </>
+        );

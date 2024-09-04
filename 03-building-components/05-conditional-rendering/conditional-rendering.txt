@@ -1,21 +1,30 @@
 Conditional Rendering
 ---------------------
-- To dynamically render content based on certain conditions
-    - Use an if statement to render the corresponding content
+- To render a list of items dynamically based on certain conditions
+    - If the array returns a length of greater than 0
+        - Dynamically render a list of cities
+        - Otherwise render only the list header
 
-        // Conditional rendering using an if statement
+
+- Using an if statement
+    - Declare an if statement, outside the JSX mark-up of the <ListGroup /> component
+    
+    - Implement the conditional logic and corresponding logic
+
         if (items.length === 0)
             return (
-            <>
-                <h1>List</h1>
-                <p>No item found</p>
-            </>
+                <>
+                    <h1>List</h1>
+
+                    <p>No item found</p>
+                </>
             );
 
         return (
             // Fragment implementation
             <>
                 <h1>List</h1>
+
                 <ul className="list-group">
                     {items.map((item) => (
                     <li key={item}>{item}</li>
@@ -24,26 +33,22 @@ Conditional Rendering
             </>
         );
 
-    - This implementation introduces two <h1> elements
-        - That has serves the same purpose (i.e. list heading)
-        - Resulting to code duplication
+    - This implementation, renders two JSX element <h1> that serves the same purpose (i.e. list header)
+         - Resulting to code duplication
 
 
-- To address this concern is by conditionally rendering content w/in the JSX mark-up
-    - Using the ternary operator 
-        - Enclosed within a pair of { }
-        - This allows the expression to run w/in the JSX mark-up
-    
-    - It checks if the stated condition is true
-        - If it is, it renders the corresponding content
-        - Otherwise, returns "null" and nothing will be rendered
+- Using a ternary operator
+    - Declare a pair of { } within the JSX mark-up of the <ListGroup /> component
+        - Preceeding the JSX element <ul>
+
+    - Declare a the conditional statement and corresponding logic
 
         return (
             // Fragment implementation
             <>
                 <h1>List</h1>
 
-                {/* Conditional rendering using ternary operator */}
+                {/* Conditional rendering using a ternary operator */}
                 {items.length === 0 ? <p>No items found</p> : null}
 
                 <ul className="list-group">
@@ -54,69 +59,72 @@ Conditional Rendering
             </>
         );
 
-    - Sometimes the implemented logic for the ternary operator may be too complicated
-        - It is also susceptible to "polluting" the JSX mark-up
+    - Susceptible of "polluting" the JSX mark-up
+        - If the implemented logic of the ternary operator becomes complicated
 
     - To address this concern
-        - Move the ternary operator's logic into a constant
+        - Move the ternary operator's logic into a constant outside the JSX mark-up
+        - Replace the content of the { } by referencing the name of the content
 
-    - Then replace the former ternary operator logic with the constant
+            const message = items.length === 0 ? <p>No items found</p> : null;
+        
+            return (
+                // Fragment implementation
+                <>
+                    <h1>List</h1>
 
-        const message = items.length === 0 ? <p>No items found</p> : null;
+                    {/* Conditional rendering using a ternary operator stored in a constant */}
+                    {message}
 
-        return (
-            // Fragment implementation
-            <>
-                <h1>List</h1>
-
-                {/* Conditional rendering using ternary operator */}
-                {message}
-
-                <ul className="list-group">
-                    {items.map((item) => (
-                    <li key={item}>{item}</li>
-                    ))}
-                </ul>
-            </>
-        );
+                    <ul className="list-group">
+                        {items.map((item) => (
+                        <li key={item}>{item}</li>
+                        ))}
+                    </ul>
+                </>
+            );
 
 
-    - Alternatively, the ternary operator's logic can be moved to an arrow function
-        - The benefit of using a function is that it can have parameters
+    - An alternative approach is moving the ternary operator's logic in an arrow function
+        - The benefit of this approach is that a function can have parameters
         - It can render different messages based on different conditions
 
-        const getMessage = () => (items.length === 0 ? <p>No items found</p> : null);
+            const getMessage = () => (items.length === 0 ? <p>No items found</p> : null);
 
-        return (
-            // Fragment implementation
-            <>
-                <h1>List</h1>
+            return (
+                // Fragment implementation
+                <>
+                    <h1>List</h1>
 
-                {/* Conditional rendering using ternary operator */}
-                {getMessage()}
+                    {/* Conditional rendering using a ternary operator stored in a constant */}
+                    {message}
 
-                <ul className="list-group">
-                    {items.map((item) => (
-                    <li key={item}>{item}</li>
-                    ))}
-                </ul>
-            </>
-        );
+                    <ul className="list-group">
+                        {items.map((item) => (
+                        <li key={item}>{item}</li>
+                        ))}
+                    </ul>
+                </>
+            );
 
 
-- There is a more concise way of rendering dynamic content conditionally
-    - Using the && operator (logical AND)
+- Using the && operator (Logical AND)
+    - The COMMON TECHNIQUE of rendering dynamic content conditionally
 
-    - If the condition evaluates to "true" (1st operand)
+    - Declare a pair of { } within the JSX mark-up of the <ListGroup /> component
+        - Preceeding the JSX element <ul>
+
+    - Declare a the conditional statement and corresponding logic
+        - If the conditional statements evaluates to "true" (1st operand)
         - The 2nd operand is returned
 
-    - If the condition evaluates to "false" (1st operand)
-        - The entire expresion evaluates to false
+        - If the conditional statements evaluates to "false" (1st operand)
+        - The entire expression evaluates to "false"
         - Nothing will be rendered
 
-        return (
-            // Fragment implementation
-            <>
+            return (
+                // Fragment implementation
+                <>
                 <h1>List</h1>
 
                 {/* Conditional rendering using a Logical AND operator */}
@@ -127,7 +135,5 @@ Conditional Rendering
                     <li key={item}>{item}</li>
                     ))}
                 </ul>
-            </>
-        );
-
-    - NOTE: This is a COMMON TECHNIQUE when rendering dynamic content conditionally
+                </>
+            );

@@ -1,40 +1,36 @@
 Fragments
 ---------
-- In React, a component is NOT ALLOWED to return more than one JSX element
-    - There are two ways to solve this problem
-        - Wrapping the multiple JSX elements w/in a pair of <div> elements
-            - However this adds one extra element in the DOM just to make React happy
-            - This is unnecessary
+- A React component is NOT ALLOWED to return more than one (1) JSX element
+    - Two (2) ways to address this concern
+        - Wrap multiple JSX elements w/in a pair of JSX <div> elements
+            - However this adds an extra JSX element in the DOM in order to make React "happy"
+            - This is NOT necessary
 
-        - Use a Fragment
-            - Similar to wrapping multiple JSX elements w/in a pair of <div> elements
-            - EXCEPT it does NOT render an extra element in the DOM
+        - Use a Fragment to wrap the multiple JSX elements
+            - This approach does NOT render an extra JSX element in the DOM
+            - Preferred approach
 
 
-- To import Fragments into a component
-    - Use the "import" statement
-    - To specifically import "Fragment" from the React library
+- To import Fragment into a React component
+    - Declare an "import" statement and specifically pull "Fragment" from the React library
     
         import { Fragment } from "react";
 
 
-- To implement Fragments on a multiple JSX elements
-    -  Wrap the multiple JSX elements w/in a pair of <Fragment> elements
+- To implement multiple JSX elements in a Fragment
+    - Wrap the elements w/in <Fragment>
 
         <Fragment>
             {/* Multiple JSX elements here */}
         </Fragment>
 
 
-- An alternative implement
-    - Remove the recently defined "import" statement
-    
-    - Omit the word "Fragment" 
-        - Leaving behind an empty <> tags
-
-        - Informs the React library to a Fragment
-            - On the enclosed multiple JSX elements
+- Alternatively, Fragment can be implmented without explicitly importing it
+    - Delete the previously declared "import" statement
+    - Remove the word "Fragment" & leave the <> </> tags behind
+    - This implicitly informs React that the multiple JSX elements are wrapped in a Fragment
 
         <>
             {/* Multiple JSX elements here */}
         </>
+
