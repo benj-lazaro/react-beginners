@@ -1,95 +1,170 @@
 Managing State
 ---------------
-- In order to highlight a rendered JSX <li> element when clicked
-    - Bootstrap's "active" class is required
-        - Adding this class into the JSX element's "className" property
-        - However, this results to ALL JSX <li> element being highlighted
+- To highlight the clicked item of the <ListGroup /> component
+    - Requires using the Bootstrap class "active"
+    - Add the class "active" to the JSX element <li> property "className"
 
-    - To address this, assign a ternary condition in the "className" property
-        - First, declare the variable selectedIndex outside of the return statement
-            - This variable will keep track of clicked JSX <li> element's index value
+        <li
+          className="list-group-item active"
+          key={item}
+          onClick={handleClick}
+        >
 
-            - Initialize the variable with the value of -1
-                - This meant that no JSX <li> elment is selected upon loading this component
-                - As the value of 0 refers to the index value of the 1st JSX <li> element
-
-    - Refactor the "className" property in order to dynamically load the Bootstrap classes
-        - By assigning a pair of { } 
-            - Implement a ternary statement inside the { }
-
-        - When the variable selectedIndex === index value of the clicked JSX <li> element
-            - Dynamically add the Bootstrap "active" to the "className" property
-            - Otherwise, load the Bootstrap class without the "active" class
-
-                className = {selectedIndex === index ? "list-group-item active": "list-group-item" }
-
-            - NOTE: This is a simple way to add/remove Bootstrap classes dynamically
-
-    - Refactor the JSX <li> element's "onClick" property
-        - In order to change the value assign to the variable selectedIndex
-            - When a JSX <li> element is clicked
-
-        - Remove the "handleClick" function from the "onClick" property
-            - Remove the associated event handler code & import (MouseEvent) statement
-
-        - Replace "handleClick" function with a simple arrow function
-            - The variable selectedIndex get assigned 
-                - With the clicked JSX <li> element's index value
-
-                    onClick = {() => selectedIndex = index}
-
-            - Save changes but nothing happened
-                - The variable selectedIndex is LOCAL ONLY to the component's function
-                - The React library is NOT aware of its existence
-                    - Making it unable implement the dynamic changes in the Virtual DOM
-
-            - To address this issue is to inform React
-                - That the component has data or state that MIGHT change over time
-
-                - By using the React built-in function "useState()"
-                    - Along with its associated import statement
-
-                        import { useState } from "react";
-
-            - The useState() function is called a Hook
-                - This is a function that allows you to tap into React's built-in features
-                - This is a State Hook
-
-    - To implement a State Hook using useState()
-        - Pass the value of -1 to useState()
-
-        - The useState() function returns an array with two elements
-            - 1st element   = State variable; assigns the argument value passed to the function
-            - 2nd element   = Updater function; updates the State variable's state (value)
-
-        - Destructure the returned array of useState() into individual constants
-            - 1st element assigned to selectedIndex (state variable) 
-            - 2nd element assigned to setSelectedIndex (updater function)
-            
-                const [selectedIndex, setSelectedIndex] = useState(-1);
-
-            - NOTE: This is a convention followed in React applications
-
-        - Delete the variable selectedIndex
-
-    - Refactor the assigned value to the "onClick" property
-        - Call the updater function setSelectedIndex()
-        - Pass the index value of the clicked JSX <li> element as an argument value
-
-            onClick = {() => setSelectedIndex(index); }
-
-        - Save changes
-
-        - When an JSX <li> element is clicked
-            - Loads the corresponding Bootstrap class "active" on the "className" property
-            - Informs the React library of the component's change of state
-            - React updates component in the Virtual DOM
+    - This results to all of the rendered items are highlighted or being "activated"
 
 
-- NOTE: Each React component is going to have its own state
-    - To demonstrate, open App.tsx
-    - Duplicate the <ListGroup /> component twice
-    - React updates the Virtual DOM with two <ListGroup /> component
+- To address this issue
+    - Requires a variable that keeps track of the selected list item's index value
+
+    - Declare a variable named "selectedIndex"
+        - Outside the <ListGroup /> mark-up
+            - Succeeding the line after the array declaration
+
+        - Assign an initial value of -1
+            - The value of 0 to the 1st item of the array a.k.a list item
+            - The value of -1 meant that NO item from the array is selected
+        
+        let selectedIndex = -1;
+
+
+- Back in the JSX mark-up
+    - Dynamically render the classes assign to the JSX element <li> property "className"
+        - Using a ternary operator
+
+    - Declare a pair of { } to the JSX element <li> property "className"
+
+    - Inside declare ternary operator logic
+        - If the value of the variable "selectedIndex" === "index"
+        - Assign the value of "list-group active" to the property "className"
+        - Otherwise assign the value of "list-group" instead
+
+        className={selectedIndex === index ? "list-group-item active" : "list-group-item"}
+
+    - NOTE: This is a simple way of dynamically adding / removing Bootstrap classes
+
+
+- To implement the logic of updating the value of the variable "selectedIndex"
+    - By assigning the rendered item's index value when clicked
+
+    - A simple arrow function is needed to update the variable "selectedIndex"
+
+    - In the JSX element <li> property "onClick"
+        - Delete the assigned Event Handler "handleClick"
+        - Delete the declared arrow function stored in the constant "handleClick"
+        - Delete the "important" statement for the "MouseEvent"
+
+    - Back to the JSX element <li> property "onClick"
+        - Declare an inline arrow function with NO parameter variable
+
+    - Inside the inline arrow function
+        - Assign the value of the variable "index" to the variable "selectedIndex"
+
+        <li
+          className={
+            selectedIndex === index
+              ? "list-group-item active"
+              : "list-group-item"
+          }
+          key={item}
+          onClick={() => (selectedIndex = index)}
+        >
+          {item}
+        </li>
+
+    - Save the changes
+        - Clicking a rendered item in the browser does NOT get highlighted
+        - The declared variable "selectedIndex" is local ONLY to the <ListGroup /> component
+        - React is NOT aware of its existence
+
+    - To addess this concern
+        - React NEEDS to be informed that the <ListGroup /> component 
+            - Contains data or state that MIGHT change over time
+
+        - This is implemented using React's built-in function named "useState()"
+
+    - To load the built-in function "useState()" in the <ListGroup /> component codebase
+        - Type "useS" 
+        - Wait for the auto-completion kicks-in and press ENTER
+        - Automatically loads the associated "import" statement & completes the function name
+
+
+- The built-in function "useState()" is specifically referred as a "State Hook"
+    - In general, a "hook" is a built-in function 
+        - That allows developers to tap into other built-in features of the React library
+
+    - A "State Hook" informs React that the <ListGroup /> component
+        - Contains data or state that MIGHT change over time
+
+    - The function "useState()" returns an array containing two (2) elements
+        - 1st element   = State variable; stores the initial value or current "state" 
+        - 2nd element   = Updater function; updates the value or "state" of the State variable
+                        = Informs React on the change of the "state"
+                        = React then re-renders the component in the DOM
+
+
+- Back in the <ListGroup /> component
+    - Declare the function "useState()" on the line after the previous variable declaration
+
+    - Pass the value of -1 as argument value
+        - This value gets assigned to the 1st element of the function "useState()" returned array
+
+    - Assign the returned array from the function "useState()" to the constant "arr"
+
+        const arr = useState(-1);
+
+    - HOWEVER, it is easier to work with the returned array by deconstructing it into two elements
+        - 1st element named as "selectedIndex" (variable where the value of -1 is stored)
+        - 2nd element named as "setSelectedIndex" (an updater function)
+
+        const [selectedIndex, setSelectedIndex] = useState(-1);
+
+        - NOTE: This is the convention followed in React applications
+
+
+- On the JSX element <li> property "onClick"
+    - Replace the entire inline arrow function with a call to the State Hook's "updater function"
     
-    - Clicking individual <li> elements from each <ListGroup />
-        - Are independent of each other
+    - Call the updater function "setSelectedIndex" 
+
+    - Pass the parameter variable "index" as argument value
+
+        <li
+            className={
+              selectedIndex === index
+                ? "list-group-item active"
+                : "list-group-item"
+            }
+            key={item}
+            onClick={() => setSelectedIndex(index)}
+        >
+          {item}
+        </li>
+
+    - Save the changes
+        - When a renedered list element is clicked
+        - The updater function "selectedIndex" updates the "state" of the variable "selectedIndex"
+    
+        - React gets informed of the changes
+            - Rre-renders the <ListGroup /> component
+
+            - Corresponding JSX element <li> property "className"
+                - Gets assigned with the property Bootstrap classes "list-group-item active"
+
+
+- NOTE: Each React component has its own state
+    - React keeps track of a component's state individually
+
+    - To demonstrate, import two identical <ListGroup /> components in the <App />
+
+        function App() {
+            return (
+                <div>
+                    <ListGroup />
+                    <ListGroup />
+                </div>
+            );
+        }
+
+
+    - After React renders both components in the DOM
+        - It independently keeps track of the clicked item on each <ListGroup /> component

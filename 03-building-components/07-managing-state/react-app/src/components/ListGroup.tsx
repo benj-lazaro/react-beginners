@@ -3,16 +3,19 @@ import { useState } from "react";
 function ListGroup() {
   let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
-  // State hook useState()
-  // Initializes and updates this component's state
+  // Deconstruct the returned array from useState()
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   return (
+    // Fragment implementation
     <>
       <h1>List</h1>
-      {items.length === 0 && <p>No item found</p>}
+
+      {/* Conditional rendering using a Logical AND operator */}
+      {items.length === 0 && <p>No items found</p>}
 
       <ul className="list-group">
+        {/* Renders <li> element for each item in the array */}
         {items.map((item, index) => (
           <li
             className={
@@ -21,9 +24,7 @@ function ListGroup() {
                 : "list-group-item"
             }
             key={item}
-            onClick={() => {
-              setSelectedIndex(index);
-            }}
+            onClick={() => setSelectedIndex(index)}
           >
             {item}
           </li>
@@ -33,4 +34,5 @@ function ListGroup() {
   );
 }
 
+// Export the function as a default object from this module (i.e. component)
 export default ListGroup;
