@@ -1,17 +1,19 @@
 Conditional Rendering
 ---------------------
 - To render a list of items dynamically based on certain conditions
-    - In the example code
-        - Declare a conditional statement
-        - If the condition is true or false
-        - Render the corresponding list with the list header intact
+
+
+- In the example code
+    - Declare a conditional statement
+    - If the condition is true or false
+    - Render the corresponding list with the header intact
 
 
 - Using an if statement
     - Declare an if statement
         - Outside the JSX mark-up of the <ListGroup /> component
     
-    - Implement the conditional logic and corresponding logic
+    - Implement the conditional logic and corresponding result
 
         if (items.length === 0)
             return (
@@ -44,7 +46,7 @@ Conditional Rendering
         - Inside the JSX mark-up of the <ListGroup /> component
         - Preceeding the JSX element <ul>
 
-    - Declare a the conditional statement and corresponding logic
+    - Declare a the conditional statement and corresponding result
 
         return (
             // Fragment implementation
@@ -118,13 +120,13 @@ Conditional Rendering
         - Inside the JSX mark-up of the <ListGroup /> component
         - Preceeding the JSX element <ul>
 
-    - Declare a the conditional statement and corresponding logic
-        - If the conditional statements evaluates to "true" (1st operand)
+    - Declare the conditional statement and corresponding result
+        - If the conditional statement evaluates to "true" (1st operand)
         - The 2nd operand is returned
 
-        - If the conditional statements evaluates to "false" (1st operand)
+        - If the conditional statement evaluates to "false" (1st operand)
         - The entire expression evaluates to "false"
-        - Nothing will be rendered
+        - No list will be rendered
 
             return (
                 // Fragment implementation
