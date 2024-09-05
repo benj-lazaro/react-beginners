@@ -5,13 +5,14 @@ Rendering Lists
 
 
 - Declare a constant named "items"
-    - Assign an array of items, each with the data type of string
-    - This serves as the source of the items list that will be dynamically rendered
+    - Assign an array of items
+    - Each item has the data type of string
+    - This array serves as the source of list items to be generated dynamically in the JSX mark-up
     
         const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
 
 
-- In JSX, it does NOT have a for loop 
+- Now JSX does NOT have a for loop 
     - To iterate through the items of the array
         - A different approach is needed
 
@@ -20,35 +21,29 @@ Rendering Lists
         - Then converts each item into a different type
 
 
-- Call the method ".map()" on the array stored in the constant "items"
+- To iterate through the items of the array
+    - Call the method ".map()" on the array stored in the constant "items"
 
-    items.map()
+        items.map()
 
-    
-- Pass an arrow function as argument to the method ".map()"
+    - Pass an arrow function as argument to the method ".map()"
 
+    - Declare the parameter variable "item" to the arrow function
+        - This holds the current item read from the array
 
-- Declare the parameter variable "item" to the arrow function
-    - This holds the current item read from the array
-
-
-- In the body of the arrow function, convert each item into a JSX element <li>
-    - Declare a JSX element <li>
-
-    - Embed the parameter variable "item" enclosed w/in a pair of {} as content to the JSX element <li>
+    - In the body of the arrow function
+        - Convert each item into its own JSX element <li>
+        - Embed the parameter variable "item" w/in a pair of { } as content to the JSX element <li>
 
         items.map((item) => <li>{item}</li>)
 
-        
     - NOTE: To render data dynamically in JSX
-        - Embed the source of data (i.e. variable) w/in a pair of {}
+        - Embed the data source (i.e. constant, variable) w/in a pair of { }
 
 
-- Within the <ListGroup /> component's "return" statement
+- Going back to the "return" statement of the <ListGroup /> component
     - Delete all of the hard-coded <li> elements
-
-    - Declare a { }
-    
+    - Declare a { }   
     - Cut and paste the declared expression involing the method ".map()" w/in the pair of { }
 
         return (
@@ -68,7 +63,7 @@ Rendering Lists
 
    - Save the changes
         - The browser dynamically renders a list 
-            - Based on the contents of the array stored in the constant "items"
+        - Based on the contents of the array stored in the constant "items"
 
         - HOWEVER, it reported the following JavaScript warning
 
@@ -110,9 +105,7 @@ Rendering Lists
         - The JavaScript warning addressed
 
 
-- On a real-world application
-    - Where items are received from an remote API
-
+- On a real-world application where the items are received from a remote API
     - Each item will likely to have a property "id" that contains a unique identification
 
         return (
