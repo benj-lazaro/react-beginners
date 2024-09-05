@@ -1,6 +1,6 @@
 Creating a ListGroup Component
 ------------------------------
-- Install the Bootstrap library first
+- Before creating a new component, install the Bootstrap library first
     - Bootstrap is a popular CSS library
         - It offers a bunch of styling classes
         - It offers a modern look & feel on React components 
@@ -11,7 +11,7 @@ Creating a ListGroup Component
         npm i bootstrap@5.2.3
 
 
-- To import Bootstrap to the Vite-generated React application
+- To import Bootstrap into the Vite-generated React application
     - Open the folder named "src"
 
     - Open the file named "App.css"
@@ -80,7 +80,7 @@ Creating a ListGroup Component
                 );
             }
 
-    - Next line after the function "ListGroup()"
+    - The line suceeding the function "ListGroup()" block
         - Declare an "export" statement 
         - Export the function "ListGroup()" as a "default object" from this module
 
