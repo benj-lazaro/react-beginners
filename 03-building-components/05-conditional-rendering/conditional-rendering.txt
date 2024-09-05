@@ -1,13 +1,15 @@
 Conditional Rendering
 ---------------------
 - To render a list of items dynamically based on certain conditions
-    - If the array returns a length of greater than 0
-        - Dynamically render a list of cities
-        - Otherwise render only the list header
+    - In the example code
+        - Declare a conditional statement
+        - If the condition is true or false
+        - Render the corresponding list with the list header intact
 
 
 - Using an if statement
-    - Declare an if statement, outside the JSX mark-up of the <ListGroup /> component
+    - Declare an if statement
+        - Outside the JSX mark-up of the <ListGroup /> component
     
     - Implement the conditional logic and corresponding logic
 
@@ -38,7 +40,8 @@ Conditional Rendering
 
 
 - Using a ternary operator
-    - Declare a pair of { } within the JSX mark-up of the <ListGroup /> component
+    - Declare a pair of { } 
+        - Inside the JSX mark-up of the <ListGroup /> component
         - Preceeding the JSX element <ul>
 
     - Declare a the conditional statement and corresponding logic
@@ -111,7 +114,8 @@ Conditional Rendering
 - Using the && operator (Logical AND)
     - The COMMON TECHNIQUE of rendering dynamic content conditionally
 
-    - Declare a pair of { } within the JSX mark-up of the <ListGroup /> component
+    - Declare a pair of { } 
+        - Inside the JSX mark-up of the <ListGroup /> component
         - Preceeding the JSX element <ul>
 
     - Declare a the conditional statement and corresponding logic
