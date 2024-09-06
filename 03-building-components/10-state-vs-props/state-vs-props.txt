@@ -1,26 +1,27 @@
 State vs Props
 --------------
-- The differences and similarities between State and Props are as follows:
+- The difference between Props and State
     - Props (Properties)
-        - Input (arguments) passed to a component
-        
-        - Similar to function arguments
+        - These are "inputs" passed to a component
 
-        - It is immutable (unchangeable)
-        
-        - Anytime a change is introduced in the props
-            - React re-renders the component 
-            - Updates the virtual DOM accordingly 
-        
+        - They are like function arguments
+
+        - Treat props as immutable (unchangeable or as READ-ONLY)
+            - Assigning a new value to a prop should NEVER be done within a component
+            
+            - Doing so is considered Anti-Pattern in React
+                - Based on the functional programming principles
 
     - State
-        - Internal data managed by a component
-            - That contains data that changes over time
+        - Refers to the internal data managed by a component
 
-        - Similar to local variables inside a function
-        
-        - It is mutable (changes over time)
-        
-        - Anytime a change is introduced in the state
-            - React re-renders the component 
-            - Updates the virtual DOM accordingly 
+        - They are like local variables inside a function
+
+        - A state is mutable 
+            - It informs React that a component has data that can change over time
+
+
+- The similarities of Props and State
+    - Anytime a change is introduced in either props or state
+
+    - React re-renders the component and updates the virtual DOM accordingly
