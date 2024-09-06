@@ -1,66 +1,149 @@
 Passing Data via Props
 ----------------------
-- Using props (properties) to make a React component reusable
-    - Props are the "inputs" to a component
+- Instead creating another React component for the same purpose (e.g. list of items)
+    - Make the component reusable
+        - By making it able to accept different types of items
+        - Then render a list from it
+
+    - This is made possible through the use of props (or properties)
+        - These props serve as an input to a React component
+        - Think of them in the similar vein as parameter variable(s) of a function
 
 
-- To make the React component <ListGroup /> reusable
-    - Design the shape (interface) of the input of the component
+- In the example code
+    - Instead of defining the array and JSX mark-up for the list heading w/in the component
 
-    - Use TypeScript's "interface" keyword
-        - Followed by a name; by convention the name "Props" is used
-        - Then a pair of { }
+        let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+        ...
+        return (
+            // Fragment implementation
+            <>
+            <h1>List</h1>
+            ...
+        )
 
-    - Inside the interface's { }, define the name and their corresponding types 
-        - items     = an array of string
-        - heading   = a string
+    - They should be passed as "input" to the <ListGroup /> component
 
+
+- First decide the "shape" of the input to the component
+    - For the <ListGroup /> component, it expects to receive an object w/ two (2) props
+        - items     = an array of strings
+        - heading   = a string for the list heading
+
+
+- To implement the "shape" of the <ListGroup /> component's input object
+    - Use the TypeScript's feature called an "interface"
+
+    - The "interface" defines the "shape" or interface of the component's input object
+
+        Syntax:
+
+        interface <name_of_component_interface> {
+            ...
+        }
+
+    - Declare an "interface" outside the <ListGroup /> component's JSX mark-up
+        - By convention, the name "Props" is used
+        - Alternatively, "Props" is prefixed with the component's name (e.g. ListGroupProps)
+
+    - Inside the body of the inteface
+        - Define the input object's props (ListGroupProps) name & data type
+        - Each prop definition is terminated by an ;
+
+            // Component interface
             interface Props {
                 items: string[];
-                heading: heading;
+                heading: string;
             }
 
-    - Refactor the function ListGroup()
-        - Define a parameter named "props" of type "Props"
+
+- Move to the declaration of the function "ListGroup()"
+    - Define a parameter variable named "props" with the data type of "Props"
+
+        function ListGroup(props: Props) {
+            ...
+        }
+
+    - Save the changes
+        - The <App /> component (App.tsx) reports an TypeScript compilation error
+
+            Type "{}" is missing the following properties from type "Props": items, heading
+
+        - TypeScript is saying that the imported <ListGroup /> component
+            - Is expecting two properties named "items" and "heading" as input
+            - These props have NOT been specified yet inside the <App /> component
+
+            function App() {
+
+                return (
+                    <div>
+                        <ListGroup /> // Warning on this line
+                    </div>
+                );
+            }
+
+
+- To address the reported warning
+    - Move back to the <ListGroup /> component (ListGroup.tsx)
+        - Select the array declaration saved into the constant named "items"
+        - Cut the entire array declaration 
         
-            function ListGroup(props: Props) { 
-                ... 
+    - Switch back to the <App /> component (App.tsx)
+        - Within the declaration of the function "App()"
+        - Paste the array declaration on the line above the component's JSX mark-up
+
+    - On the <App /> component's JSX mark-up
+        - Declare a property named "items" on the imported <ListGroup /> component
+            - Assign an object as value
+            - Inside the object is a reference to the constant "items" that stores the array
+
+        - Declare a 2nd property named "heading"
+            - Assign a static string "Cities" as value
+
+            function App() {
+                let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+
+                return (
+                    <div>
+                        <ListGroup items={items} heading="Cities" />
+                    </div>
+                );
             }
 
-        - Save changes
+    - Moving back to the <ListGroup /> component (ListGroup.tsx)
+        - With the reference to the array declaration moved into the <App /> component
+            - Triggers a TypeScript compilation error
 
-        - TypeScript complier throws an error
-            - Reminding that the <ListGroup /> component in App.tsx
-                - Is expecting an argument value of props: Props to be passed 
+                Cannot find name "items"
+        
+        - A solution is to prefix each instance of "items" with the parameter variable "props"
+            - e.g. props.items
+            - This works BUT makes the code repetitive and ugly
 
-    - Move the line of code declaring the variable "items"
-        - From ListGroup.tsx to App.tsx
-        - Paste it within the function App(); just above the "return" statement
-
-    - Still in App.tsx, refactor the <ListGroup /> component 
-        - By passing the interface Props' properties 
-        - Implement it similarly to setting attributes of an HTML element 
-
-            <ListGroup <Prop_name>={<dynamic_value>} <Prop_name>="<static_value>"/>
-
-            OR
-
-            <ListGroup items={items} heading="Cities"/>
-
-
-    - In the ListGroup.tsx, refactor the <ListGroup /> component
-        - Replace the parameter name "props" with the property names of interface Props
-            - By destructuring them within a pair of { }
+        - A BETTER SOLUTION is to
+            - Destructure the input object to be received from the <App /> component
+            - Replace the parameter variable "props" with the input object's individual properties
 
                 function ListGroup({items, heading}: Props) {
                     ...
                 }
+            
+            - This grants the <ListGroup /> component access to the input object's properties
+
+    - On the <ListGroup /> component's JSX mark-up
+        - Replace the hard-coded content of the JSX element <h1>
+            - With an object referencing the input object's property named "heading"
+
+                function ListGroup({ items, heading }: Props) {
+                    // Deconstruct the returned array from useState()
+                    const [selectedIndex, setSelectedIndex] = useState(-1);
+
+                    return (
+                        // Fragment implementation
+                        <>
+                            <h1>{heading}</h1>
+                            ...
+                    )
+                }
         
-
-        - Within the return statement
-            - Replace the static content of the JSX element <h1> 
-
-                <h1>List</h1>
-
-            - With the dynamic content from the interface Props' property "heading"
-                <h1>{ heading }</h1>
+        - Save the changes
