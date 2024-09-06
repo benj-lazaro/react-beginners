@@ -1,93 +1,127 @@
 Passing Functions via Props
 ---------------------------
-- In a real-world situation, a corresponding action is expected
-    - After an item in the <ListGroup /> component is selected (clicked)
-
-    - Implementing a piece of logic inside the <ListGroup /> component
-        - Makes the component NOT reusable anymore
-
-    - Requires a mechanism to inform the consumer / parent component (App component)
-        - That an item within the child component has been selected (clicked)
+- The React component <ListGroup /> is in a fairly good shape
+    - In a real-world scenario
+        - When an item in the list is clicked (and highlighted)
+        - A corresponding action is to be expected
+        - The action differs from one app to another
 
 
-- To address this requirement, open the file ListGroup.tsx
-    - Add a new property to the "Props" object (of type interface)
-        - This property is of a function type
-            - Takes an argument value of string (i.e. selected item from the list)
-            - Returns void (i.e. does NOT return a value)
+- In the example code
+    - Implementing the "action" logic inside the <ListGroup /> component
+        - Makes this component NOT reusable anymore
 
-        - NOTE: By convention, naming a property of type "function" inside the "Props" object
-            - Begins with the word "on"
-            - Followed by the type of event e.g. "SelectItem"
-            - e.g. "onSelectItem"
-            
-        - The property "onSelectItem" is assigned with an anonymous arrow function
-            - Takes a parameter "item" of type "string"
-            - Return "void"
+    - To address this concern, a mechanism is required to 
+        - Notify the consumer or "parent" component (i.e. <App />)
+        - That an event in the "child" component (i.e. <ListGroup />) has been triggered
 
+
+- To implement this mechanism
+    - On the <ListGroup /> component's interface "Props"
+        - Declare a 3rd property named "onSelectItem"
+            - Assign an arrow function
+            - With a parameter variable named "item" of data type string
+            - And returns void
+
+            // Component interface
                 interface Props {
-                    items: string[];
-                    heading: string;
-                    onSelectItem: (item: string) => void;
+                items: string[];
+                heading: string;
+                onSelectItem: (item: string) => void;
+            }
+
+        - By convention, a property that has the data type of a function
+            - It's name begins with the word "on"
+            - Followed by the event of event written in PascalCase (e.g. SelectItem)
+            - e.g. onSelectItem
+
+    - Save the changes
+        - The <App /> component reports a TypeScript compilation error
+
+            Property "onSelectItem" is missing in type "{items: string[], heading: string}" 
+            but required in type "Props"
+
+        - TypeScript is saying that the imported <ListGroup /> component
+            - The value for the property "onSelectItem" has NOT been specified
+
+
+- To address this concern
+    - Open the <App /? component (App.tsx)
+        - Proceed to the component's JSX mark-up
+
+    - On the imported <ListGroup /> component
+        - Declare an additional property named "onSelectItem"
+
+            return (
+                <div>
+                    <ListGroup
+                        items={items}
+                        heading="Cities"
+                        onSelectItem={}
+                    />
+                </div>
+            );
+
+    - Outside the JSX mark-up
+        - Declare a constant named "handleSelectItem"
+
+        - Assign an arrow function
+            - With a parameter variable named "item" of data type string 
+            - It displays the value of the parameter variable "item" on the browser's JavaScript console
+
+        - This function serves as an Event Handler
+
+            // Event handler
+            const handleSelectItem = (item: string) => {
+                console.log(item);
+            };
+
+    - Move to the imported <ListGroup /> component in the JSX mark-up
+        - On the property "onSelectItem"
+        - Reference the constant named "handleSelectItem" 
+
+            return (
+                <div>
+                    <ListGroup
+                        items={items}
+                        heading="Cities"
+                        onSelectItem={handleSelectItem}
+                    />
+                </div>
+            );
+
+    - Switch back to the <ListGroup /> component (ListGroup.tsx)
+        - On the declaration of the function "ListGroup()"
+        - Add the parameter variable named "onSelectItem"
+        
+            function ListGroup({ items, heading, onSelectItem }: Props) {
+                ...
+            }
+  
+    - Move down to the JSX mark-up 
+        - On the JSX element <li> property "onClick"
+            - Add the reference to the parameter variable "onSelectItem"
+            - Pass the parameter variable named "item"
+
+        - The parameter variable "onSelectItem" references a function
+            - Defined in the parent component <App />
+            - Keeping the <ListGroup /> component reusable
+            
+            <li
+                className={
+                selectedIndex === index
+                    ? "list-group-item active"
+                    : "list-group-item"
                 }
+                key={item}
+                onClick={() => {
+                    setSelectedIndex(index);
+                    onSelectItem(item);
+                }}
+            >
+                {item}
+            </li>
 
-        - Save changes
-            - A reported compilation error on the parent component App.tsx
-
-    - Open the file App.tsx
-        - Implement the additional property of the "Props" object in the <ListGroup /> component
-            - Implement it similarly to setting attributes of an HTML element
-            - Assign a separate event handler (to be written)
-
-            <ListGroup items={items} heading="Cities" onSelectItem={}/>
-
-
-        - Define a function expression that works as an event handler of type constant
-            - Placed outside the parent component's "return" statement
-
-            - NOTE: Event handler begins with the word "handle"
-            - Followed by the type of event e.g. "SelectItem"
-            - e.g. "handleSelectItem"
-
-            - It has a paremter "item" of type "string"
-            - It returns nothing (void)
-                - For this example, a console.log() statement is return
-                - Containing the name of the selected item
-
-                    const handleSelectItem = (item: string) => {
-                        console.log(item);
-                    };
-
-        - Update the <ListGroup /> component
-            - By assigning the event handler "onSelectItem" to "onSelectItem" property
-            - Save changes
-
-    - Move back to ListGroup.tsx
-        - Update the parameter of the function ListGroup()
-            - By adding the property "onSelectItem"
-
-                function ListGroup({ items, heading, onSelectItem }: Props) {
-                    ...
-                }
-
-        - On the "onClick" property
-            - Add a call to the property "onSelectItem" (w/c is a function)
-            - Then passing the "item" (clicked/selected item) as an argument value
-
-                <li
-                    className={
-                    selectedIndex === index
-                        ? "list-group-item active"
-                        : "list-group-item"
-                    }
-                    key={item}
-                    onClick={() => {
-                        setSelectedIndex(index);
-                        onSelectItem(item);
-                    }}
-                >
-                    {item}
-                </li>
-
-            - Save changes
-
+    - Save the changes
+        - When an item rendered by the the <ListGroup /> is clicked
+        - The corresponding name of the item is displayed on the browser's JavaScript console

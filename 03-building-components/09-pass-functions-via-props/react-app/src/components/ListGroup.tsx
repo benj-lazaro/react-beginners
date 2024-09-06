@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// Define the interface
+// Component interface
 interface Props {
   items: string[];
   heading: string;
@@ -8,14 +8,19 @@ interface Props {
 }
 
 function ListGroup({ items, heading, onSelectItem }: Props) {
+  // Deconstruct the returned array from useState()
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   return (
+    // Fragment implementation
     <>
       <h1>{heading}</h1>
-      {items.length === 0 && <p>No item found</p>}
+
+      {/* Conditional rendering using a Logical AND operator */}
+      {items.length === 0 && <p>No items found</p>}
 
       <ul className="list-group">
+        {/* Renders <li> element for each item in the array */}
         {items.map((item, index) => (
           <li
             className={
@@ -37,4 +42,5 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
   );
 }
 
+// Export the function as a default object from this module (i.e. component)
 export default ListGroup;
