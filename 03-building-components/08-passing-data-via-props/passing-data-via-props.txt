@@ -26,7 +26,7 @@ Passing Data via Props
 
 
 - First decide the "shape" of the input to the component
-    - For the <ListGroup /> component, it expects to receive an object w/ two (2) props
+    - For the <ListGroup /> component, it expects to receive an object w/ two (2) properties
         - items     = an array of strings
         - heading   = a string for the list heading
 
