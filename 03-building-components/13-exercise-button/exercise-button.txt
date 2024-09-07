@@ -5,3 +5,35 @@ Exercise: Building a Button Component
         - Reference (https://getbootstrap.com/docs/5.3/components/buttons/)
 
     - Encapsulate these buttons within a resuable React component
+
+    - When clicked, it returns a "clicked" message on the browser's JavaScript console
+
+    - BONUS: Add a default value for the color of the button
+        - Default = "btn-primary"
+
+
+- NOTE: To make the <Button /> component's interface prop "color" optional
+    - On the <Button /> component's interface
+        - Place a "?" right after the prop "color"
+
+            interface Props {
+                children: string;
+                color?: string;
+                onClick: () => void;
+            }
+    
+
+NOTE: To make the <Button /> component's interface prop "color" trigger a TypeScript compilation error
+    - When an invalid value is assigned
+    - Offers a list of valid values after declaring the prop "color"
+
+    - On the <Button /> component's interface
+        - Change the data type of the prop "color"
+        - Replace it with a list of valid string literals separated by a | operator
+
+            interface Props {
+                children: string;
+                color?: "primary" | "secondary" | "success";
+                onClick: () => void;
+            }
+        

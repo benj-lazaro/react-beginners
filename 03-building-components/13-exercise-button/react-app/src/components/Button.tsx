@@ -1,24 +1,15 @@
-import { ReactNode } from "react";
-
 interface Props {
   children: string;
-  // The "?" meant that this property is OPTIONAL
-  // color?: string;
-
-  // The string literal values prevents other colors from being used
-  color?: "primary" | "secondary" | "danger";
-
+  //   color?: string;
+  color?: "primary" | "secondary" | "success";
   onClick: () => void;
 }
 
-const Button = ({ children, color = "primary", onClick }: Props) => {
+const Button = ({ color = "primary", children, onClick }: Props) => {
   return (
-    <>
-      <button type="button" className={"btn btn-" + color} onClick={onClick}>
-        {children}
-      </button>
-      <span> </span>
-    </>
+    <button type="button" onClick={onClick} className={"btn btn-" + color}>
+      {children}
+    </button>
   );
 };
 
