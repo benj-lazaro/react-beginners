@@ -1,21 +1,29 @@
 Inspecting Components with React Dev Tools
-------------------------------------------
-- React Dev Tools is a browser extension
-    - For analyzing and inspecting React applications
+-------------------------------------------
+- React Developer Tools is a useful browser extension
+    - Used for analyzing and inspecting React applications
     - Available for Chrome, Firefox and Microsoft Edge browsers
 
 
-- To install
-    - Head to the website (https://react.dev/learn/react-developer-tools)
+- To install React Dev Tools
+    - Visit the website (https://react.dev/learn/react-developer-tools)
+    
     - Click the correponding browser
-    - Install extension
-    - Restart the browser
+        - Install extension
+        - Restart the browser
+    
     - Restart the React application (if not started)
-    - Browser's Dev Tools will include new items
-        - Components
-        - Profiler
+    
+    - Launch the browser's Developer Tools
+        - It will now have additional tabs
+            - Components
+            - Profiler
 
 
-- It offers 
+- React Developer Tools offers 
     - A better understanding on how components works
-    - A way to inspect their properties (props) and state 
+        - Inspect their properties (props) and state 
+
+    - A way to search for a specific component on larger React applications
+
+    - Inspect the matching DOM element of the component
