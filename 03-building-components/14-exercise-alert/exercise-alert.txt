@@ -1,9 +1,13 @@
 Exericse: Showing an Alert
 --------------------------
-- Render a Bootstrap Button using primary colors
-    - When clicked renders a dismissable Alert
-    - When the Alert's close button is clicked, it disappears
+- Based on the previous exercise's <Button /> component
+    - Render a single <Button /> component in <App />
 
-    - Alerts component (https://getbootstrap.com/docs/5.3/components/alerts/)
-    - Alerts dismissing (https://getbootstrap.com/docs/5.3/components/alerts/#dismissing)
-    
+    - When the component is clicked
+        - It renders a dismissable <Alert /> component
+            - Wher it is rendered with a close button
+            - When clicked the component is removed from the DOM
+            - Reference (https://getbootstrap.com/docs/5.3/components/alerts/#dismissing)
+
+        - A "child" of string data type is passed to the <Alert /> component
+            - The content is "My Alert" 
