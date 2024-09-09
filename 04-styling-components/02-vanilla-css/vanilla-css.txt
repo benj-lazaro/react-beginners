@@ -1,71 +1,86 @@
 Vanilla CSS
 -----------
-- To implement CSS styling on a React component using vanilla CSS
-    - Open the file "main.tsx"
-        - Remove the earlier import statement to load the Bootstrap CSS library
+- First approach for styling React components is using vanilla (or plain) CSS
+    - NOT recommended due to the available of useful 3rd-party libraries
+        - Bootstrap
+        - Material UI
 
-            import 'bootstrap/dist/css/bootstrap.css'
+    - Writing it all by hand is time consuming and tedious
 
-        - Save changes
 
-    - Open the "components" folder
+- On the example code
+    - Before styling the <ListGroup /> component using vanilla CSS
 
-    - Create a new folder named "ListGroup"
-        - Move the file "ListGroup.tsx" (component) to the folder
-        - To store related files inside the same folder
+    - Disable the previously imported Bootstrap library
+        - Open the folder "src"
 
-    - Inside the folder "ListGroup"
-        - Create a new file named "ListGroup.css"
-        - This is where vanilla CSS will be stored to style the <ListGroup /> component
+        - Open the file "main.tsx"
 
-    - Open "ListGroup.css"
-        - Define a CSS class selector named "list-group"
-            - Referencing the value assigned in the "className" attribute of the JSX <ul> element
+        - Delete the associated "import" statement
+
+    - Save the changes
+        - All of the stlying had been stripped off from the <ListGroup /> component
+
+
+- To stlyle the <ListGroup /> component from scratch using vanilla CSS
+    - In the folder "src/components"
+        - Create a new folder named "ListGroup"
         
-                <ul className="list-group">
-                    ...
-                </ul>
+    - Open the folder "ListGroup"
+        - Create a new CSS file named "ListGroup.css"
+        - Then move the <ListGroup /> component (ListGroup.tsx) into the folder "ListGroup"
 
-        - Implement the corresponding "list-style" & "padding" properties
-
-            .list-group {
-                list-style: none;
-                padding: 0;
-            }
-
-        - Save changes
-
-    - Create a new file named "index.ts"
-        - Import the component ListGroup
-
-            import ListGroup from "./ListGroup";
-
-        - Export the component as a default object
-
-            export default ListGroup
-
-        - This functions as an index file
-            - When the TypeScript compiler encounters a missing file from an import statement
-            - It looks up on this file on a local folder to check on exported default object(s)
-
-        - Save changes
-
-    - Open the file "App.tsx"
-        - Refactor the import statement for the <ListGroup /> component
-        
-            import ListGroup from "./components/ListGroup";
-    
-        - When the TypeScript compiler encouners this statement
-            - It searches for the file "index.ts"
-            - Loads the export default object (i.e. <ListGroup />)
-            - This is done to make the import statement cleaner
-
-
-    - Open the component "ListGroup.tsx"
+    - Open the <ListGroup /> component (ListGroup.tsx)
         - Import the CSS file "ListGroup.css"
 
             import "./ListGroup.css";
 
-        - Save changes
-    
-               
+        - Save the changes
+
+    - Open the file "ListGroup.css"
+        - Declare a class selector named "list-group"
+            - Set the property "list-style" to the value of "none"
+            - Set the property "padding" to 0
+
+                .list-group {
+                    list-style: none;
+                    padding: 0;
+                }
+
+        - Save the changes
+            - The React app broke due to the move of the <ListGroup /> component to a different folder
+            - Resulting to the <App /> component's import statement NOT working anymore
+
+
+- To address this concern
+    - Inside the folder "ListGroup"
+
+    - Create new file named "index.ts"
+
+    - Open the file "index.ts"
+        - Import the folder "ListGroup"
+        - Then export "ListGroup" as a default object
+
+            import ListGroup from "./ListGroup";
+                
+            export default ListGroup
+
+    - Save the changes
+        
+        - The file "index.ts" functions as an index file 
+            - Located within a component's folder
+
+        - When the TypeScript compiler references a missing file on the <App /> component's "import" statement
+            - Searches for the file "index.ts" inside the corresponding component's folder
+            - Opens the file
+            - Checks for exported default object(s)
+
+    - Move back to the <App /> component
+        - Use the "import" statement to reference the folder "ListGroup"
+
+            import ListGroup from "./components/ListGroup";
+
+    - Save the changes
+        - React app now working
+        - Rendered items from the <ListGroup /> component does NOT have bulletpoints
+        - Padding around each list item is removed
