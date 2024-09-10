@@ -1,88 +1,164 @@
 CSS Modules
 -----------
-- The problem with implementing styles on component using vanilla CSS
-    - It is prone to style clash
-    - Due to stylesheet of other components sharing the same CSS class selector name
+- Styling using vanilla CSS is prone to "style clash"
+    - Due to the respective stylesheet of other components sharing the same selector class name
 
 
-- To demonstrate
-    - Open the file "App.css"
-        - Stylesheet for the <App /> component
+- To demonstrate the "style clash" on the example code
+    - Open the CSS file for the <App /> component (App.css)
 
-    - Add a new CSS class selector named "list-group"
-        - Define the property "background-color"
-        - Assign it with the value of "red"
+    - Declare a new class selector named "list-group"
+        - Add a property named "background-color"
+        - Then assign it with the value of "red"
 
             .list-group {
-            background-color: red;
+                background-color: red;
             }
 
-        - Save changes
+    - Save changes
 
-    - Open the component "App.tsx"
+    - Next, open the <App /> component (App.tsx)
 
-    - Import the corresponding CSS file
+    - Import the file "App.css"
 
         import "./App.css";
 
-        - Save changes
+    - Save changes
+        - Vite reloads the React application
+        - The <App /> component's style clashes with that of the <ListGroup /> component
+        - Due to the respective CSS files using an identical class selector "list-group"
 
-    - Browser reloads
-        - Styling for <App /> and <ListGroup /> components clashes (merged)
-        - Due to sharing the identical CSS class selector name "list-group"
-            - On their respective CSS stylesheet
-
-
-- To address this problem
-    - A CSS module is basically a file on which defined class selector(s) are SCOPED LOCALLY
-    - Allows other CSS stylesheets to use identical class selector names
-
-    - Behind the scenes
-        - As part of bundling the React application
-        - Vite takes all CSS modules
-        - Then individually create unique names; eliminating styling clash
+    - To address this problem
+        - Use the second approach for styling React components called "CSS module"
 
 
-- To implement CSS modules
-    - Rename the stylesheet of the component
-        - Inserting the word "module"
-        - Between the stylesheet's filename and filename extension ".css"
-        - e.g. ListGroup.module.css
+- A CSS module is simply a CSS file
+    - In which all class selector(s) are SCOPED LOCALLY
+        - Just like a JavaScript module
 
-    - Open the component's corresponding stylesheet (ListGroup.css)
-        - Rename the class selector using the Camelcase naming convention
-            - From ".list-group" to ".listGroup"
+    - This allows the CSS file of React components to use identical class selector(s)
+        - Without worrying about a "style clash"
 
-        - This is due to TypeScript NOT considering "-" as a valid property name
-            - A workaround do exists but makes the code "noisy" and ugly
 
-    - Open the corresponding component (ListGroup.tsx)
-        - Update the import statement of the corresponding component
+- On the example code
+    - Rename the <ListGroup /> component's CSS file (ListGroup.css)
+        - Insert the word "module"
+            - Between the CSS filename and the ".css" extension
+            - e.g. ListGroup.module.css
+
+    - Open the <ListGroup /> component (ListGroup.tsx)
+        - Refactor the "import" statement to reflect the changes made on the CSS file
 
             import styles from "./ListGroup.module.css";
 
-        - The "styles" is a regular JavaScript object
-            - Wherein every defined class selector becomes a property
+        - Save the changes
+            - The "styles" is just a regular JavaScript object
+            
+            - It contains the defined class selector(s) from the imported CSS file
+                - These selector(s) are now properties of the "styles" object
 
-        - Updateh the JSX <ul> "className" property
-            - Assigning the object "styles.listGroup" as value
-
-                <ul className={styles.listGroup}>
-                    ..
+    - On the <ListGroup /> component's JSX mark-Update
+        - Refactor the value assigned to the property "className" of the JSX element <ul>
+            - Assign it with an empty object { }
+            - Inside assign the object "styles"
+            - Followed by the targeted class selector as property "list-group"
+    
+                <ul className={styles.list-group}>
+                    ...
                 </ul>
 
-        - Save changes
+        - A TypeScript compilation error is triggered
+            - This is due to the presence of a "-" character in the name of the class selector 
+                - This class selector is now a property of the "styles" object
+
+            - In TypeScript, the "-" character is NOT a valid property name
+                - When using the . notation
+            
+        - To address this concern
+            - Replace the . nottation with a [ ] notation
+            - Enclose the property "list-group" in a pair of " "
+            - Then assign it within the [ ]
+
+                <ul className={styles["list-group"]}>
+                    ...
+                </ul>
+
+        - Save the changes
+            - Vite reloads the React application
+            - The "style clash" is now resolved
 
 
-- To assign multiple CSS class selectors
-    - Place each "style.<class_selector>" object inside an array
-    - Then call chain the method .join()
-        - Passing " " (space) as argument value
+- How does this work
+    - Inspecting the rendered HTML element <ul> on the Browser
+        - Using Chrome's Dev Tools
     
-    - This allows multiple CSS class selectors to be assigned for the "className" property
+    - The assigned CSS class selector as value to the attribute "class" of the HTML element
+        - Contains additional random characters appended after the name of the class selector
+
+            <ul class="list-group_dvjk9_1">
+                ...
+            </ul>
+
+        - Making it unique
+
+
+- Behind the scenes
+    - As Vite bundles the React application
+    - It takes all of the CSS modules
+    - Then creates unique CSS class selectors
+    - Effectively eliminating the possibility of a "style clash"
+
+
+- Using the [ ] notation to reference properties of the object "styles" is ugly
+    - It is recommended to use . notation instead 
+
+    - First, refactor the name of class selector(s) of the React component's CSS file
+        - Using camelcase notation
+
+            .listGroup {
+                list-style: none;
+                padding: 0;
+            }
+
+        - Save the changes
+
+    - Then on the component's JSX mark-up
+        - Use the . notation on the property "className" of the target JSX element
+        - Reference the updated name of the class selector like a regular JavaScript object property
+
+            <ul className={styles.listGroup}>
+                ...
+            </ul>
+
+        - NOTE: The class selector is treated as a property of the object "styles"
+
+        - Save the changes
+
+
+- To assign multiple class selectors in the property "className" of a JSX element
+    - Wrap the selected properties (i.e. class selectors) of the object "styles" in an array
+    - Chain the method ".join()" to the array
+    - Pass a whitespace character as an argument value to the method ".join()"
+    - Save the changes
+
+
+- In order to assign multiple class selectors in a JSX element
+    - Place each defined class selector (i.e. property) of the "styles" object inside an array
+        - Each property is separated by a ,
+
+    - Chain the method ".join()" to the array
+        - Pass a whitespace to the method ".join()" as an argument value
+
+    - Then assign this expression enclosed in an object
+        - As value to the JSX element's property "className"
 
         <ul className={[styles.listGroup, styles.container].join(" ")}>
             ...
         </ul>
     
     - Save changes
+        - Vite reloads the React application
+        - The <ListGroup /> component's styling has been applied
+            - Defined class selectors used
+            - With no "style clash" against the <App /> component's styling
+            
