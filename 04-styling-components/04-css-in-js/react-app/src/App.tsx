@@ -1,22 +1,24 @@
 import ListGroup from "./components/ListGroup";
 import "./App.css";
 
-let items = ["New York", "Los Angeles", "San Francisco"];
-
-const handleSelectItem = (item: string) => {
-  console.log(item);
-};
-
 function App() {
+  let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+
+  // Event handler
+  const handleSelectItem = (item: string) => {
+    console.log(item);
+  };
+
   return (
     <div>
       <ListGroup
         items={items}
-        heading="Miami"
+        heading="Cities"
         onSelectItem={handleSelectItem}
       />
     </div>
   );
 }
 
+// Export the React App component
 export default App;

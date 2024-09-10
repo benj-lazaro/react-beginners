@@ -2,21 +2,18 @@ import { useState } from "react";
 import "./ListGroup.css";
 import styled from "styled-components";
 
-// Styled components for the <ul> mark-up; returns a React component
+// Returns React component(s) that contains the defined styles c/o styled-components
 const List = styled.ul`
   list-style: none;
   padding: 0;
 `;
 
-// Interface for the <ListItem /> component
-interface ListItemProps {
+interface ListItemPros {
   active: boolean;
 }
 
-// Styled components for the <li> mark-up
-// Assigned value for "background" property is based on the current value of property "active" (truthy/falsy)
-const ListItem = styled.li<ListItemProps>`
-  padding$: 5px 0;
+const ListItem = styled.li<ListItemPros>`
+  padding: 5px 0;
   background: ${(props) => (props.active ? "blue" : "none")};
 `;
 
@@ -27,7 +24,7 @@ interface Props {
 }
 
 function ListGroup({ items, heading, onSelectItem }: Props) {
-  const [selectedIndex, setSelectedIndex] = useState(0); // 1st list item selected (by default)
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <>
