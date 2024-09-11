@@ -1,25 +1,51 @@
 Inline Styles
 -------------
+- Fourth approach for styling React components is called "Inline Styles"
+
+
+- It uses the prop (property) "style" of an JSX element
+    - Similar to using the "style" attribute of an HTML element
+
+
 - CSS inline styles can also be used for styling components
     - Similar to how they are implemeneted in HTML documents
 
-    - Uses the JSX element's prop "style"
-        - Similar to that of the HTML element's "style" attribute
+    - It uses the camelcase notation on naming a property of a CSS selector
+        - e.g. "background-color" to "backgroundColor"
 
-        - The CSS property is named using camelcase convention
-            - e.g. "background-color" to "backgroundColor"
+    - Assigned value is expressed as an object
+        - Enclosed within a pair of { }
 
-        - The value is expressed as an object instead of a string
-            - Enclosed within a pair of {..}
+        - The object can also be defined outside the React component's JSX mark-up
 
-            - The object can also be defined outside the JSX markup
 
-                <ul className="list-group" style={{ backgroundColor: "yellow" }}>
-                    ...
-                </ul>
+- In the example code
+    - Open the <ListGroup /> component (ListGroup.tsx)
 
-    - This form of styling is NOT recommended
-        - It makes the codebase hard to read and to maintain
-        - It is considered a bad practice
-        - ONLY to be used on special cases (i.e. troubleshooting styles) or as a last resort
+    - In the JSX mark-up
+        - Declare the property "styles" on the JSX element <ul>
+        - Assign an empty object within the the pair of { } as value to the property "styles"
 
+        - Inside the empty object
+            - Declare the CSS property and corresponding value
+
+                return (
+                    <>
+                        <h1>{heading}</h1>
+                        {items.length === 0 && <p>No item found</p>}
+
+                        <ul className="list-group" style={{ backgroundColor: "yellow" }}>
+                            ...
+                        </ul>
+                        ...
+                    </>
+                );
+
+
+- This approach is NOT recommended
+    - It makes the JSX mark-up of the React component hard to read & maintain
+    
+    - This way of styling is considered a BAD practice 
+    
+    - Use it as a LAST RESORT
+    
