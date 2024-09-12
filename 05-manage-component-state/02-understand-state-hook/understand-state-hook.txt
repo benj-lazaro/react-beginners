@@ -1,53 +1,62 @@
 Understanding State Hook
 ------------------------
-- State Hooks allows us to add state to function components
+- State hooks adds state to a React component
 
 
-- React update State Hook(s) in an asynchronous manner (NOT applied immediately)
-    - State updates are batched
-    - Applied at once after ALL event handlers have finished execution
-    - Only then React re-renders a component
+- React updates a state asynchronously (i.e. NOT immediately)
     - This is done for performance reasons
-
-
-- When using State Hooks
-    - State Variables are created outside of a component
-
-    - React stores them in memory
-        - As long as the associated component is visible on screen (web page)
-
-    - As soon as a component is removed from the screen
-        - React destroys the component and associated State Variables
-
-
-- Call State Hooks at ONLY the top-level (beginning) of a function component
-    - State Variables are local identifiers to the function component
+        - Due to handling multiple state variables
     
-    - React is NOT aware of the State Variables' names
-        - They are stored in memory as an array
+    - React takes all of the state updates & batches them
+        - Applies the state updates at a later time (i.e. Event Handler)
+    
+    - After an Event Handler finishes its execution
+        - React applies state updates all at once
+        - Then re-renders the component with an updated state
+
+
+- When using the State hook
+    - The state variables are actually created & stored outside of the component in memory
+    
+    - A local variable declared inside a component
+        - That variable is scopled within that component
+    
+    - When the component finishes execution
+        - The local variable is removed from memory
+    
+    - The next time the component is rendered again in the DOM
+        - The local variable is re-initialized
+
+    - With a state variable
+        - The value or "state" is stored outside of the component & in memory
+
+        - The variable is automatically removed
+            - When the associated component is NO longer displayed in the DOM
+
+
+- Use State hooks at the top-level of a React component
+    - The state variables are local identifiers in a component
+
+    - React is NOT aware of the state variables' names
+    
+    - When using State hook, it tells React to
+        - Store the initial values of the state variables
+        - Most likely inside an array
+
+    - The next time React re-renders a component
+        - It looks inside at the array 
+        - Then grabs a value and store in the corresponding state variable
         
-    - Reeact solely relies on the order in which State Hooks are called
-        - To assign / map the values from the array to the State Variable of a State Hook
+        - NOTE: React relies on the of the array's elements
+        - In order to properly map the value(s) to the corresponding state variable
 
-        - To demonstrate, when a component with a State Hook is called / re-rendered
-            - React looks up at the array containing state value(s)
-            - Grabs the 1st array element (state value)
-            - Assigns / maps it to the State Variable of the 1st State Hook
-            - React proceeds with the suceeding array element
-            - Assigns / maps it to the State Variable of the succeeding State Hook
+        - This is the reason why State hooks can NOT be used in
+            - Conditional statements (e.g. if-else)
+            - Loops (e.g for loops)
+            - Nested functions
 
-        - Relies on the order of the array elements
-            - To properly assign / map the state value to the State Variable of a State Hook
+        - These constructs impacts the order in which the State hook variables are called
 
-        - When a component using State Hook is called or re-rendered
-            - React looks up at the array containing state values
-            - Grabs the 1st state value 
-            - Assigns / maps the value to the State Variable of the 1st State Hook
-            - React proceeds with the succeeding state value
-            - Assigns / maps the value to the State Variable of the suceeding State Hook
-            
-    - State Hooks can NOT be used within a conditional statements, loops or in nested functions
-        - These constructs impacts the ORDER in which State Hooks are called
+        - To ensure a consitent order
+            - Call State hooks at the top-level of a component
 
-        - To ensure consistent order
-            - State Hook(s) can ONLY be called at the top-level (beginning) of a component

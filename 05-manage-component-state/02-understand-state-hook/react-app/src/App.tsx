@@ -1,23 +1,22 @@
 import { useState } from "react";
 
 function App() {
-  // State hooks
-  // State values are stored in memory as an array [false, true]
-  // React is NOT aware of the name(s) of state variable(s)
-  // React relies on the order of the State Hook(s) to properly assign/map array value(s)
-  //  to the corresponding State Variable(s) 
-  //  e.g. isVisible = false; isApproved = true
+  // State hook variables isVisible & isApproved
+  // are stored outside of this component as elements of an array in memory
   const [isVisible, setVisibility] = useState(false);
   const [isApproved, setApproved] = useState(true);
+
+  // Local variable, get re-initialized everytime this component is re-rendered
+  let count = 0;
 
   // Event handler
   const handleClick = () => {
     setVisibility(true);
-    console.log(isVisible); // Retuns the previous value (false) instead of the current
-    
-    setApproved(false);
-    console.log(isApproved);
+    count++;
+    console.log(isVisible); // Displays the previous state value
   };
+
+  // State variables are updated ALL at once after the exeuction of the Event handler
 
   return (
     <div>
@@ -26,4 +25,5 @@ function App() {
   );
 }
 
+// Export the React App component
 export default App;
