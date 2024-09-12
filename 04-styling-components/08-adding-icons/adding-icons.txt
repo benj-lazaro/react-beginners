@@ -1,28 +1,68 @@
 Adding Icons
 ------------
-- To add icons to a component, use a popular library called React Icons
-    - It is a package of different icon libraries
+- In order to add icons to a React component
+    - Use a popular library called React Icons
+    - It is essentially a package of different icon libraries
 
 
-- To install via npm
-    - For this course, version 4.7.1 will be installed
+- To install React Icons via npm
+    - NOTE: version 4.7.1 will be used for the example code
 
         npm i react-icons@4.7.1
 
 
-- To use
-    - Proceed to the React Icons website (https://react-icons.github.io/react-icons/)
+- In the example code
+    - Proceed to the website of React Icons
+        - Website (https://react-icons.github.io/react-icons/)
 
-    - Search for preferred icon
-        - Click the desired icon
+    - Search for a "calendar" icon
+    
+    - Click the icon named "BsFillCalenderFill"  
+    
+    - Launches a dialog window that contains
+        - The icon's color palette 
 
-        - A new window will slide-in containing
-            - The "import" statement
-            - Name of the component
+        - The corresponding "import" statement
 
-        - Copy the import statement & component name
+            import { BsCalendarFill } from "react-icons/bs";
 
-    - Paste the import statement & component name on React app
+        - The component's name
 
-    - Save changes
+            <BsCalendarFill />
 
+    - Open the React application (App.tsx)
+        - Paste the "import" statement
+
+        - In the component's JSX mark-up, paste the component <BsCalendarFill />
+
+            import { BsCalendarFill } from "react-icons/bs";
+
+            function App() {
+                return (
+                    <div>
+                        <BsCalendarFill />
+                    </div>
+                );
+            }
+
+            // Export the React App component
+            export default App;
+
+    - Save the changes
+        - Vite reloads the React application
+        - Renders the calendar icon on the DOM
+    
+    - On the React component <BsCalendarFill />
+        - Declare the property "color"
+            - Assign the value "red"
+
+        - Declare the property "size"
+            - Assign the value of 40
+
+                <div>
+                    <BsCalendarFill color="red" size="40" />
+                </div>
+
+    - Save the changes
+        - Vite reloads the React application
+        - Renders the calendar icon in red with the size of 40px on the DOM

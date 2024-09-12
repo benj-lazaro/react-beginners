@@ -1,12 +1,12 @@
-import { BsFillCalendarFill } from "react-icons/bs";
+import { BsCalendarFill } from "react-icons/bs";
 
 function App() {
   return (
     <div>
-      {/* Set prop color to Red & size to 40 */}
-      <BsFillCalendarFill color="red" size="40" />
+      <BsCalendarFill color="red" size="40" />
     </div>
   );
 }
 
+// Export the React App component
 export default App;
