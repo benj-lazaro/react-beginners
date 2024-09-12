@@ -2,15 +2,20 @@ import styles from "./Button.module.css";
 
 interface Props {
   children: string;
-  color?: "primary" | "secondary" | "danger";
+  //   color?: string;
+  color?: "primary" | "secondary" | "success";
   onClick: () => void;
 }
 
-const Button = ({ children, color = "primary", onClick }: Props) => {
+const Button = ({ color = "primary", children, onClick }: Props) => {
   return (
-      <button type="button" className={[styles.btn, styles["btn-" + color]].join(" ")} onClick={onClick}>
-        {children}
-      </button>
+    <button
+      type="button"
+      onClick={onClick}
+      className={[styles.btn, styles["btn-" + color]].join(" ")}
+    >
+      {children}
+    </button>
   );
 };
 
