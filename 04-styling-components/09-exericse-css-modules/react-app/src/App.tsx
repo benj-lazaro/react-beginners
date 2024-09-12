@@ -1,4 +1,4 @@
-import Button from "./components/Button/Button";
+import Button from "./components/Button";
 
 function App() {
   return (
@@ -8,4 +8,5 @@ function App() {
   );
 }
 
+// Export the React App component
 export default App;

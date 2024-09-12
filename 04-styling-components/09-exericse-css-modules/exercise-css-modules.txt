@@ -1,6 +1,11 @@
 Exercise: Using CSS Modules
 ---------------------------
 - In the previous section
-    - A <Button /> component was created using Bootstrap
-    - For this exercise, style the component using CSS Modules
+    - The component <Button /> was created
+    
+    - Earlier in this section the "import" statement for Bootstrap was removed
+        - From the file main.tsx
+    
+    - For this exercise
+        - Style the component <Button /> using CSS modules
 
