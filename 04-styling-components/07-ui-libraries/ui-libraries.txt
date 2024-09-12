@@ -1,34 +1,35 @@
 Popular UI Libraries
 --------------------
-- Among the popular UI libraries that help quickly build beautiful & modern apps
+- UI libraries that help quickly build beautiful & modern applications
     - Bootstrap
-        - Offers a bunch of useful components
-        - Really easy to use
+        - It gives a bunch of useful components & really easy to use
 
     - Material UI
-        - An open-source React component library
-        - It has influenced Google's material design
-        - It is the design language used in Google products
-        - It help to ship products (apps) faster instead of writing UI by hand
+        - It is an open-source React component library that influenced Google's material design
+            - The design language used in Google products
+
+        - Use theses components to ships products (apps) faster
+            - Instead all of the styles by hand
 
     - Tailwind CSS
-        - A utility-first CSS framework
-        - It provides a bunch of small utility classes for styling components
-            - Instead of fully-fleshed UI components
-        
-        - It eliminates the need to write CSS by hand
+        - It is a utility-first CSS framework
+            - Instead of fully-fleshed component
+            - It gives a bunch of small utility classes used for styling components
 
-        - However, as the styles get more complicated
-            - The component's markup ends up with a lot of utility classes
+        - As the styles of a component gets more complicated
+            - The component's JSX mark-up will end up with a lot of utility classes
 
+
+- Alternatives to Tailwind CSS
     - Daisy UI
-        - Provides fully-fleshed components with cleaner markup
-        - A good alternative to Tailwind CSS
+        - It gives a fully-fleshed components with cleaner mark-up
+        - It is kind of similar to Bootstrap
 
     - Chakra UI
-        - A React component library built on top of Tailwind CSS
-            - Similar to Material UI
-            - BUT NOT as comprehensive
-            - It has all the essential UI components
+        - It is a React component library built on top of Tailwind CSS
+            
+        - It is similar to Material UI but NOT as comprehensive
+            - It has the essential UI components
             - It is very easy to learn
-            - Will be used on the course's projects
+            
+        - NOTE: Author's preference for the project of this course
