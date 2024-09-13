@@ -1,20 +1,21 @@
 import { useState } from "react";
 
 function App() {
-  // State hooks for user information stored in an object
+  // State hook on username
   const [person, setPerson] = useState({
-    firstName:"Mosh",
-    lastName: "Hamedani"
+    firstName: "John",
+    lastName: "Wick",
   });
-  
-  // State Hook for page spinner while waiting requested data from a remote server
-  const [isLoading, setIsLoading] = useState(false);
+
+  // State hook on page loading
+  const [isLoading, setLoading] = useState(false);
 
   return (
     <div>
-      { person.firstName } { person.lastName}
+      {person.firstName} {person.lastName}
     </div>
   );
 }
 
+// Export the React App component
 export default App;

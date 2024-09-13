@@ -1,60 +1,52 @@
 Choosing the State Structure
 ----------------------------
-- The following are best practices for choosing the State Structure
+- A few best practices on choosing the state structure 
 
 
-- AVOID redundant state variables that can be taken from existing variables
-    - Alternatively, store the values of State Variables inside a constant
-    - Then render the constant in the JSX mark-up
-    
-        function App() {
-            // State Hooks for user information
-            const [firstName, setFirstName] = useState("Mosh");
-            const [lastName, setLastName] = useState("Hamedani");
-            
-            // Store the values of State Variables of corresponding State Hooks in a constant
+- Avoid redundant state variables
+    - If a value to be rendered can be computed (i.e. derived) from existing state variables
+        - Declare a constant
+        - Store the computed values
+        - Then render the constant's value on the component's JSX mark-up
+
+            // State hook variables firstName & lastName
+            const [firstName, setFirstName] = useState("John");
+            const [lastName, setLastName] = useState("Wick");
+
             const fullName = firstName + " " + lastName;
+
+            return <div>{fullName}</div>;
+
+
+- For multiple state variables that are related 
+    - It is better to group them inside an object
+        - Assign the object to a state variable 
+        - Render the state variable on the component's JSX mark-up
+
+            // State hook on username
+            const [person, setPerson] = useState({
+                firstName: "John",
+                lastName: "Wick",
+            });
+
+            // State hook on page loading
+            const [isLoading, setLoading] = useState(false);
 
             return (
                 <div>
-                    {/* Render the value of the constant variable */}
-                    {fullName}
+                    {person.firstName} {person.lastName}
                 </div>
             );
-        }    
 
 
-- Group related State Variables inside an object
+    - NOTE: Avoid using deeply nested structures (e.g. object)
+        - They are hard to update
+        - Prefer to use a flat (i.e. single-level) structure
 
-    function App() {
-        // State hooks for user information stored in an object
-        const [person, setPerson] = useState({
-            firstName:"Mosh",
-            lastName: "Hamedani"
-        });
-            
-        // Unrelated State Hook
-        const [isLoading, setIsLoading] = useState(false);
-
-        return (
-            <div>
-                {/* Render the object's properties */}
-                { person.firstName } { person.lastName}
-            </div>
-            );
-        } 
-
-
-- When group related State Variables inside an object
-    - Avoid using deeply nested structures
-    - As they're difficult to update
-    - Preferably use a flat structure instead 
-
-        function App() {
-            // Deeply nested structure
+            // State hook on username using deeply nested structure
             const [person, setPerson] = useState({
-                firstName:"Mosh",
-                lastName: "Hamedani",
+                firstName: "John",
+                lastName: "Wick",
                 contact: {
                     address: {
                         street: ""
@@ -62,5 +54,11 @@ Choosing the State Structure
                 }
             });
 
-            ...
-        }
+            // State hook on page loading
+            const [isLoading, setLoading] = useState(false);
+
+            return (
+                <div>
+                    {person.firstName} {person.lastName}
+                </div>
+            );
