@@ -1,68 +1,109 @@
 Keeping Components Pure
 -----------------------
-- The fundamental concept in React called Purity
-    - In Computer Science, a Pure Function is a function
-        - Given the same input
-        - ALWAYS RETURNS the same result
+- In Computer Science, a pure function is a function
+    - Given the same input
+    - It ALWAYS returns the same result
+
+    - If a function is called 10 times and returns the same result
+        - The function is said to be pure
 
 
 - React is designed around the concept of Purity
-    - It expects every Component created to be a Pure Function
-
-    - Given the same input (props)
-        - It should always return (render) the same JSX mark-up
-
+    - It expects every created component to be a pure function
+        - If a component is given the same input (props)
+        - It ALWAYS renders the same JSX mark-up
+    
     - This is done for performance reasons
-        - If the props of a Component have NOT changed
-        - React skips re-rendering the Component
+        - If the input (props) of a component have NOT changed
+        - React can skip re-rendering the component
+
+    - How to keep component pure
+        - Keep changes OUT of the render phase
+
+        - It should NOT change any object that existed BEFORE rendering
+
+        - However, it is totally FINE to update an object as PART OF RENDERING
 
 
-- To keep a Component pure
-    - Keep changes out of the render phase
+- In the example code
+    - Open the <Message /> component (Message.tsx)
+        - Refactor the previous code to demonstrate in keeping the component pure
 
-        let count = 0;
-
-        const Message = () => {
-            return (
-                // The value of variable count ALWAYS return the same value of 0
-                <div>Message {count}</div>
-            )
-        }
-
-        export default Message
-
-
-    - Implementing changes in an object or variable in the render phase
-        - Makes the Component impure
-        - As it returns different a value whenever a Component is rendered
-
-        let count = 0;
-
-        const Message = () => {
-            count++; // Increments the value of the variable count
-
-            return (
-                // Returns a different value everytime the Component is rendered
-                <div>Message {count}</div>
-            )
-        }
-
-        export default Message
-
-
-- It is totally fine to update an object or value of a variable as part of rendering
-    - Moving the variable declaration inside the function
-    - ALWAYS returns the same incrmented value
-    - Everytime the Component is rendered
-
-        const Message = () => {
             let count = 0;
-            count++; // Consistently returns the value of 1 everytime the Component is rendered
 
-            return (
-                <div>Message {count}</div>
-            )
-        }
+            const Message = () => {
+                return <div>Message {count}</div>;
+            };
 
-        export default Message
+            // Export component as a default object from this module
+            export default Message;
+        
+        - Save the changes
+
+    - Then open the <App /> component (App.tsx)
+        - Call the <Message /> component three (3) times
+
+        - Save the changes
+            - Vite reloads the React application
+            - Renders the <Message /> component by displaying the following output in the DOM
+
+                Message 0
+                Message 0
+                Message 0
+
+            - This confirms that the <Message /> component is pure
+
+    - However, if changes is introduced as part of rendering the <Message /> component
+        - Move back to the <Message /> component (Message.tsx)
+
+        - Declare an increment statement within the component's JSX mark-up
+
+            let count = 0;
+
+            const Message = () => {
+                count++;    // Changes IN the render phase
+                return <div>Message {count}</div>;
+            };
+
+            // Export component as a default object from this module
+            export default Message;
+
+        - Save the changes
+            - Vite reloads the React application
+            - Renders the <Message /> component by displaying the following output in the DOM
+
+                Message 2
+                Message 4
+                Message 6
+
+            - This confirms that the <Message /> component is impure
+                - It returns a different result every time the <Message /> component is rendered
+                - Changes made IN the render phase
+            
+
+- Now, it is FINE to update an object (or value) as part of rendering
+    - On the example code
+        - Switch back to the <Message /> component (Message.tsx)
+
+        - Move the variable declaration of "count" within the JSX mark-up
+
+            const Message = () => {
+                let count = 0;
+                count++; 
+                return <div>Message {count}</div>;
+            };
+
+            // Export component as a default object from this module
+            export default Message;
+
+        - Save the changes
+            - Vite reloads the React application
+            - Renders the <Message /> component by displaying the following output in the DOM
+
+                Message 1
+                Message 1
+                Message 1
+
+            - This confirms that the <Message /> component is pure
+                - It consistently returns the same result every time the <Message /> component is rendered 
 

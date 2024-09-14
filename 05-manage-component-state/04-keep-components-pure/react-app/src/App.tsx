@@ -1,7 +1,6 @@
-import Message from "./components/Message";
+import Message from "./Message";
 
 function App() {
-  
   return (
     <div>
       <Message />
@@ -11,4 +10,5 @@ function App() {
   );
 }
 
+// Export the React App component
 export default App;
