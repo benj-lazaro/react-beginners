@@ -1,62 +1,149 @@
 Updating Nested Objects
 -----------------------
-- When updating the state of a nested object
-    - Using the spread operator (...) to copy the existing object's properties
-        - Performs a shallow copy
-        - It references to the same address in memory
-        - Updating the state of a property will "mutate" the existing object
+- When copying the properties of an existing state object to a new state object 
+    - Using the spread operator (...)
+    
+    - It performs a shallow copy of the existing state object
 
-            function App() {
-            // State Hook of a nested object
-            const [customer, setCustomer] = useState({
-                name: "John",
-                address: {
-                    city: "San Francisco",
-                    zipCode: 94111
-                }
-            });
-
-            // Event handler to update the property zipCode
-            const handleClick = () => {
-                setCustomer({...customer})  // Performs a shallow copy of the existing object
-            };
-            ...
-            }
+    - It returns the address of the existing state object to the new state object
+        - Now BOTH the new & existing state objects references the same address in memory
+        - This is NOT what you want
 
 
-- When updating the state of a React application
-    - The State Object MUST be completely INDEPENDENT of the existing object
+- When updating a property of a nested object assigned to an existing state object's property
+    - Create a new state object (or an empty object)
+    
+    - Copy the properties of the existing state object that will NOT be updated
+        - Using the spread operator (...)
+
+    - Next the property of the existing state object that holds a nested object
+        - Whose property's value will be updated
+
+        - Copy the nested object's properties that will NOT be updated
+            - Using the spread operator (...)
+            
+            - Pass the nested object's property name as argument value
+                - Prefixed with the existing state object's name
+                - e.g. {...<existing_state_object_name>.<nested_object_property_name>}
+
+        - Followed by the nested object's property name to be updated
+            - Assigned with a new value
+
+    - This new state object is INDEPENDENT from the existing state object
+
+    - Pass the new state object as argument to the set function of the declared State Hook
 
 
-- To update the state of a nested object
-    - Use the spread operator (...) to copy the existing object's properties
+- Important take-away when working with state objects
+    - AVOID using deeply nested structures
 
-    - Followed by a new property based on the parent property of the targeted nested property
+    - The deeper the structure
+        - The more complicated the logic required to update the object
 
-    - Pass an object to the new property containing
-        - Use the spread operator (...) parent property of the targeted nested property
+    - Prefer a flat structure over deeply nested ones
 
-    - Then assign the updated value to the targeted nested property
 
-        function App() {
-        // State Hook of a nested object
+- On the example code 
+    - Open the <App /> component (App.tsx)
+
+    - Use State Hook to declare a state object with the following properties
+        - name          = string data type
+        - address       = nested object with two (2) properties
+            - city      = string data type
+            - zipCode   = number data type
+
+    - Save the state object to the state variable "customer"
+
         const [customer, setCustomer] = useState({
-            name: "John",
+            name: "John Wick",
             address: {
                 city: "San Francisco",
-                zipCode: 94111
-            }
+                zipCode: 12345,
+            },
         });
 
-        // Event handler to update the property zipCode
+
+- The targeted property to be updated is the "zipCode"
+    - A property of the nested object 
+    - Assigned as value to the property "address" of the existing state object
+
+    - Use an Event Handler to update the value assigned to the property "zipCode"
+
+
+- Declare an Event Handler and assign it to the constant named "handleClick"
+    - Declare an anonymous arrow function
+    - Assign it as value to the constant "handleClick"
+
+        const handleClick = () => {};
+
+
+- In the anonymous arrow function
+    - Declare a new state object (i.e. an empty object)
+
+    - Inside the new state object
+        - First, copy the properties of the existing state object that will NOT be updated
+            - Using the spread operator (...)
+
+                {...customer}
+
+
+        - Next, declare the property "address" of the existing state object
+            - Where the nested object whose property "zipCode" will be update
+
+        - Pass an empty object as value
+
+                {...customer, address: {}}
+
+
+        - Inside the empty object assigned to the property "address"
+            - Copy the properties of the nested object using the spead operator (...)
+            - Pass the existing state object's name "customer" and property "address" as value
+
+                {...customer, address: {...customer.address}}
+
+            - The object assigned on the new state object property "address" 
+                - Is an INDEPENDENT copy from the existing state object
+
+
+        - Next declare the nested object's property "zipCode"
+            - Assign it with an updated value
+
+                {...customer, address: { ...customer.address, zipCode: 94222 }}
+
+
+    - Pass the new state object as argument to the set function (i.e. setCustomer()) 
+        - Of the declared State Hook
+
         const handleClick = () => {
-            setCustomer({...customer, address: {...customer.address, zipCode: 94222}})
+            setCustomer({
+                ...customer,
+                address: { ...customer.address, zipCode: 94222 },
+            });
         };
-        ...
-        }
-    
 
-- When working with State Objects, avoid using deeply nested structures
-    - The deeper the structure, the more complicated the logic to update the object
 
-    - Prefer a more flat structure over deeply nested ones
+- On the <App /> component's JSX mark-up
+    - Declare a two JSX element <p>
+        
+    - In-between, access the properties of the state object "customer"
+        - name
+        - address
+
+    - Next declare a JSX element <button>
+        - Pass the text "Click Me" in-between the JSX element <button>
+
+        - On the JSX element <button>
+            - Declare the prop "onClick"
+            - Assign the Event Handler named "handleClick" 
+
+            return (
+                <div>
+                    <p>Name: {customer.name}</p>
+
+                    <p>
+                        Address: {customer.address.city}, {customer.address.zipCode}
+                    </p>
+
+                    <button onClick={handleClick}>Click Me</button>
+                </div>
+            );
