@@ -1,47 +1,99 @@
 Updating Objects
 ----------------
-- When updating an object or array
-    - Treat them as Immutable; similar to props
+- It is better to group related state variables inside an object
 
 
-- To update an object or array
-    - Create a new object / array instead of mutating them
-    - Copy the properties of the 1st object
-    - Add the targeted property assigned with an updated value
-
-    // State Hook
-    const [drink, setDrink] = useState({
-        title: "Americano",
-        price: 5
-    });
-
-    // Update state by creating a new object
-    const handleClick = () => {
-        const newDrink = {
-            title: drink.title,     // Copies the original property
-            price: 6                // Targeted property with the updated value
-        };
-
-        setDrink(newDrink);
-    };
+- When dealing with state objects and arrays
+    - REMEMBER to treat them as immutable (or read-only)
 
 
-- Alternatively, the State Hook's 2nd argument (sets the state) can used to
-    - Create a new object and update the state of the original object
-        - This way of creating a new object is preferable
-        - If the original object has numerous properties
+- When updating a property of an object inside an Event Handler
+    - Instead of directly updating the targeted property of a state object
 
-    - Uses the spread operator (...) to copy the original object's properties
-        - Followed by the targeted property with an updated value
+    - Create a new object
+
+    - Copy the state object's properties using the spread operator (...)
+
+    - Followed by the targeted property to be updated
+        - Assigned with the updated value
+
+    - Pass the object as argument to the declared set function of the State Hook
+
+    - The Event Handler informs React whenever a state update occurs
+        - React re-renders the component in the DOM
+        - Along with the updated value of the targeted property
 
 
-    // State Hook
-    const [drink, setDrink] = useState({
-        title: "Americano",
-        price: 5
-    });
+- In the example code
+    - Open <App /> component (App.tsx)
 
-    // Update state by creating a new object
-    const handleClick = () => {
-        setDrink({...drink, price: 6});
-    };
+    - Declare a State Hook
+
+    - Pass an object with two (2) properties
+        - title = name of drink
+        - price = price of drink
+
+    - Name the state variable "drink" and set function "setDrink"
+
+        const [drink, setDrink] = useState({
+            title: "Americano",
+            price: 5,
+        });
+
+    - Declare a constant to store an Event Handler
+        - Name the Event Handler "handleClick"
+
+    - Then assign an anonymous arrow function
+
+        const handleClick = () => {};
+
+    - Within the anonymous arrow function
+        - Create a new object
+
+        - Copy the properties of the object within the state variable "drink"
+            - Using the spread operator (...)
+
+        - Followed by the property to be updated named "price"
+            - Assign it with a new value of 6
+
+                { ...drink, price: 6 }
+
+        - Pass the object as argument to the State Hook's set function "setDrink"
+
+            const handleClick = () => {
+                setDrink({ ...drink, price: 6 });
+            };
+
+
+    - Move to the <App /> component's JSX mark-up
+        - Declare a JSX element <p>
+        
+        - In-between the JSX element <p>
+            - Declare an object to access the properties
+                - title
+                - price
+
+        - Next declare a JSX element <button>
+            - Pass the text "Click Me" in-between the JSX element <button>
+
+        - On the JSX element <button>
+            - Declare the prop "onClick"
+            - Assign the Event Handler named "handleClick"
+
+                return (
+                    <div>
+                        <p>
+                            {drink.title} Price: {drink.price}
+                        </p>
+                        <button onClick={handleClick}>Click Me</button>
+                    </div>
+                );
+
+    - Save the changes 
+        - Vite reloads the React application
+
+        - Clicking the "Click Me" button
+            - React is informed of a state update
+
+            - It re-renders the <App /> component
+                - With the updated value of the state object's "price" property
