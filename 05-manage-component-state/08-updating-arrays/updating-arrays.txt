@@ -1,40 +1,176 @@
 Updating Arrays
 ---------------
-- The concept of updating the state of an object applies to an array
+- The concept behind updating a property of a state object
+    - Can also be applied to a state array
+
+    - Instead of directly updating an item of the existing state array
+        - Create a brand new state array
+        - Copy the items from the existing state array
+        - Followed by adding, removing or updating an item in the new state array
+        - Inform React regarding a state update 
+        - Then React re-renders the component in the DOM
+
+
+- To add an item into the array
+    - Create a brand new state array
     
+    - Copy the items of the existing state array
+        - Using the spread operator (...)
 
-- To add an element into the primary array
-    - Instead of working directly on the primary array
-        
-    - Use the 2nd parameter method
-        - Pass a new array as argument
-        - Use the spread operator (...) to copy the contents of the primary array
-        - Followed by the new item to be added into the new array
+    - Followed by the new item to be added into the array
+        - Separated by a comma
 
-
-- To remove an element from the primary array
-    - Instead of working directly on the primary array
-        
-    - Use the 2nd parameter method
-        - Call the .filter() method on the primary array
-
-        - Pass an arrow function as an argument value to .filter()
-            - Pass an argument variable (representing an array element)
-            - In the body of the function
-                - The value in the argument variable !== targeted element to be removed
-
+    - Pass the new state array as an argument value to the declared set function of the State Hook
     
-- To update an element on the primary array
-    - Instead of working directly on the primary array
-        
-    - Use the 2nd parameter method
-        - Call the .map() method on the primary array
-            - NOTE: There are other ways; this is the preference of the author
+    - React is informed of a state update
+        - Re-renders the component in the DOM
 
-        - Pass an arrow function as an argument value to .map()
-            - Pass an argument variable (representing an array element)
-            - In the body of the function
-                - Implement an ternary operation
-                - If the value of the argument variable === targeted element to be updated
-                    - Then update it with a new value
-                    - Otherwise assign the same value of the argument variable
+
+- In the code example
+    - Open the <App /> component (App.tsx)
+
+    - Inside the arrow function of the Event Handler "handleClick"
+        - Create a new array
+
+        - Copy the items of the existing state array using the spread operator (...)
+            - Followed by a comma
+
+        - Then the new item (e.g. "exciting") to be added into the array
+
+            [...tags, "exciting "]
+
+    - Pass the array as an argument value to the function "setTags()"
+
+        const handleClick = () => {
+            setTags([...tags, "exciting "]);
+        };
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Displays the current items in the array
+
+        - Clicking the "Click Me" button
+            - Adds the new item "exciting" into the array
+            - Then React re-renders the <App /> component in the DOM
+            
+
+- To remove an item from the array
+    - Call the method ".filter()" on the existing state array
+        - Pass an arrow function as an argument value to the method ".filter()"
+
+        - Inside the arrow function
+            - Declare a parameter variable
+                - That represents an item from the array (i.e. existing state array's shallow copy)
+
+        - Inside the function's body
+            - Declare an equality statement
+            - Where the value of the parameter variable is NOT equal 
+                - To the element to be removed from the array
+
+    - Returns a shallow copy of the existing state array
+        - EXCEPT for the removed item
+
+    - Pass the returned (shallow copy) array as an argument value to the declared set function of the State Hook
+    
+    - React is informed of a state update
+        - Re-renders the component in the DOM
+
+
+- In the code example
+    - Open the <App /> component (App.tsx)
+
+    - Inside the arrow function of the Event Handler "handleClick"
+        - Call the method ".filter()" on the existing state array "tags"
+
+            tags.filter()
+
+        - Pass an arrow function as an argument value to the method ".filter()"
+
+        - Inside the arrow function
+            - Declare a parameter variable named "tag"
+            - Represents an item in the array "tags"
+
+        - Inside the function's body
+            - Check if the current value in the variable "tag"
+            - Is NOT EQUAL to the targeted item "happy "
+
+        - Returns a shallow copy of the existing state array
+            - Without the targeted item "happy "
+
+    - Pass the existing state array's shallow copy as an argument value to the function "setTags()"
+    
+        const handleClick = () => {
+            setTags(tags.filter((tag) => tag !== "happy "));
+        };
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Displays the current items in the array
+
+        - Clicking the "Click Me" button
+            - Removes the item "happy " from the array
+            - Then React re-renders the <App /> component in the DOM
+            
+
+- To update an item in the array
+    - Call the method ".map()" on the existing state array
+        - Pass an arrow function as an arugment value to the method ".map()"
+
+        - Inside the arrow function
+            - Declare a parameter variable
+                - That represents an item from the array (i.e. existing state array's shallow copy)
+
+        - Inside the function's body
+            - Declare a ternary operator
+            - If the current value of the parameter variable is equal to the item to be updated
+                - Return the updated value
+                - Otherwise return current the value of the parameter variable (NO match found)
+
+    - Returns a new array
+        - Populated with the results from calling the arrow function on every item in the existing state array
+    
+    - Pass the new array as an argument value to the declared set function of the State Hook
+    
+    - React is informed of a state update
+        - Re-renders the component in the DOM
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Inside the arrow function of the Event Handler "handleClick"
+        - Call the method ".map()" on the existing state array "tags"
+
+
+    - Pass an arrow function as an argument value to the method ".map()"
+
+    - Inside the arrow function
+        - Declare a parameter variable named "tag"
+        - Represents an item in the array "tags"
+
+    - Inside the function's body
+        - Declare a ternary operator
+            - If the current value of the parameter variable "tag" 
+            - Is EQUAL to the targeted item "happy "
+            - Return the updated value "happiness "
+            - Otherwise return current the value of the parameter variable (NO match found)
+
+    - Returns a new array
+        - Populated with the items that passed the arrow function's ternary operation
+
+    - Pass the existing state array's shallow copy as an argument value to the function "setTags()"
+
+        const handleClick = () => {
+            setTags(tags.map((tag) => (tag === "happy " ? "happiness " : tag)));
+        };
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Displays the current items in the array
+
+        - Clicking the "Click Me" button
+            - Updates the item "happy " to "happiness" in the array
+            - Then React re-renders the <App /> component in the DOM

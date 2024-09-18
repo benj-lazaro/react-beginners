@@ -1,27 +1,28 @@
 import { useState } from "react";
 
 function App() {
-  // State Hook of an array
+  // State hook
   const [tags, setTags] = useState(["happy ", "cheerful "]);
 
   // Event handler
   const handleClick = () => {
-    // Add an element to the array
-    setTags([...tags, "exciting "]);
+    // Add new item in the array
+    // setTags([...tags, "exciting "]);
 
-    // Remove an element from the array
-    setTags(tags.filter((tag) => tag !== "happy "));
+    // Remove an item from the array
+    // setTags(tags.filter((tag) => tag !== "happy "));
 
-    // Update an element in the array
+    // Update an item in the array
     setTags(tags.map((tag) => (tag === "happy " ? "happiness " : tag)));
   };
 
   return (
     <div>
-      {tags}
+      <p>{tags}</p>
       <button onClick={handleClick}>Click Me</button>
     </div>
   );
 }
 
+// Export the React App component
 export default App;
