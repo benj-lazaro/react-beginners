@@ -145,7 +145,7 @@ Simplifying Update Logic with Immer
     - Save the changes
         - Vite reloads the React application
 
-        - Renders the objec items in the state array
+        - Renders the object items in the state array
 
         - Clicking the "Click Me" button
             - Change the property "fixed" of the targeted object item

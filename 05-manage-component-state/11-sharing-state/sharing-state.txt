@@ -1,10 +1,277 @@
 Sharing State between Components
 --------------------------------
-- When sharing state between (child) components
-    - The State Hook MUST be placed on the nearest parent component 
-    - The parent component shares the state to its children component using props
-    
+- Sometimes there is a need to share state with different React components
+    - An example would be an e-commerce site 
+        - Which likely have a <NavBar /> and a <ShoppingCart /> components
 
-- All the changes in the state SHOULD be done in the parent component
-    - The component that holds the state (i.e. parent component) 
-        - Is the one responsible for updating it
+        - When a user removes an item from the <ShoppingCart /> component
+            - The number of items in the <NavBar /> component gets updated in real-time
+
+        - These components need to share state & in-sync
+
+
+- To share state between React components
+    - The State Hook must be declared on the nearest parent component (e,g. <App /> component)
+
+    - The parent component is the one responsible
+        - For sharing states to its children components
+        - Using props
+
+    - All state updates SHOULD be performed on the parent component
+        - As the parent compoonent holds the current state
+            - It is the one responsible for updating the state
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Declare a State Hook using the function "useState()"
+        - Create an array that contains two (2) string items
+
+            uesState(["Product1", "Product2"]);
+
+        - Deconstruct the state array and assign to their state variable & set function
+            - state variable    = cartItems
+            - set function      = setCartItems
+
+            const [cartItems, setCartItems ] = uesState(["Product1", "Product2"]);
+
+        - Save the changes
+
+
+    - Create a child component named <NavBar />
+        - In the folder "src/components"
+            - Create a new file named "NavBar.tsx"
+
+        - Use the shortcut "rafce" 
+            - To implement the function component boilerplate code
+
+    - In the <NavBar /> component
+        - Define the shape of the component's props
+
+        - The function of this child component is to display
+            - The current number of items in the state array
+
+        - Declare the prop named "cartItemCount"
+            - Give it a data type of number
+
+                interface Props {
+                    cartItemsCount: number;
+                }
+
+        - In the component's arrow function
+            - Pass the desconstructed prop "cartItemCount" as argument value
+                - With the data type of Props
+
+                const NavBar = ({ cartItemsCount }: Props) => {
+                    return <div>NavBar</div>;
+                };
+
+        - Update the content of the component's JSX mark-up 
+            - To render the content of the prop "cartItemCount"
+
+                const NavBar = ({ cartItemsCount }: Props) => {
+                    return <div>NavBar: {cartItemsCount}</div>;
+                };
+
+        - Save the changes
+
+
+    - Create a child component named <Cart />
+        - In the folder "src/components"
+            - Create a new file named "Cart.tsx"
+
+        - Use the shortcut "rafce" 
+            - To implement the function component boilerplate code
+
+    - In the <Cart /> component
+        - Define the shape of the component's props
+
+        - The function of this child component is to display
+            - The current items stored in the state array (i.e. shopping cart)
+
+        - Declare the prop named "cartItems"
+            - Give it data type of an array of string
+
+                interface Props {
+                    cartItems: string[];
+                }
+
+        - In the component's arrow function
+            - Pass the desconstructed prop "cartItems" as argument value
+                - With the data type of Props
+
+                export const Cart = ({ cartItems }: Props) => {
+                    return <div>Cart</div>;
+                };
+
+        - Update the content of the component's JSX mark-up
+            - Declare a fragment
+                - Wrap the JSX element <div> within the fragment
+
+            - Declare a JSX element <ul> inside the fragment
+            
+            - Inside the JSX element <ul>
+                - Declare an empty object
+
+                <>
+                    <div>Cart</div>
+                    <ul>
+                        {}
+                    </ul>
+                </>
+
+            - Inside the empty object
+                - Call the method ".map()" on the prop "cartItems"
+
+            - Pass an arrow function as argument value to the method ".map()"
+
+                <>
+                    <div>Cart</div>
+                    <ul>
+                        {cartItems.map(() => {})}
+                    </ul>
+                </>              
+
+            - Inside the arrow function
+                - Declare the parameter variable "item"
+                - This holds the current item in the state array
+
+                <>
+                    <div>Cart</div>
+                    <ul>
+                        {cartItems.map((item) => {})}
+                    </ul>
+                </>     
+
+            - Inside the body of the arrow function
+                - Declare a JSX element <li>
+                    - Declare the prop "key"
+                    - Assign the parameter variable "item" as value
+                
+                - Inside the JSX element <li>
+                    - Render the content of the parameter variable "item"
+
+                <>
+                    <div>Cart</div>
+                    <ul>
+                        {cartItems.map((item) => {
+                            <li key={item}>{item}</li>
+                        })}
+                    </ul>
+                </>                       
+
+        - Save the changes
+
+
+    - Switch back to the <App /> component (App.tsx)
+        - Import the React components <NavBar /> and <Cart /> using the "import" statements
+
+            import NavBar from "./components/NavBar";
+            import Cart from "./components/Cart";
+
+        - On the <App /> component's JSX mark-up
+            - Insert the component <NavBar />
+                - Declare the property "cartItemCount"
+                - Pass the property ".length" on the state variable "cartItems"
+                - Then assign it as a value to the property "cartItemCount"
+
+                <NavBar cartItemsCount={cartItems.length} />
+
+            - Insert the component <Cart />
+                - Declare the property "cartItems"
+                - Pass the start variable "cartItems" as value 
+
+                <Cart cartItems={cartItems}></Cart>
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Renders the components <NavBar /> and <Cart /> in the DOM
+            - Displays the content of the state array
+
+    - Back to the <Cart /> component
+        - Add a JSX element <button>
+            - Just beneath the JSX element <ul>
+            - Place the text "Clear" as content
+
+        - The purpose of this element is that when clicked
+            - It clears the content of the state array (i.e. shopping cart)  
+
+        - Declare the property "onClick"
+            - NOTE: Treat props "cartItems" as immutable
+                - This prop will NOT be modified on this component
+                - Instead notifies the <App /> component that a state update has occurred
+
+            - All of the changes in the state 
+                - MUST be performed in the parent component (i.e. <App /> component)
+
+            return (
+                <>
+                    <div>Cart</div>
+                    <ul>
+                        {cartItems.map((item) => (
+                        <li key={item}>{item}</li>
+                        ))}
+                    </ul>
+                    <button onClick={}>Clear</button>
+                </>
+            );
+
+        - Back to the interface of the <Cart /> component
+            - Add a new prop named "onClear"
+            - Assign an arrow function with NO parameter that returns void
+        
+            interface Props {
+                cartItems: string[];
+                onClear: () => void;
+            }
+
+        - Pass the desconstructed prop "onClear" as an argument value
+            - To the component's arrow function
+
+        - On the JSX element <button>
+            - Assign the desconstructed prop "onClear" as the value to the prop "onClick"
+
+            export const Cart = ({ cartItems, onClear}: Props) => {
+                return (
+                    <>
+                    <div>Cart</div>
+                    <ul>
+                        {cartItems.map((item) => (
+                        <li key={item}>{item}</li>
+                        ))}
+                    </ul>
+                    <button onClick={onClear}>Clear</button>
+                    </>
+                );
+            };
+
+        - Save the changes
+
+
+    - Switch back to the <App /> component (App.tsx)
+        - On the <Cart /> component 
+            - Declare the prop "onClear" 
+            - Assign an arrow function as value
+
+            <Cart cartItems={cartItems} onClear={() => {}}></Cart>
+
+        - Inside the arrow function
+            - Call the set function "setCartItems()"
+            - Pass an empty array as value
+
+            <Cart cartItems={cartItems} onClear={() => setCartItems([])}></Cart>
+
+    - Save the changes
+        - Vite reloads the React application
+            - Renders the <NavBar /> and <Cart /> components in the DOM
+
+        - Clicking the "Clear" button
+            - Clears out the content of the state array
+
+            - React re-renders the <NavBar /> and <Cart /> components in the DOM
+                - The <NavBar /> component reports 0 items
+                - The <Cart /> component has NO items to display
+
+                - Verifies that both <NavBar /> and <Cart /> components are in-synced
