@@ -10,8 +10,7 @@ Updating Array of Objects
         - Pass an arrow function as an arugment value to the method ".map()"
 
         - Inside the arrow function
-            - Declare a parameter variable
-                - That represents an item from the array (i.e. existing state array's shallow copy)
+            - Declare a parameter variable that represents an object item from the array
 
         - Inside the function's body
             - Declare a ternary operator

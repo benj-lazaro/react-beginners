@@ -1,48 +1,154 @@
 Simplifying Update Logic with Immer
 -----------------------------------
-- Updating the state of objects in an array without mutation
+- Updating object items in a state array without mutation
     - Can be complicated and repetitive
-    - To simplify the update logic, use the "Immer" library
+    - Use the Immer library to simplify the "update" logic
     
-    - Behind the scenes
-        - Immer keeps track of the changes 
-        - It creates a copy of the array with the changes applied
-
-
+    
 - To install Immer via npm
-    - For this course, version 9.0.19 is used
+    - For this exercise, version 9.0.19 will be installed
 
         npm i immer@9.0.19
-
-
-- Refactor the update logic of the <App /> component
-    - Import the produce() function from Immer library
-
-        import { produce } from "immer";
-
-
-- Refactor the event handler "handleClick"
-    - Call the 2nd parameter function
     
-    - Pass the produce() function as an argument value
+- Immer behind the scenes
+    - Keeps track of the updates on the object items within the state array
+    
+    - If changes have been detected
+        - It then creates a copy of the state array with the changes applied
 
-    - Pass an arrow function to the produce() function as an argument value
-        - Pass the parameter "draft"
 
-    - Within the arrow function
-        - The "draft" object calls the .find() method
-        - Passes another arrow function to find the matching object
-            - Based on its identifier property (e.g. id)
+- To import the Immer library into a React component
+    - Use the "import" statement
+
+        import produce from "immer";
+
+
+- To update an object item in the existing state array
+    - Call the Immer library's function "produce()"
+
+    - Pass an arrow function as an argument value to the function "produce()"
+
+    - In the arrow function
+        - By convention the parameter variable "draft" is used
         
-        - Stores the result in a constant
+        - The parameter variable "draft" is a proxy object
+            - It records the changes applied to the object items inside the state array
+
+            - Imagine "draft" is a copy of the existing state array
+                - Free to update the value stored in the property of the targeted object item
+
+            - So, when Immer detects a change
+                - It creates a copy of the existing state array 
+                - Stores the copy in the parameter variable "draft"
+                - Applied the changes in the property of the targeted object item
+            
+    - In the body of the arrow function
+        - Call the method ".find()" on the parameter variable "draft"
+    
+            draft.find()
+
+        - Pass a new arrow function as an argument value to the method ".find()"
+           - Declare a parameter variable that represents an object item from the array
+
+        - Inside the arrow function
+            - Declare a conditional statement
+
+            - Check if the object item referenced by the parameter variable is EQUAL
+                - To the target object whose property will be updated
+
+            - Returns the matching object item
+
+        - Store the returned object item by the method ".find()" into a constant
+
+        - Perform a conditional check on the object item stored in the constant
+            - If the value is truthy
+                - Meant that the matching object item has been found
+
+            - Then directly updated the property of the targeted object item with a new value
+
+    - Pass the new array as an argument value to the declared set function of the State Hook
+    
+    - React is informed of a state update
+        - Re-renders the component in the DOM
 
 
-- Write an if statement to check if a matching object array element is found
-    - If it does, directly update the targeted property of the object
+- In the example complicated
+    - Open the <App /> component (App.tsx)
 
+    - Inside the arrow function of the Event Handler "handleClick"
+        - Call Immer library's function "produce()"
 
-- To verify that the refactored update logic is working
-    - Render the corresponding JSX mark-up
-    - Just above the line calling the event handler "handleClick"
+            produce()
 
-        { bugs.map(bug => <p key={bug.id}> {bug.title} {bug.fixed ? "Fixed" : "New"} </p>) }
+    - Pass an arrow function as an argument value to the function "produce()"
+
+            produce(() => {})
+
+    - Inside the arrow function
+        - Declare a parameter variable named "draft"
+
+            produce((draft) => {})
+
+    - Inside the arrow function's body
+        - Call the method ".find()" on the parameter variable "draft"
+
+            produce((draft) => {
+                draft.find();
+            })
+
+        - Pass a new arrow function as an argument value to the method ".find()"
+
+            produce((draft) => {
+                draft.find(() => {});
+            })
+
+        - In the new arrow function
+            - Declare a parameter value "bug" that represents an object item in the existing state array
+
+                produce((draft) => {
+                    draft.find((bug) => {});
+                })            
+
+        - Inside the body of the arrow function
+            - Declare an "if" statement
+
+            - Check if the property "id" of the object item referenced in the parameter variable "bug"
+                - Matches the value of the property "id" of the targeted object item
+                - It returns the boolean value "true" or "false"
+
+                produce((draft) => {
+                    draft.find((bug) => bug.id === 1);
+                })             
+        
+        - Store the boolean value returned by the function "produce()" to a constant named "bug"
+
+            const bug = produce((draft) => {
+                draft.find((bug) => bug.id === 1);
+            })
+
+    - Pass the constant "bug" as an argument value to the function "setBugs()"
+
+    - Modify the <App /> component's JSX mark-up
+        - To render properties of the object items stored in the state array
+
+            return (
+                <div>
+                    {bugs.map((bug) => (
+                        <p key={bug.id}>
+                            {bug.title} {bug.fixed ? "Fixed" : "New"}
+                        </p>
+                    ))}
+                    <button onClick={handleClick}>Click Me</button>
+                </div>
+            );
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Renders the objec items in the state array
+
+        - Clicking the "Click Me" button
+            - Change the property "fixed" of the targeted object item
+                - From "New" to "Fixed"
+
+            - Then React re-renders the <App /> component in the DOM
