@@ -1,5 +1,84 @@
 Updating Array of Objects
 -------------------------
-- When updating an object's property (state) inside an array of Objects
-    - There is NO need to create a brand new copy of every object
-    - Instead copy ONLY the object whose property is intended to be updated
+- Updating properties of an object as item in a state array
+    - Does NOT require creating a brand new copy of every object stored in the state array
+    - ONLY the object item that (whose properties) is to be updated
+    
+
+- To update an object item in the existing state array
+    - Call the method ".map()" on the existing state array
+        - Pass an arrow function as an arugment value to the method ".map()"
+
+        - Inside the arrow function
+            - Declare a parameter variable
+                - That represents an item from the array (i.e. existing state array's shallow copy)
+
+        - Inside the function's body
+            - Declare a ternary operator
+
+            - If the object item referenced by the parameter variable is EQUAL
+                - To the target object whose property will be updated
+                - Return the updated object item
+                - Otherwise return the current object item referenced by the parameter variable
+
+    - Returns a new array
+        - Populated with the results from calling the arrow function on every item in the existing state array
+    
+    - Pass the new array as an argument value to the declared set function of the State Hook
+    
+    - React is informed of a state update
+        - Re-renders the component in the DOM
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Inside the arrow function of the Event Handler "handleClick"
+        - Call the method ".map()" on the existing state array "bugs"
+
+    - Pass an arrow function as an argument value to the method ".map()"
+
+    - Inside the arrow function
+        - Declare a parameter variable named "bug"
+        - Represents an item in the existing state array "bugs"
+
+    - Inside the function's body
+        - Declare a ternary operator
+            - If the property "id" of an object item referenced in the parameter variable "bug"
+                - Matches the value of the property "id" of the targeted object item
+
+            - Create a new object
+
+            - Copy the properties of the object item referenced in the parameter variable "bug"
+                - Using the spread operator (...)
+
+                - Followed by the targeted property "fixed"
+                    - Assigned with an updated boolean value of "true"
+
+                - Return the updated object item
+            
+                - Otherwise return the object item referenced in the parameter variable "bug"
+
+                    bug.id === 1 ? { ...bug, fixed: true } : bug
+        
+        - Returns a new array
+            - Populated with the object items that passed the arrow function's ternary operation
+
+    - Pass the returned new array as an argument value to the function "setBugs()"
+
+        const handleClick = () => {
+            setBugs(bugs.map((bug) => (bug.id === 1 ? { ...bug, fixed: true } : bug)));
+        };
+    
+    - Save the changes
+        - Vite reloads the React application
+
+        - Launch the React Developer Tools extension
+            - To view the State Hook's state update
+            - Expand the "hooks" panel
+
+        - Clicking the "Click Me" button
+            - Updates the property "fixed" of the targeted object
+                - From the boolean value of "false" to "true"
+                
+            - Then React re-renders the <App /> component in the DOM

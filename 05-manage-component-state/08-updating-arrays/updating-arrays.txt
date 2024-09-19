@@ -143,7 +143,6 @@ Updating Arrays
     - Inside the arrow function of the Event Handler "handleClick"
         - Call the method ".map()" on the existing state array "tags"
 
-
     - Pass an arrow function as an argument value to the method ".map()"
 
     - Inside the arrow function
