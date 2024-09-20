@@ -1,66 +1,172 @@
 Building a Form
 ---------------
-- Use Bootstrap classes to create forms in a React app
-    - To provide a form a nice, modern look & feel
+- Before creating a form inside a React application
+    - Enable the previously installed Bootstrap 
+    - To provide a nice, modern look & feel on the form
 
 
-- Open the file "main.tsx", add the following import statement
+- In the example code
+    - Enable Bootstrap
+        - Open the file "main.tsx"
+        
+        - Use the following "import" statement to import Bootstrap
 
-    import "bootstrap/dist/css/bootstrap.css"
+            import "bootstrap/dist/css/bootstrap.css"
 
-
-- Create a component named "Form.tsx"
-    - Save the file within the folder "components"
-
-    - Use "rafce" to render the component template
-
-    - Replace the rendered JSX mark-up <div> with <form>
-
-    - Within the <form>, add the following mark-up
-
-        <form>
-            <div className="mb-3">
-                <label htmlFor="name" className="form-label">Name</label>
-                <input id="name" type="text" className="form-control" />
-            </div>
-        </form>
-
-    - Open the main component "App.tsx"
-        - Add the <Form /> component
-        - Save changes
+        - Save the changes
 
 
-- Add some padding around the rendered <body> mark-up
+    - Create a new component <Form /> (Form.tsx)
+        - In the folder "src/component" 
+
+        - Use the "rafce" shortcut 
+            - To generate function component boilerplate code
+
+        - In the component's JSX mark-up
+            - Remove the generated mark-up
+
+        - Add a JSX element <form>
+
+        - Inside the JSX element <form>
+            - Add a JSX element <div>
+            - Declare the property "className"
+            - Assign it with the Bootstrap class "mb-3" (i.e. margin-bottom: 3px)
+        
+        - Inside the JSX element <div>
+            - Add a JSX element <label>
+            - In the property "htmlFor"
+            - Assign the value of "name"
+
+            - Declare the property "className"
+            - Assign it with the Bootstrap class "form-label"
+
+            - Add the content "Name"
+
+        - After the JSX element <label>
+            - Add a JSX element <input>
+            
+            - Declare the property "id"
+            - Assign it with the value of "name"
+
+            - In the property "type"
+            - Assign it with the value of "text"
+
+            - Declare the property "className"
+            - Assign it with the Bootstrap class "form-control"
+
+            <form action="">
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label">
+                        Name
+                    </label>
+
+                    <input id="name" type="text" className="form-control" />
+                </div>
+            </form>
+
+        - Save the changes
+
+
+    - Open the <App /> component (App.tsx)
+        - Import the <Form /> component using the "import" statement
+
+            import Form from "./components/Form";
+
+        - In the JSX mark-up
+            - Add the <Form /> component
+
+                return (
+                    <div>
+                        <Form />
+                    </div>
+                );
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Renders the <Form /> component in the DOM
+                - The input field is close to the browser window's edges
+                - Need to implement some padding to the JSX element <body>
+
+
+- To implement global CSS styling in the React application
     - Create a new file "index.css"
-        - Within the folder "src"
-        - This is where the global CSS styles are declared
+        - In the folder "src"
+
+    - Add an element selector "body"
+        - Declare the property "padding"
+        - Assign it with the value of "20px"
+
+    - Save the changes
 
 
-    - Declare the CSS element selector <body>
-        - Give the "padding" property, a value of 20px
+    - Open the file "main.tsx"
+        - Import the file "index.css" using the "import" statement
 
-            body {
-            padding: 20px;
-            }
+            import "./index.css";
 
-    - Import the "index.css" to the "main.tsx" file
-
-        import "./index.css";
+    - Save the changes
+        - Vite reloads the React application
+        - CSS styling applied
 
 
-- Back to the file "Form.tsx"
-    - Implement another <input> mark-up that accepts numbers
-    - Lastly, a submit <buttom> with the attribute "type" of submit
+- Implement an additional JSX element <input> in the form
+    - Switch back to the <Form /> component (Form.tsx)
 
-      <div className="mb-3">
-        <label htmlFor="age" className="form-label">
-          Age
-        </label>
-        <input id="age" type="number" className="form-control" />
-      </div>
+    - Inside the JSX element <form>
+        - Add a new JSX element <div>
+        - Declare the property "className"
+        - Assign it with the Bootstrap class "mb-3"
 
-      <button className="btn btn-primary" type="submit">
-        Submit
-      </button>
+    - Inside the JSX element <div>
+        - Add a new JSX element <label>
+        - In the property "htmlFor"
+        - Assign it with the value of "age"
 
-    - Save changes
+
+        - Declare the property "className"
+        - Assign it with the Bootstrap class "form-label"
+
+    - Next add a new JSX element <input>
+        - Declare the property "id"
+        - Assign it with the value of "age"
+
+        - In the property "type"
+        - Assign it with the value of "number"
+    
+        - Declare the property "className"
+        - Assign it with the Bootstrap class "form-control"
+
+    - Lastly, add a new JSX element <button>
+        - Declare the property "className"
+        - Assign it with the Bootstrap class "btn btn-primary"
+
+        - Declare the property "type"
+        - Assign it with the value of "submit"
+
+        - Add the content "Submit"
+
+            <form>
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label">
+                        Name
+                    </label>
+
+                    <input id="name" type="text" className="form-control" />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="age" className="form-label">
+                        Age
+                    </label>
+                    <input id="age" type="number" className="form-control" />
+                </div>
+
+                <button className="btn btn-primary" type="submit">
+                    Submit
+                </button>
+            </form>
+
+    - Save the changes
+        - Vite reloads the React app
+        - Re-renders the updated <Form /> component in the DOM

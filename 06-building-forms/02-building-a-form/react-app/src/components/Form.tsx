@@ -1,5 +1,3 @@
-import React from "react";
-
 const Form = () => {
   return (
     <form>
@@ -7,6 +5,7 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
+
         <input id="name" type="text" className="form-control" />
       </div>
 
