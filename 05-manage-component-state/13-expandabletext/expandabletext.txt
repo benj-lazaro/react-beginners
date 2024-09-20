@@ -1,27 +1,23 @@
-Building an ExpandableText Component
-------------------------------------
-- Build a component called ExpandableText
-    - Accepts a long text content
-    - It summarizes the text
-        - By default, it displays the 1st 100 characters
-        
-        - But can be configured using a prop (optional)
-            - maxChars = <max. characters to display>
+Exercise: Building an ExpandableText Component
+----------------------------------------------
+- Build a component named <ExpandableText /> (ExpandableText.tsx)
+    - It accepts long text as content
 
-        - At the end of the text
-            - It has the suffix of "..."
-            - Followed by a "More" button
+    - It summarizes the entered text down to 100 characters (by default)
+        - This limit can (optionally) confugured using a prop named "maxChars"
+        - NOTE: Use "?" besides the prop name 
 
-        - Clicking the "More" button
-            - Diplays the entire text content
-            - Followed by a suffix of "..."
-            - Then by a "Less" button
-            
-        - Clicking the "Less" button
-            - Summarizes the text down
+    - At the end of the text content, it is suffixed with "..."
+        - Followed by a button labeled "More"
+
+    - Clicking the button "More"
+        - The entire text content is rendered
+        - Suffixed with "..."
+        - Followed by a button labeled "Less"
+
+    - Clicking the button "Less"
+        - Summarizes the text content to its default (or custom) limit of characters
 
 
-- NOTE: State Hooks should NOT be used on any value that can be computed (e.g. fullname)
-    - It is used ONLY for storing values that MIGHT change over time
-    - And the change requires re-rendering a component
-    
+- NOTE: State Hooks is ONLY used for storing values that MIGHT change over time & re-render the component
+    - It should NOT be used on values that can be computed from using methods (e.g. substring())
