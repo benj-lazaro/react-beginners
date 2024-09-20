@@ -1,23 +1,29 @@
 import { useState } from "react";
 
 function App() {
-  // State Hook
+  // State hook
   const [pizza, setPizza] = useState({
     name: "Spicy Pepperoni",
-    toppings: ["Mushroom"]
+    toppings: ["Mushroom"],
   });
-  
+
   // Event handler
-  const clickHandler = () => {
-    setPizza({...pizza, toppings: [...pizza.toppings, "Cheese"]});
+  const handleClick = () => {
+    setPizza({ ...pizza, toppings: [...pizza.toppings, "Pepperoni"] });
   };
 
   return (
     <div>
-      {pizza.name} <br /> {pizza.toppings} <br />
-      <button onClick={clickHandler}>Click Me</button>
+      <p>{pizza.name}</p>
+      <ul>
+        {pizza.toppings.map((topping) => (
+          <li key={topping}>{topping}</li>
+        ))}
+      </ul>
+      <button onClick={handleClick}>Click Me</button>
     </div>
   );
 }
 
+// Export the React App component
 export default App;

@@ -2,19 +2,42 @@ Exercise: Updating State
 ------------------------
 - Implement code that updates the state of a nested object
 
-
 - Exercise 01
-    - When the user clicks the button
-    - It instructs React to change the value of the nested property "name"
-    - Located under the property "player"
+    - Implement code in the Event Handler that when the user clicks the button
+    
+    - Updates the string value "John" to "Bob" in the nested object's property "name"
+        - The nested object is a value assigned to the property "player" of the state object
+
+        const [game, setGame] = useState({
+            id: 1,
+            player: {
+                name: "John",
+            },
+        });
 
 
 - Exercise 02
-    - When the user clicks the button
-    - It pushes a new ingredient into the "toppings" property w/c is an array
+    - Implement code in the Event Handler that when the user clicks the button
+
+    - A new ingredient is pushed into the property "toppings" of the state object 
+        - The value is an array of string items
+
+        const [pizza, setPizza] = useState({
+            name: "Spicy Pepperoni",
+            toppings: ["Mushroom"],
+        });
 
 
 - Exercise 03
-    - When the user clicks the button
-    - Increments the value of "quantity" property by 1
-    - Of the 1st element (product) of the array "items"
+    - Implement code in the Event Handler that when the user clicks the button
+
+    - Increments the initial value in the property "quantity" of the 1st object item
+        - In the array that is assigned as value to the property "items" of the state object
+
+        const [cart, setCart] = useState({
+            discount: 0.1,
+            items: [
+                { id: 1, title: "Product1", quantity: 1 },
+                { id: 2, title: "Product2", quantity: 1 },
+            ],
+        });

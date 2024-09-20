@@ -1,24 +1,26 @@
 import { useState } from "react";
+
 function App() {
-  // State Hook
+  // State hook
   const [game, setGame] = useState({
     id: 1,
     player: {
-      name:"John Constantine"
-    }
+      name: "John",
+    },
   });
-  
+
   // Event handler
-  const clickHandler = () => {
-    setGame({...game, player: {...game.player, name:"John Wick"}});
+  const handleClick = () => {
+    setGame({ ...game, player: { ...game.player, name: "Bob" } });
   };
 
   return (
     <div>
-      { game.player.name} <span> </span>
-      <button onClick={clickHandler}>Click Me</button>
+      <p>{game.player.name}</p>
+      <button onClick={handleClick}>Click Me</button>
     </div>
   );
 }
 
+// Export the React App component
 export default App;

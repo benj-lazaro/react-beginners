@@ -1,5 +1,5 @@
 Updating Arrays
----------------
+--------------- 
 - The concept behind updating a property of a state object
     - Can also be applied to a state array
 
