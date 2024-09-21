@@ -1,13 +1,60 @@
 Handling Form Submission
 ------------------------
-- To handle form submissions 
-    - Use the JSX mark-up attribute "onSubmit" in the <Form /> component
-        - Assign / reference an Event Handlder to "onSubmit"
+- To handle form submissions
+    - Use the property "onSubmit" on the React component
+    - Then assign an Event Handler
+        - This arrow function handles the form submission
+        - After the user clicks the "Submit" button
 
-    - The Event Handlder accepts an "event" object as argument
-        - By default, the form posts the data to a server
-        - Then reloads the HTML document (along with the component(s))
+    - By default, when a HTML form is submitted
+        - The form data is posted (or submitted) to a remote server
+        - Then the browser performs a fullpage reload
+        - NOTE: This is the default behavior
 
-        - To prevent this default behavior
-            - Call the function event.preventDefault()
-            - Within the Event Handlder
+    - To prevent the default behavior from being triggered
+        - On the Event Handler
+            - Declare a parameter variable named "event" of type "FormEvent"
+            - This stores an "event" object 
+            - Triggered (or sent from) when the user clicked the "Submit" button
+
+        - Within the body of the Event Handler
+            - Call the function "event.preventDefault()"
+
+
+- In the example code
+    - Open the <Form /> component (Form.tsx)
+
+    - Declare the property "onSubmit" on the JSX element <form>
+        - Assign the Event Handler (to be named) "handleSubmit"
+
+            <form onSubmit={handleSubmit}>
+                ...
+            </form>
+
+    - Outside the component's JSX mark-up
+        - Declare an anonymous arrow function
+        
+        - Declare a parameter variable named "event" of type "FormEvent"
+            - This variable stores the corresponding "event" object
+            - Triggered (or sent from) when the user clicked the "Submit" button
+
+        - Inside the arrow function
+            - Call the function "event.preventDefault()"
+                - Prevents submitting form data to a non-existent remote server
+                - Prevents the fullpage reload after submittion
+
+            - Declare a console.log() with the string content "Submitted"
+
+        - Save the arrow function to a constant named "handleSubmit"
+
+            const handleSubmit = (event: FormEvent) => {
+                event.preventDefault();
+                console.log("Submitted.");
+            };
+        
+    - Save the changes
+        - Vite reloads the React application
+
+        - When the user clicks the "Submit" button
+            - The default behavior after submitting a HTML form is prevented
+            - The message "Submitted" is returned on the browser's JavaScript console

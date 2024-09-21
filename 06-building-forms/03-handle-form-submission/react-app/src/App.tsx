@@ -8,4 +8,5 @@ function App() {
   );
 }
 
+// Export the React App component
 export default App;

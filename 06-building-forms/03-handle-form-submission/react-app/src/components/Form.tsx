@@ -1,10 +1,9 @@
-import React, { FormEvent } from "react";
+import { FormEvent } from "react";
 
 const Form = () => {
-  // Event handler
   const handleSubmit = (event: FormEvent) => {
-    event.preventDefault(); // Prevents the form from being posted to the server
-    console.log("Submitted");
+    event.preventDefault();
+    console.log("Submitted.");
   };
 
   return (
@@ -13,6 +12,7 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
+
         <input id="name" type="text" className="form-control" />
       </div>
 
