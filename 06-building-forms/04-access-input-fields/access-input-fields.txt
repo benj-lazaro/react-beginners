@@ -1,64 +1,227 @@
 Accessing Input Fields
 ----------------------
-- To access DOM elements (e.g. input fields)
-    - Use the built-in React Hook called "useRef()"
-    - It returns a reference object
-        - The targeted DOM element
+- In order to access a form's input fields (or a DOM eleemnt)
+    - Use React's built-in Hook "useRef()"
+        - To reference ANY type of elements in the DOM
 
 
-- Import the React Hook "useRef" in the <Form /> component
+- To import the Reference Hook into a component
+    - Use "useRef" on the following "import" statement
 
-    import React, { FormEvent, useRef } from "react";
+        import React, { FormEvent, useRef } from "react";
 
 
-- To implement the React hook "useRef()"
-    - Initially pass a "null" value as argument to useRef()
-    - Save the returned reference object to a constant
+- When calling the Reference Hook
+    - It is common practice to pass an initial value of null
+        - It returns a reference object
+    
+            useRef(null);
+    
+        - Why initially assign a null
+            - When a reference object is created using "useRef()"
+            - The React application has NO access to a DOM node
+            - Because the DOM is created ONLY after React renders the component
+            - NOT setting an initial value will default to the value of "undefined"
+                - This can cause unexpected issues down the road
+
+    - Store the returned reference object in a constant
+        - The reference object has a single property named "current"
+        - It returns the DOM element that is being referenced (targeted)
+
+
+- To associate the returned reference object in the component's mark-up
+    - On the targeted JSX element <input>
+        - Declare the property "ref"
+        - Assign the reference object (stored in a constant) as value
+
+
+- To access the value in the referenced DOM element in the Event Handler
+    - Chain the property "value" to the reference object's property "current"
+
+        - NOTE: Doing so will trigger a TypeScript compilation error
+            - TypeScript is unaware that an JSX element <input> is being referenced
+
+    - To address this, place "HTMLInputElement" in-between "useRef" and its "()"
+
+        useRef<HTMLInputElement>(null);
+
+        - NOTE: The "HTMLInputElement" is a standard interface defined in ALL browsers
+             It represents an HTML element <input>
+
+
+- Typically, when submitting a form to a remote server
+    - An object is sent containing values
+        - Taken from the respective JSX element <input>
+
+    - Outside the component's mark-up
+        - Declare an empty object
+
+        - Define the object's properties
+            - Each based on the respective JSX element <input>
+            - Each assigned with an initial value of "", null or 0 
+
+        - Then assign the object to a constant
+
+    - In the component's Event Handler
+        - The properties of the object get updated
+        - Taken from each reference object's the chained property ".current.value"
+
+        - NOTE: The property "value" returns a value of data type string
+            - For an JSX element <input> expected to return a number
+            - Use the JavaScript function "parseInt()" to convert the value into a data type number
+
+
+- In the example code
+    - Open the <Form /> component (Form.tsx)
+
+    - Import the Reference Hook in the component
+
+        import { FormEvent, useRef } from "react";
+
+    - Call the "useRef()"
+        - Pass the initial argument value of null
+        - Save the returned reference object to a constant named "nameRef"
 
         const nameRef = useRef(null);
 
+    - Associate the reference object "nameRef" in the component's JSX mark-up
+        - On the JSX element <input> with an property "id" of "name"
+        - Declare the property "ref"
+        - Assign as value the constant "nameRef"
 
-- Inform the TypeScript compiler that useRef() is referencing an <input> element
-    - Place "<HTMLInputElement>" in-between "useRef" and its ()
+            <input ref={nameRef} id="name" type="text" className="form-control" />
 
-        const nameRef = useRef<HTMLInputElement>(null);
+    - In the Event Handler "handleSubmit"
+        - Refactor the "console.log()" statement
 
-    - NOTE: The "<HTMLInputElement>" is one of the standard interfaces defined in browsers
-        - This represents an <input> element
+        - Use the reference object's property "current" to display the referenced DOM node
+
+            const handleSubmit = (event: FormEvent) => {
+                event.preventDefault();
+                console.log(nameRef.current);
+            };
+
+            - Returns the reference DOM node in the browser's JavaScript console
+
+        
+        - To view the value of the DOM node, chain the property "value" to the reference object
+
+            const handleSubmit = (event: FormEvent) => {
+                event.preventDefault();
+                console.log(nameRef.current.value);
+            };
+
+            - NOTE: This triggers another TypeScript compilation error
+                - The property "nameRef.current" is possibly "null"
+                - This is correct since the reference object is initialized with a value of null
+
+        - To address this concern
+            - Declare an "if statement" in the Event Handler
+
+            - When the property "current" of the reference object "nameRef" is NOT equal to null
+                - Display the DOM node's value to the browser's JavaScript console
+                - Otherwise do nothing
+
+                const handleSubmit = (event: FormEvent) => {
+                    event.preventDefault();
+                    if (nameRef.current !== null) console.log(nameRef.current.value);
+                };
+
+            - NOTE: This triggers another TypeScript compilation error
+                - The property "value" does not exists on type "never"
+                - TypeScript is unaware that referenced DOM node is an JSX element <input>
+
+        - To address this concern
+            - In the Reference Hook declaration for "nameRef"
+            - Place <HTMLInputElement> in-between "useRef" and its "()"
+
+                const nameRef = useRef<HTMLInputElement>(null);
+
+        - Save the changes
+            - TypeScript compilation error address
+            - Vite reloads the React application
+            - Returns the user provided input on the form field "Name"
+                - On the browser's JavaScript console
 
 
-- On the JSX mark-up <input>
-    - Associate the React hook to the targeted <input> element
-    - Using the attribute "ret"
-    - Assign the associated constant variable
+    - Declare a reference object for the "Age' field using "useRef()"
+        - Call "useRef()" with the corresponding "HTMLInputElement"
+        - Assign an initial value of null
+        - Store it to the constant "ageRef"
 
-        <input ref={nameRef} id="name" type="text" className="form-control" />
+            const ageRef = useRef<HTMLInputElement>(null);
 
+    - Associate the reference object "nameRef" in the component's JSX mark-up
+        - On the JSX element <input> with an property "id" of "age"
+        - Declare the property "ref"
+        - Assign as value the constant "ageRef"
 
-- On the Event Handler
-    - To access the value of the targeted <input> element
-        - By referencing the associated constant
-        - Then access the returned reference object's property named "current"
-        - Finally, access the reference object's prperty named "value"
+            <input ref={ageRef} id="age" type="number" className="form-control" />
 
-            console.log(nameRef.current.value);
+    - In the Event Handler
+        - Add another "if statement"
+    
+        - When the property "current" of the reference object "ageRef" is NOT equal to null
+            - Display the DOM node's value to the browser's JavaScript console
+            - Otherwise do nothing
 
-    - NOTE: An <input> element has an attribute named "value"
-        - Referencing the user provided input
+            const handleSubmit = (event: FormEvent) => {
+                event.preventDefault();
 
+                if (nameRef.current !== null) console.log(nameRef.current.value);
+                if (ageRef.current !== null) console.log(ageRef.current.value);
+            };
 
-- Repeat the aforementioned steps for each <input> field
+    - Save the changes
+        - TypeScript compilation error address
+        - Vite reloads the React application
+        - After the user provides data to the form's input fields & clicked "Submit"
+        - Returns the corresponding user input on the browser's JavaScript console
 
+    
+    - Typically an object containing the form's data is sent to a remote server
+        - Instead of logging individuals values
+        - Declare the object right after the State Reference declaration statements
 
-- Create an object in the <Form /> component
-    - Where the collected value(s) of <input> element(s) will be stored
+    - Create an object containing properties that resembles the form's input fields
+        - Property "name" with an initial value of ""
+        - Property "age" with an initial value of 0
+        - Save the object to a constant named "person"
 
-        const person = { name: "", age: 0 };
+            const person = { name: "", age: 0 };
 
+    - On the Event Handler's "if statements"
+        - Instead of logging the value of the referenced DOM node
+        - Assign the value to the correponding property of the object "person"
 
-- Refactor the Event Handler
-    - Assign the collected <input> value to the correponding object property
-    - Display the content of the object into the browser's JavaScript console
+            const handleSubmit = (event: FormEvent) => {
+                event.preventDefault();
 
-        if (nameRef.current !== null) person.name = nameRef.current.value;
-        if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
+                if (nameRef.current !== null) person.name = nameRef.current.value;
+                if (ageRef.current !== null) person.age = ageRef.current.value;
+            };
+
+            - NOTE: TypeScript compilation error on the "person.age"
+                - Type "string" is not assignable to type "number"
+
+        - To address this concern
+            - Pass the property "current.value" of the reference object "ageRef"
+            - As an argument value to the JavaScript function "parseInt()"
+            - Converts the string data type to a number
+
+            const handleSubmit = (event: FormEvent) => {
+                event.preventDefault();
+
+                if (nameRef.current !== null) person.name = nameRef.current.value;
+                if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
+            };
+
+    - Display the content of the object "person"
+        - Pass the object as an arugment value to console.log()
+
+        console.log(person);
+
+    - Save the changes
+        - Vite reloads the React application
+        - After the user provides data to the form's input fields & clicked "Submit"
+        - The content of the object "person" is returned on the browser's JavaScript console

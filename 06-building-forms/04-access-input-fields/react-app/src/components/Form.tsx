@@ -1,14 +1,14 @@
-import React, { FormEvent, useRef } from "react";
+import { FormEvent, useRef } from "react";
 
 const Form = () => {
-  // React hook
+  // Reference hook
   const nameRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
   const person = { name: "", age: 0 };
 
   // Event handler
   const handleSubmit = (event: FormEvent) => {
-    event.preventDefault(); // Prevents the form from being posted to the server
+    event.preventDefault();
 
     if (nameRef.current !== null) person.name = nameRef.current.value;
     if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
@@ -22,6 +22,7 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
+
         <input ref={nameRef} id="name" type="text" className="form-control" />
       </div>
 
