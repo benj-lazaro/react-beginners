@@ -1,12 +1,15 @@
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 
 const Form = () => {
   // State hook
-  const [person, setPerson] = useState({ name: "", age: "" });
+  const [person, setPerson] = useState({
+    name: "",
+    age: 0,
+  });
 
   // Event handler
   const handleSubmit = (event: FormEvent) => {
-    event.preventDefault(); // Prevents the form from being posted to the server
+    event.preventDefault();
     console.log(person);
   };
 
@@ -16,11 +19,12 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
+
         <input
-          value={person.name}
           onChange={(event) =>
             setPerson({ ...person, name: event.target.value })
           }
+          value={person.name}
           id="name"
           type="text"
           className="form-control"
@@ -32,10 +36,10 @@ const Form = () => {
           Age
         </label>
         <input
-          value={person.age}
           onChange={(event) =>
-            setPerson({ ...person, age: event.target.value })
+            setPerson({ ...person, age: parseInt(event.target.value) })
           }
+          value={person.age}
           id="age"
           type="number"
           className="form-control"

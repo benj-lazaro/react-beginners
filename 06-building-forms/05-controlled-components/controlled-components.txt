@@ -1,58 +1,118 @@
 Controlled Components
 ---------------------
-- Alternative to using the Ref Hook "useRef()"
-    - To access the value of <input> fields in a form
-    - Use the State Hook "useState()"
+- There is another way of getting the values of the input fields in a form
+    - Instead of using the Reference Hook (i.e. "useRef()")
+        - Use State Hook (i.e. "useState()")
+
+    - Declare a State Hook
+        - Define the properties of the state object
+        - Save the deconstructed object & set function to their respective constant variables
+
+    - On the component's JSX mark-up
+        - Declare the property "onChange" on the JSX element <input>
+            - This "event" gets triggered whenever the user types something on the input field
+       
+        - Assign an anonymous arrow function as value
+            - Declare a parameter variables named "event"
+                - Captures the triggered event
+                - Returns the "event.target" (i.e. JSX element <input>)
+                    - Use the property "value" to access the value typed by the user
+
+            - Calls the set function of the declared State Hook
+                - Use the spread operator (...) on the existing state object
+                
+                - Followed by the targeted property to be updated
+                     - Assign the corresponding value from "event.target.value"
+
+                - NOTE: The property "value" returns a string data type
+                    - Use the function "parseInt()" to convert a value of string to number
+
+    - On the component's Event Handler
+        - Pass the state object to the "console.log()"
+            - To display the content of the state object
+            - Simulating a form submission to a remote server
 
 
-- On the JSX mark-up <input>
-    - The <input> element has an attribute named "onChange"
-    - Triggered a user types a keystroke
+- A caveat of using State Hook over Reference Hook
+    - Every time the user types or removes a character on or from the JSX element <input>
+        - It triggers a state update
+        - As a result, React re-renders the component
 
-    - Assign an arrow function to this attribute
-        - Accepts an "event" object as an argument  
+        - For most cases, this is NOT an issue
+            - To some developers it is an issue 
+            - Claims that this approach of using State Hook is slow
+            - Recommends using Reference Hook instead
 
-        - Calls the function that sets the corresponding State Variable
-            - Pass an object
-                - Use the spread operator "..." to reference the current object
-                - Followed by the object property to be updated
-                - Assigned the corresponding value using "event.target.value"
+        - Remember that "Premature optimization is the root of all evil!" -- Donald Knuth
+            - Do NOT believe such hardcore recommendations heard on the internet
+            - Use your own judgement
+            
+            - If you have a complex form with a lot of element
+                - Observed performance issues using State Hook
+                - Then use Reference Hook instead
+            
 
-
-- On the Event Handler
-    - Display the content of the object in the browser's JavaScript console
-
-
-- A caveat using this approach
-    - Every time a user types a single character on an <input> field
-        - React re-renders the component
-        - Possibly affecting the performance of the app
-        - Better off using Reference Hook "useRef()" instead
-
-    - On MOST cases, this is NOT an issue
-        - Using State Hook "useState()" is ok
-
-    - Remember:
-        "Premature optimization is the root of all evil!"
-        -- Donald Knuth
-        
-
-- A tiny problem on this example's implementation
-    - All JSX <input> element has a attribute / property named "value"
+- There is a tiny problem with this implementation
+    - Each JSX element <input> has a property named "value"
         - That is used for maintaining their own state
+    
+    - The State Hook also has a state variable
+        - That stores the current state
 
-    - The State Hook has its own State Variable
-        - Used for maintaining its own state
-        - This may get out-of-sync with the state of the <input> element
+    - It is possible that these sources get out-of-sync
+        - To solve this problem
+        - Is to make React (not the DOM) the "single source of truth"
 
-    - To address this, make React (not the DOM) as a "single source of truth"
-        - The ONLY source assign to the corresponding "value" attribute of <input> element(s)
+    - To make React as the "single source of truth"
+        - On the property "value" of the JSX element <input>
+            - Assign as value the state object and corresponding property name
+        
+        - Now this element ALWAYS relies on the value stored in the State Hook's state variable
 
-        - Assign the object's property (managed by the State Hook)
-            - To the "value" attribute / property of the associated <input> element
+    - This JSX element <input> is now referred as a "Controlled Component"
+        - Because the element's state is ENTIRELY controlled by React
+        
+        - This means that the property "value" of the JSX element <input> is NOT managed by the DOM
+            - But it is stored and updated on the component's state (c/o the State Hook)
 
-                <input 
-                    value={person.name}
+
+- In the example code
+    - Open the <Form /> component (Form.tsx)
+        - Remove the implement Reference Hook from the previous section's example
+
+    - Declare a State Hook
+        - Define a state object with the following properties
+            - name  = intially set to an empty string
+            - age   = intially set to 0
+
+        - Descontruct the state object into its state variable and set function
+
+            const [person, setPerson] = useState({
+                name: "",
+                age: 0,
+            });
+
+    - On the component's JSX mark-up
+        - Declare the property "onChange" on the JSX element <input> with an property "id" set to "name"
+
+        - Assign an anonymous arrow function as value
+
+            <input onChange={() => {}} id="name" type="text" className="form-control" />
+
+        - Declare the parameter variable named "event"
+
+            <input onChange={(event) => {}} id="name" type="text" className="form-control" />
+
+        - Inside the arrow function
+            - Call the set function "setPerson()"
+                - Pass a new object as an argment value
+
+            - Inside the new object
+                - Copy the current state object using the spread operator (...)
+                - Followed by the property "name"
+                - Assigned with "event.target.value"
+
+                <input
                     onChange={(event) =>
                         setPerson({ ...person, name: event.target.value })
                     }
@@ -61,9 +121,75 @@ Controlled Components
                     className="form-control"
                 />
 
+        - Repeat the same on the JSX element <input> with an property "id" set to "age"
 
-    - The <input> element's "value" attribute is NOT managed by the DOM anymore
-        - Instead it is managed (stored & updated) in a Component State
-        
-        - This element is now referred as a Controlled Component
-            - It's state is entirely CONTROLLED by React
+                <input
+                    onChange={(event) =>
+                        setPerson({ ...person, age: event.target.value })
+                    }
+                    id="age"
+                    type="number"
+                    className="form-control"
+                />
+
+            - NOTE: The property "age" of the state object triggered a TypeScript compilation error
+                - Type "string" is not assignable to type "number"
+
+            - To address this concern
+                - Pass the "event.target.value" as argument value to the function "parseInt()"
+
+                <input
+                    onChange={(event) =>
+                        setPerson({ ...person, age: parseInt(event.target.value) })
+                    }
+                    id="age"
+                    type="number"
+                    className="form-control"
+                />        
+
+    - On the component's Event Handler
+        - Pass the state variable "person" as argument value to "console.log()"
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Displays the user-input from the form's "Name" and "Age" fields
+            - On the browser's JavaScript console
+    
+    - To make React as the "single source of truth" 
+        - On the JSX element <input> with an property "id" set to "name"
+            - Declare the property "value"
+            - Assign as value the state object "person" and its property "name" (i.e. "person.name")
+
+                <input
+                    onChange={(event) =>
+                        setPerson({ ...person, name: event.target.value })
+                    }
+                    value={person.name}
+                    id="name"
+                    type="text"
+                    className="form-control"
+                />
+
+        - On the JSX element <input> with an property "id" set to "age"
+            - Declare the property "value"
+            - Assign as value the state object "person" and its property "age" (i.e. "person.age")
+
+                <input
+                    onChange={(event) =>
+                        setPerson({ ...person, age: parseInt(event.target.value) })
+                    }
+                    value={person.age}
+                    id="age"
+                    type="number"
+                    className="form-control"
+                />
+
+        - NOTE: Both JSX element <input> are now referred as a "Controlled Component"
+            - These elements are NOT controlled by the DOM anymore
+            - But rather by React instead
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - NO visual difference from the recent save
