@@ -1,128 +1,270 @@
 Managing Forms with React Hook Form
 -----------------------------------
-- As the <Form /> component gets complex; managing the form state using State Hook
-    - Can become time-consuming & error prone
-    - For each <input> element, requires setting two (2) attributes
-        - onChange
-        - value
+- As the a form gets more complex, using State Hook to manage the form's state 
+    - Can be time-consuming & error prone
+    
+    - For every JSX element <input>, requires the declaring & maintaining properties
+        - "onChange"
+        - "value"
 
-    - Alternatively, a popular library React Hook Form
-        - Quickly build forms with less code
-
-
-- To install via npm (specific version 7.43)
-
-        npm i react-hook-form@7.43
+    - To address this concern
+        - Use a popular form library known as "React Hook Form"
+        - It quickly builds a form component with less code
 
 
-- Post-installation verification
-    - Open the file "package.json"
-    - Under "dependencies"
-    - Check for the line
+- To install React Hook Form via npm
 
-        "react-hook-form": "7.43",
+    npm i react-hook-form@7.43
 
 
-- To use React Hook Form
-    - Import the "useForm" hook from the library into the <Form /> component
+- To implement React Hook Form library in a component
+    - Import the custom hook / function "useForm" from the library
 
         import { useForm } from "react-hook-form";
 
-    - The "useForm" hook returns an object
-        - This object contains form related properties & methods
-        - Destructure the returned object and grab the functions
-            - register()
-            - handleSubmit()
+    - Calling the function "useForm()" returns an object 
+        - It contains a bunch of properties & functions
 
-                const { register, handleSubmit } = useForm();
+    - Destructure the returned object & pull the function "register()"
+        - Save it to a constant variable
 
-    - When calling the function "register()"
-        - It returns an object with following properties
-            - "name" property
+        const { register } = useForm();
 
-            - Built-in methods
-                - onBlur()
-                - onChange()
-                - ref()
+    - Calling the function "register()" requires passing a key (of data type "string")
+        - Based on the assigned value of the property "id" of the targeted JSX element <input>
 
-        - This function uses "reference objects"
-            - To retrieve value(s) from <input> element(s)
-            - There is NO re-rendering of the component involved
+        - It returns an object with the following property & methods
+            - property "name"
 
-    - On the corresponding JSX mark-up <input> elements
-        - Remove the attributes "onChange" and "value"
+            - methods
+                - ".onBlur()"
+                - ".onChange()"
+                - ".ref()"
+
+        - NOTE: The method ".ref()" confirms that the library uses "reference object"
+            - To retrieve the value of the targeted JSX element <input>
+            - This also means that that is NO re-rendering of the component involved
+
+
+- To implement React Hook Form library on the component's JSX mark-up
+    - On the targeted JSX elements <input>, remove the properties
+        - "onChange"
+        - "value"
+
+    - Replace it with a blank object
+
+    - Inside the object, call the function "register()"
+        - Pass a key (of data type "string")
+            - Based on the assigned value of the property "id" of the JSX element <input>
+            - It returns an object
+        
+        - Use the spead operator (...) to spread the returned object
+
+    - Repeat the steps for the remaining targeted JSX element <input>
+
+
+- Outside the component's mark-up
+    - Remove the declared State Hook and associated "import" statement
+
+    - Remove the declared Event Handler "handleSubmit" declared in the previous code example
+
+    - On the declaration of the function "useForm()"
+        - Pull the function "handleSubmit()"
+
+            const { register, handleSubmit } = useForm();
+
+
+- Move back to the component's JSX mark-up
+    - On the property "onSubmit" of the JSX element <form>
+        - Pass the function "handleSubmit()" as an argument value
+
+    - On the function "handleSubmit()"
+        - Pass a "SubmitHandler" as an argument value
+
+        - NOTE: A "SubmitHandler" is basically an arrow function
+            - That receives user-typed data from the previously registered JSX element <input>
+
+    - On the arrow function (i.e. "SubmitHandler")
+        - Pass a parameter variable that will hold the user-type data
+            - Common convention it is named "data"
+    
+    - Inside the arrow function (i.e. "SubmitHandler")
+        - The parameter variable is passed to the "console.log()"
+            - To display the content of the "reference object"
+            - To simulate a submission to a remote server
+
+            onSubmit={handleSubmit(data => console.log(data))}
+
+
+- In a real-world scenario
+    - A separate function outside the JSX mark-up is expected to
+        - Handle the "form submission" to a remote server
+            
+    - Declare an arrow function 
+        - Outside the component's JSX mark-up
+        - Save it to a constant variable
+
+    - On the arrow function
+        - Declare a parameter variable
+            - This variable stores the collected user-typed data
+            - From the registered JSX element <input>
+
+        - NOTE: The parameter variable's data type is of "FieldValues"
+            - This is defined in the React Hook Form library
+
+    - Inside the arrow function's body
+        - The parameter variable is passed to the "console.log()"
+        - To simulate a submission to a remote server
+
+    - Next, on the property "onSubmit" of the JSX element <form>
+        - Assign the arrow function as value
+
+    - When the user "submits" the form
+        - The React Hook Form library calls the reference arrow function
+            - It collects user-typed data from the registered JSX element <input>
+            - Then displays the content of the returned "reference object" 
+
+
+- In the example code
+    - Open the component <Form /> (Form.tsx)
+
+    - Import the React Hook Library and pull the function "useForm()"
+
+        import { useForm } from "react-hook-form";
+    
+    - Call the function "useForm()", outside the component's JSX mark-up
+        - It returns an object
+        - Destructure the object and pull the function "register()"
+        - Then save it to a constant variable
+    
+            const { register } = useForm();
+
+    - On the JSX element <input>
+        - With the property "id" of "name"
+
+        - Remove the proeprties "onChange" & "value"
+            - Replace the removed properties with a blank object  
+
+        - Inside the blank object
+            - Call the function "register()"
+
+        - Pass a key (of data type "string") as argument value to the function "register()"
+            - Based on the assigned value of the property "id" of the JSX element <input>
+
+            - It returns an object with the following property & methods
+                - property "name"
+
+                - methods
+                    - ".onBlur()"
+                    - ".onChange()"
+                    - ".ref()"
+            
+                - NOTE: This meant that this JSX element <input> has been registered
+                    - It has inherited these property & methods 
+
+        - Use the spread operator (...) on the function "register()"
+            - To spread the returned object
 
             <input
-                value={person.name}
-                onChange={(event) =>
-                    setPerson({ ...person, name: event.target.value })
-                }
+                {...register("name")}
                 id="name"
                 type="text"
                 className="form-control"
             />
 
-        - Replace it with an empty object { }
-            - Call the function register() from within the empty object
-            - Pass a key value of "name" (for the Name field)
+        - Repeat the steps for the JSX element <input> with the property "id" of "age"
 
-                <input
-                    {...register("name")}
-                    id="name"
-                    type="text"
-                    className="form-control"
-                />
+            <input
+                {...register("age")}
+                id="age"
+                type="number"
+                className="form-control"
+            />
 
-                ...
 
-                <input
-                    {...register("age")}
-                    id="age"
-                    type="text"
-                    className="form-control"
-                />
+    - Outside the component's JSX mark-up
+        - Remove the declared State Hook & its associated "import" statement
+        - Remove the declared Event Handler "handleSubmit"
 
-        - Use the spread operator on the function "register()"
-            - In order to include the returned object properties with the <input> element
+    - On the declaration of the function "useForm()"
+        - Pull the function "handleSubmit()"
 
-    - Remove the State Hook (i.e. useState())
+            const { register, handleSubmit } = useForm();
 
-    - Remove the Event Handler "handleSubmit"
-
-    - On the "onSubmit" attribute of the <form> element
-        - Refactor the "handleSubmit()"
-
-        - Pass a "Submit Handler" as argument
-            - In the form of an anonymous arrow function
-            - This function receives user-input data from the form's <input> elements
-
-        - In the arrow function declaration
-            - Declare a parameter variable named "data"
-
-        - Inside the "Submit Handler" (arrow function) body
-            - Display the content of the variable "data" on the browser's console
-
-                <form onSubmit={handleSubmit((data) => console.log(data))}>
-                ...
-                </form>
-
-        - Save changes and test the code
-
-    - To accomodate scalability 
-        - Move the "Submit Handler" code into a separate function
+    - On the JSX element <form>
+        - Pass the function "handleSubmit()" as a value to the property "onSubmit"
         
-        - Save the function to a constant named "onSubmit"
-
-            const onSubmit = (data: FieldValues) => console.log(data);
-
-    - Back to the "onSubmit" attribute of the <form> element
-        - Refactor the "handleSubmit()"
-
-        - Replace the "Submit Handler" arrow function 
-            - With the "onSubmit" function
-    
-            <form onSubmit={handleSubmit(onSubmit)}>
-            ...
+            <form onSubmit={handleSubmit()}>
+                ...
             </form>
 
-    - Save changes and test the code
+    - Pass a "SubmitHandler" as an argument value to the function "handleSubmit()"
+        - NOTE: A "SubmitHandler" is basically an arrow function
+        - That receives user-typed data from the previously registered JSX element <input>
+
+            <form onSubmit={handleSubmit(() => {})}>
+                ...
+            </form>
+
+    - In the "SubmitHandler" arrow function
+        - Declare a parameter variable named "data"
+        - This stores the user-typed data from the registered JSX element <input>
+
+    - In the "SubmitHandler" arrow function
+        - Pass the parameter variable "data" to the "console.log()"
+
+            <form onSubmit={handleSubmit((data) => console.log(data))}>
+                ...
+            </form>
+
+        - Displays the content of the reference object on the browser's JavaScript console
+            - Each user-typed data assigned to the declared "key" of data type "string"
+            - That was declared when the function "register()"  was called on the targeted
+                - JSX element <input>
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - When the user types data into the input fields & submits the form
+            - React Hook Form calls the referenced arrow function (i.e. "SubmitHandler")
+
+            - The arrow function (i.e. "SubmitHandler") then collects the user-typed data 
+                - From the registered JSX element <input>
+
+            - Then displays the content of the returned "reference object" 
+                - On the browser's JavaScript console
+
+
+    - Implement the logic of displaying the form data into a separate function
+        - Create an arrow function outside the JSX mark-up
+
+        - Declare the parameter variable "data"
+            - The parameter variable is of data type "FieldValues"
+            - This data type is defined in the React Hook Form library
+
+        - Inside the arrow function
+            - Pass the parameter variable "data" to the "console.log()"
+
+        - Save the arrow function to a constant named "onSubmit"
+
+            const onSubmit = (data:FieldValues) => console.log(data);
+
+
+    - Back to the JSX element <form>
+        - Pass the constant "onSubmit" as an argument value to the function "handleSubmit()"
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+                ...
+            </form>
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - When the user types data into the input fields & submits the form
+            - React Hook Form library calls the referenced arrow function "onSubmit()"
+
+            - The function "onSubmit()" then collects the user-typed data 
+                - From the registered JSX element <input>
+
+            - Then displays the content of the returned "reference object" 
+                - On the browser's JavaScript console

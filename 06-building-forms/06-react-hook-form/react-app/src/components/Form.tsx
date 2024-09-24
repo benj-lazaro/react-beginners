@@ -1,11 +1,9 @@
-import React, { FormEvent, useState } from "react";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 const Form = () => {
-  // Get a form object
+  // Hook form
   const { register, handleSubmit } = useForm();
 
-  // Submit handler
   const onSubmit = (data: FieldValues) => console.log(data);
 
   return (
@@ -14,6 +12,7 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
+
         <input
           {...register("name")}
           id="name"
