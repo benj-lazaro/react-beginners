@@ -1,11 +1,10 @@
-import React, { FormEvent, useState } from "react";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Define the schema by passing a configuration object
+// Define the schema & validation rules
 const schema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+  name: z.string().min(3, { message: "Name must be least 3 characters." }),
   age: z
     .number({ invalid_type_error: "Age field is required." })
     .min(18, { message: "Age must be at least 18." }),
@@ -14,14 +13,13 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const Form = () => {
-  // Get a form object
+  // Hook form
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  // Submit handler
   const onSubmit = (data: FieldValues) => console.log(data);
 
   return (
@@ -32,13 +30,12 @@ const Form = () => {
         </label>
 
         <input
-          {...register("name", { required: true, minLength: 3 })}
+          {...register("name")}
           id="name"
           type="text"
           className="form-control"
         />
 
-        {/* Validation check error message */}
         {errors.name && <p className="text-danger">{errors.name.message}</p>}
       </div>
 
@@ -53,7 +50,6 @@ const Form = () => {
           className="form-control"
         />
 
-        {/* Validation check error message */}
         {errors.age && <p className="text-danger">{errors.age.message}</p>}
       </div>
 

@@ -1,224 +1,359 @@
 Schema-based Validation with Zod
 --------------------------------
-- Based on the previous code example
-    - Form validation rules are implement within the JSX mark-up <input>
-    
-    - As the form gets more complex
-        - The validation rules will be all over the place
-        - To address this concern
-            - Use a technique called "schema-based valiation"
- 
-    - Zod is one of the many 3rd-party libraries that
-        - Allows to define all form validation rules in a single place (i.e. schema)
+- React HooK Form's validation rules are defined in the middle of the JSX element <input>
+    - As the form get more complex
+        - It will end up with a lot of validation rules all over the place
 
+    - To address this concern
+        - Employ a technique known as "schema-based validation"
+        - This allows validation rules to be defined in a single place (i.e. schema)
+
+    - Zod is a 3rd-party library that offers this feature (and a lot more)
+ 
 
 - To install Zod via npm
 
     npm i zod@3.20.6
 
-    - In the event that Zod does NOT get included in the file "package.json"
-        - Clear the npm cache
+    - NOTE: If Zod is NOT included in the file "package.json"
+        - Perform a "force clean" of the npm's cache
             
             npm cache clean --force
 
-        - Try to install Zod again
+        - Then install Zod again
         
 
-- To define a schema for the project's form
-    - Import the Zod library in the <Form /> component
+- To import Zod in the component
 
-        import { z } from "zod";
+    import { z } from "zod";
 
-    - Use "z" to define the form's schema and all of its validation rules
-        - Call the method ".object()" of z
+    - Use z to define the schema of the form & all of its validation rules
+    
 
-        - Pass a "configuration object" as argument value to the method
-            - This contains the properties that represents the form's fields
-                - "name"    = of type "string" with a minimum number of characters of 3
-                - "age"     = of type "number" with a minimum value of 18
+- To define the form's schema and validation rules
+    - Call the method ".object()" of z
 
-        - The method ".object()" returns an object
-            - Save the object to a constant named "schema"
-            - "This object contains the form's schema"
+        z.object()
 
-                const schema = z.object({
-                    name: z.string().min(3),
-                    age: z.number().min(18),
-                });
+    - Pass a "configuration object" as argument value to the method ".object()"
+        - The properties of the "configuration object" 
+            - Represents the form's field(s) or the "shape" of the form
 
-        - The chained methods ".string()" and ".min()" are referred as "helper method"
-            - They help define validation rules in a form
+        - Each property has
+            - A <key> based on the property "id" of the JSX element <input>
+            - The data type of the property using z.<data_type>()
+            - Followed by chained "helper" methods that defines the validation rule(s)
 
+            z.object({
+                <key>:z.<data_type_method>().<helper_method>().<helper_method>(),
+                <key>:z.<data_type_method>().<helper_method>().<helper_method>()
+            })
 
-    - Remove the previously defined FormData "interface"
-        - Zod has a method ".infer" that allows to extract the data type from a schema object
+        - Save the returned object to a constant (by convention) named "schema"
 
-    - Call method ".infer" followed by "<typeof schema>"
-        - This returns a TypeScript "type"
-        - A TypeScript "type" is very similar to a TypeScript "interface"
-        - Store the returned object in a "type" named "FormData"
-
-            type FormData = z.infer<typeof schema>;
-
-        - Hovering the mouse over "FormData" previews the content of the returned object
+            const schema = z.object({
+                <key>:z.<data_type_method>().<helper_method>().<helper_method>(),
+                <key>:z.<data_type_method>().<helper_method>().<helper_method>()
+            })
 
 
-- To integrate React Hook Forms with Zod
-    - Install React HooK Forms' "resolvers" for various schema-based validation libraries
+- Extract the TypeScript "type" of the returned object by the method ".object" named "schema"
+    - Call the property ".infer" of z
+        - Followed by <typeof schema>
+
+            z.infer<typeof schema>;
+
+    - This returns the "type" of the object "schema"
+        - NOTE: A TypeScript "type" is VERY SIMILAR to an "interface"
+
+    - Save it to a "type"
+        - Followed by a name describing the form content (e.g. FormData)
+        
+            type <form_content_name> = z.infer<typeof schema>;
+
+        - Hovering the mouse over the <form_content_name>
+            - Displays the properties of the object "schema"
+
+
+- To integrate Zod with the React Hook Form
+    - Install React Hook Form's "resolvers" for various schema-based validation
 
         npm i @hookform/resolvers@2.9.11
 
-    - Import the resolver for the Zod library (i.e. zodResolver) in the <Form /> component
+    - Import the React HooK Form's resolver for the Zod library
 
         import { zodResolver } from "@hookform/resolvers/zod";
 
-    - When calling the Form Hook
-        - Pass a configuration object as argument to "useForm<FormData>()"
+    - When calling the function "useForm()" of the React Hook Form
+        - Pass a "configuration object" as an argument value
 
-        - In the configuration object
-            - Assign the function "zodResolver()" as value to the property "resolver"
-            - Pass the object "schema" as argument value to "zodResolver"
+            useForm<form_content_name>({});
 
-            const Form = () => {
-                const {
-                    register,
-                    handleSubmit,
-                    formState: { errors },
-                } = useForm<FormData>({ resolver: zodResolver(schema) });
-            ...
-            }
+        - Inside this "configuration object"
+            - Set the property "resolver"
+            - To the function "zodResolver()" as its value
+
+        - Then pass the object "schema" 
+            - As an argument value to the function "zodResolver()"
 
 
-- Consolidate error messages
-    - Remove the embedded validation rules from the JSX <input> elements
-        - Since all validation rules are defined within the schema
-
-        - From:
+- Consolidate the error messages
+    - On the registered JSX element <input>
+        - Remove the object containing the validation rules
 
         <input
-            {...register("name", { required: true, minLength: 3 })}
-            id="name"
-            type="text"
-            className="form-control"
-        />
-
-        - To:
-
-        <input
-            {...register("name")}
-            id="name"
-            type="text"
-            className="form-control"
-        />
-
-    - Delete the 2nd JSX <p> element embedded within an object, containing the 2nd error message
-        - There is NO need for separate <p> elements for error messages
-        - Error messages will be stored in a single <p> element with dynamic content
-
-            {errors.name?.type === "required" && (
-                <p className="text-danger">The name field is required.</p>
-            )}
-
-            {/* DELETE THIS OBJECT */}
-            {errors.name?.type === "minLength" && (
-                <p className="text-danger">The name must be at least 3 characters.</p>
-            )}
-    
-    - Simply the boolean expression of the 1st embedded <p> element within an object
-        - There is NO longer the need to check for the type
-        - Just for the existence of the property "name" in the "errors" object
-
-        - From:
-
-            {errors.name?.type === "required" && (
-                <p className="text-danger">The name field is required.</p>
-            )}
-
-        - To:
-
-            {errors.name && (
-                <p className="text-danger">The name field is required.</p>
-            )}
-
-    - Instead of hard-coding the error message
-        - Replace the hard-coded error message by passing an object containing "errors.name.message"
-        - Instructs Zod to dynamically generate the error message based on the defined schema
-
-            {errors.name && <p className="text-danger">{errors.name.message}</p>}
-
-    - Copy the previous line of code to the next JSX <input> field representing the "age" field
-        - Replace the property "name" with the property "age"
-
-            {errors.age && <p className="text-danger">{errors.age.message}</p>}
-
-    - Save changes and test code
-        - Clicking the "submit" button
-        - Displays the default error message for each field
-
-
-- To define custom error message for each field
-    - For the "name" field
-        - In the "name" property of the defined schema
-        
-        - Pass an object as 2nd argument value in the ".min()" method
-
-        - Inside the object, assign the custom error message to the property "message"
-
-            const schema = z.object({
-                name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-                age: z.number().min(18),
-            });
-
-
-    - For the "age" field
-        - It returns the default message "Expected number, received string"
-        
-        - This is due to the fact that the JSX <input> element's attribute of "value"
-            - ALWAYS returns a string value
-
-        - To address this, instruct the React Hook Form
-            - To have the JSX <input> element's attribute of "value" return a number instead
-
-    - To implement this
-        - In the function "register()" of the age field's JSX <input> element
-        - Pass an object as a 2nd argument value
-        - Inside the object, assign the boolean value of "true" to the property "valueAsNumber"
-
-        <input
-          {...register("age", { valueAsNumber: true })}
-          id="age"
-          type="number"
+          {...register("name", { required: true, minLength: 3 })}
+          id="name"
+          type="text"
           className="form-control"
         />
 
-    - Save changes and test code
-        - The "age" field now returns the default error message "Expected number, received nan"
+        - As ALL validation rules are NOW DEFINED within the object "schema"
+
+        <input
+          {...register("name")}
+          id="name"
+          type="text"
+          className="form-control"
+        />   
+
+    - Using schema-based validation
+        - There is NO need for serveral objects containing the corresponding error message
+        - Leave one and delete the rest
+
+    - Inside the object containing the error message
+        - Refactor the && operator
+        
+        - Check for the existence of the "key" in the returned object "errors"
+
+        - If it exists, render a JSX element <p>
+
+        - Dynamically render the corresponding error message as content
+            - Using "errors.name.message"
+
+            { errors.<key> && (<p>{errors.<key>.message}</p>)}
+
+        - Repeat this step to every registered JSX element <input>
+
+        - Zod will take care of generating (default) error messages 
+            - Based on the validation rules defined in the object "schema"
     
-    - Define a custom error message
-        - In the "age" property of the defined schema
-        - Pass an object as an argument value to the method ".number()"
-        - Inside the object, assign the custom error message to the property "invalid_type_error"
+
+- To customize error messages
+    - When specifying validation rules in the object "schema"
+
+    - Pass an object as an argument value to the chained "helper" method
+        - Assign the custom error message to the property "message"
+
+        z.object({
+            <key>:z.<data_type_method>().<helper_method>({message: "<custom_error_message>"}),
+            ...
+        })
+
+    - NOTE: The JSX element <input> ALWAYS return the value as a string
+        - If the expected value to be received is a number
+
+        - Pass an object as a 2nd argument value to the function "register()"
+            - Set the property "valueAsNumber"
+            - To the boolean value of true
+
+                <input
+                    {...register("<key>", { valueAsNumber: true })}
+                    ...
+                />
+
+    - To prevent register JSX element <input> that that expects a number value
+        - From triggering the error message "Expected number, received nan"
+
+        - In the validation rules of targeted input field inside the object "schema"
+
+        - Pass an object as an argument value to "z.number()"
+            - Set the property "invalid_type_error"
+            - To a custom error message
+        
+            const schema = z.object({
+                <key>:z.number({ invalid_type_error: "<custom_error_message>"}).<helper_method>(),
+                ...
+            })
+    
+
+- In the example code
+    - Open the <Form /> component (Form.tsx)
+
+    - Import the Zod library into the component
+
+        import { z } from "zod";
+
+    - Call the Zod's method ".object()" to define the schema & validation rules
+
+        z.object();
+
+    - Pass an object as an argument value to the method ".object()"
+        - This object is referred as a "configuration object"
+
+        z.object({});
+
+    - Inside the object define the properties & validation rules that represents the form's fields
+        - A property key "name"
+            - Which is of data type "string"
+            - MUST have a minimum of 3 characters
+
+        - A property key "age"
+            - Which is of data type "number"
+            - MUST have a minimum value of 18
+        
+    - Save the returned object to a constant named (by convention) "schema"
 
         const schema = z.object({
-            name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-            age: z.number({ invalid_type_error: "Age field is required."}).min(18),
+            name: z.string().min(3),
+            age: z.number().min(18),
         });
 
-    - Save changes and test code
 
-    - Add an addition custom message for the "age" field
-        - To inform the user that the expected minimum age is 18
+    - Remove the previous defined interface named "FormData"
 
-    - Define the additional custom message
-        - In the "age" property of the defined schema
-        - Pass an object as a 2nd argument value to the method ".min()"
-        - Inside the object, assign the custom error message to the property "message"
+
+    - Next is to extract the "type" of the returned object "schema"
+        - Call the property ".infer"
+            - Followed by <typeof schema>
+
+        - Save the returned "type" of the object "schema" 
+            - To a TypeScript type named "FormData"
+
+        type FormData = z.infer<typeof schema>;
+
+
+    - Integrate React HooK Form with Zod by installing resolvers & import them
+
+        import { zodResolver } from "@hookform/resolvers/zod";
+
+
+    - When calling the React HooK Form using function "useForm()"
+        - Pass an object as argument value to the function "useForm()"
+
+        const Form = () => {
+            const {
+                register,
+                handleSubmit,
+                formState: { errors },
+            } = useForm<FormData>({});
+
+            ...
+        }
+
+        - Inside the object
+            - Set the property "resolver"
+            - To the function "zodResolver()"
+
+        - Pass the object "schema" as an argument value to the function "zodResolver()"
+
+        const Form = () => {
+            const {
+                register,
+                handleSubmit,
+                formState: { errors },
+            } = useForm<FormData>({ resolver: zodResolver(schema) });
+            
+            ...
+        }
+    
+
+    - On the component's JSX mark-up
+        - Remove the object containing the valiation rules 
+        - From the registered JSX element <input>
+
+        <input
+          {...register("name")}
+          id="name"
+          type="text"
+          className="form-control"
+        />
+
+    - Remove the objects that contain the error messages
+        - Leave only one to consolidate ALL error messages
+
+        {errors.name?.type === "required" && (
+          <p className="text-danger">The name field is required.</p>
+        )}
+        
+    - Refactor the object's boolean expression & corresponding error message
+        - Check for the existence of the property "name" from the object "errors"
+            - If it evaluates to true
+            - Return an object containing the value of "errors.name.message"
+
+        {errors.name && <p className="text-danger">{errors.name.message}</p>}
+
+        - Zod takes care of generating the corresponding (default) error message
+            - Based on the defined schema & validation rules in the object "schema"
+    
+    - Copy and paste the object containing the error message
+        - Right after the JSX element <input> with the property "id" of "age"
+        - Refactor the "key" of the object from "name" to "age"
+
+        {errors.age && <p className="text-danger">{errors.age.message}</p>}
+    
+    - Save the changes
+        - Vite reloads the React application
+
+        - Submitting the form without providing an input
+            - The "Name" field generated the expected default error mesage
+
+            - The "Age" field reports an "Expected number, received string" error
+                - The data type returned by the property "value" is a string
+
+        - To address this concern
+            - Pass an object as a 2nd argument value to the function "register()"
+                - Of the JSX element <input> with the property "id" of "age"
+
+            - Inside the object
+                - Set the property "valueAsNumber"
+                - To the boolean value of true
+
+            <input
+                {...register("age", { valueAsNumber: true})}
+                id="age"
+                type="number"
+                className="form-control"
+            />
+        
+    - Save the changes
+        - Vite reloads the React application
+        - Submitting the form without providing an input
+        - The "Age" field reports an "Expected number, received nan" error
+
+        - To address this concern
+            - In the object "schema"
+
+            - Pass an object as argument value to the "helper" method "z.number()"
+
+            - Set the property "invalid_type_error"
+            - To the error message "Age field is required."
+
+            const schema = z.object({
+                name: z.string().min(3),
+                age: z.number({ invalid_type_error: "Age field is required." }).min(18),
+            });
+
+    - Save the changes
+        - Vite reloads the React application
+        - Submitting the form without providing an input
+        - Previous issue has been addressed
+
+
+    - To customize an error message
+        - In the object "schema"
+
+        - Pass an object as a 2nd argument value to the corresponding "helper" method
+            - Set the property "message"
+            - To the custom error message
 
         const schema = z.object({
-        name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-        age: z
+            name: z.string().min(3, { message: "Name must be least 3 characters." }),
+            age: z
             .number({ invalid_type_error: "Age field is required." })
             .min(18, { message: "Age must be at least 18." }),
         });
 
-    - Save changes and test code
+    - Save the changes
+        - Vite reloads the React application
+        - Custom error message respond to the provided input

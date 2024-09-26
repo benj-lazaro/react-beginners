@@ -6,16 +6,17 @@ interface Props {
 }
 
 const Like = ({ onClick }: Props) => {
+  // State hook
   const [status, setStatus] = useState(false);
 
+  // Notifies the parent component that a change of state occurred
   const toggle = () => {
     setStatus(!status);
     onClick();
-  }
+  };
 
-  if (status) return <AiFillHeart color="#ff6b81" size={20} onClick={toggle} />
-  return <AiOutlineHeart size={20} onClick={toggle}/>
-  
-}
+  if (status) return <AiFillHeart color="#ff6b81" size={20} onClick={toggle} />;
+  return <AiOutlineHeart size={20} onClick={toggle} />;
+};
 
-export default Like
+export default Like;
