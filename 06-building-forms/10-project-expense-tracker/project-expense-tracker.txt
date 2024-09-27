@@ -1,29 +1,39 @@
 Project: Expense Tracker
 ------------------------
-- Build a mini project, an Expense Tracker
-    - It has a form with the following fields
-        - Description
-        - Amount
-        - Category (drop-down list)
-            - Groceries
-            - Utilities
-            - Entertainment
+- Build a mini-prooject named "Expense Tracker"
 
-    - It has a Submit button
-        - Submitting a form without any values triggers custom error messages
-            - Description   = Description should at least be 3 characters
-            - Amount        = Amount is required
-            - Category      = Category is required
 
-    - It has another Category drop-down menu; filetered by the following
-        - All categories
-        - Groceries
-        - Utilities
-        - Entertainment
+- This project has a form with the following fields
+    - Description   = string
+    - Amount        = number
+    - Category      = drop-down list
+        - Groceries     = menu list item
+        - Utilities     = menu list item
+        - Entertainment = menu list item
 
-        - Displays the list of expenses based on selected Category
-        - Each item has its own "Delete" button
 
-        - Bottom row displays the "Total" amount of expenses
-            - Dynamically updates
-            - When an item is added or deleted from the list
+- It has a button "Submit"
+    - Submitting the form without any value triggers the following error messages
+        - Description   = Description should have at least be 3 characters
+        - Amount        = Amount is required
+        - Category      = Category is required
+
+    - Clicking the "Submit" button
+        - The item provided on the fields will be added into the list of expenses
+            - Each item on the list has a corresponding button "Delete"
+            - Clicking the button "Delete" removes the item from the list
+
+        - Then all of the three (3) fields gets cleared
+
+
+- Above the list of expenses is a drop-down list that filters the items displayed on the list
+    - All categories    = All items in the list
+    - Groceries         = Grocery items ONLY
+    - Utilities         = Utility items ONLY
+    - Entertainment     = Entertainment items ONLY
+
+
+- The bottom row of the list displays the "Total" amount of expenses
+    - The amount dynamically updates based on
+        - Items added or deleted to or from the list
+        - Category of list of expenses currently viewed
