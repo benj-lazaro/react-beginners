@@ -1,13 +1,11 @@
-// Function-based React component
+let count = 0;
 
-// Function component that returns a JSX (JavaScript XML) element
-function Message() {
-    const name = "";
-
-    if (name) 
-        return <h1>Hello {name}</h1>;
-    return <h1>Hello World</h1>;
-}
+// Intentionally implemented impure function
+const Message = () => {
+  console.log("Message component called ", count); // Proof that Strict mode renders this component twice
+  count++; // Changing the value of a variable prior to rendering = impure behavior
+  return <div>Message {count}</div>;
+};
 
 // Export component as a default object from this module
 export default Message;
