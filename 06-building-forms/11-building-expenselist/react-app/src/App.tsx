@@ -1,13 +1,12 @@
 import { useState } from "react";
-import ExpenseList from "./expense-tracker/components/ExpenseList";
+import ExpenseList from "./expense-list/components/ExpenseList";
 
 function App() {
-  // State Hook with the dummy data
   const [expenses, setExpenses] = useState([
-    { id: 1, description: "aaa", amount: 10, category: "utilities" },
-    { id: 2, description: "bbb", amount: 10, category: "utilities" },
-    { id: 3, description: "ccc", amount: 10, category: "utilities" },
-    { id: 4, description: "ddd", amount: 10, category: "utilities" },
+    { id: 1, description: "aaa", amount: 10, category: "Utilities" },
+    { id: 2, description: "bbb", amount: 10, category: "Utilities" },
+    { id: 3, description: "ccc", amount: 10, category: "Utilities" },
+    { id: 4, description: "ddd", amount: 10, category: "Utilities" },
   ]);
 
   return (
@@ -20,4 +19,5 @@ function App() {
   );
 }
 
+// Export the React App component
 export default App;

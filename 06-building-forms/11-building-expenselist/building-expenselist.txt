@@ -1,25 +1,429 @@
 Building ExpenseList
 --------------------
-- Build the easiest component in the project
-    - Under the folder "src"
-        - Create a new folder named "expense-tracker"
-        - This folder will contain all the building blocks for the Expense Tracker app
+- In the mini-project "Expense Tracker"
+    - The component <ExpenseList /> is the easiest & first component to build
 
-    - Inside the folder "expense-list"
-        - Create a new folder named "components"
 
-    - Inside the "components" folder
-        - Create a new file "ExpenseList.tsx"
-        - This component handles the
-            - Rendering of each item (expense) passed as Props (properties)
-            - Dynamically compute the total amount of the items
+- Create a new folder named "expense-tracker" inside the folder "src"
+    - This folder will contain all the building blocks of the mini-project
 
-    - On the <App /> component
-        - Import the <ExpenseList /> component
+    - This is a good way to structure a large complex application
+        - Rather than throwing the project's components along
+            - With the Vite-generated folder "components"
 
-        - Defines the dummy data (array of objects) 
-            - Passed as Props to the <ExpenseList /> component
+        - Better to divide the files into functional areas (i.e. modules)
+            - Within the created project folder
 
-        - Handles the deletion of items from the dummy data
-            - Using State Hook
-            - Filters the array of dummy data except the targeted one for deletion
+
+- Create a new folder named "components" 
+    - Inside the folder "expense-tracker"
+
+
+- Open the folder "components"
+    - Create a new file named "ExpenseList.tsx"
+
+
+- The component <ExpenseList /> (ExpenseList.tsx)
+    - Use the shortcut "rafce" to generate component function boilerplate
+
+    - Declare a JSX element <table>
+        - Declare property "className"
+        - Set to Bootstrap's class "table table-bordered"
+
+    - Declare a JSX element <thead>
+        - Declare a JSX element <tr> with four (4) JSX element <th> inside as content
+
+    - Specify the headings for table head columns
+        - Description
+        - Amount
+        - Category
+        - <Intentionally left blank for the button "Delete">
+
+        const ExpenseList = () => {
+            return (
+                <table className="table table-bordered">
+                    <thead>
+                        <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                        <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            );
+        };
+
+    - Declare a JSX element <tbody>
+        - Content for this JSX element will be passed as Props 
+            - In order to make this component reusable
+
+        - NOTE: The content is an array of items (i.e. expenses)
+
+
+- Outside the component's function
+    - Define the shape of "Props" using an interface 
+        - A property named "expense"    = array of expense objects
+
+        interface Props {
+            expenses: <array_of_expenses>[];
+        }
+
+    - So, let's define the shape of each "Expense" first using an interface
+        - A property named "id"             = number
+        - A property named "description"    = string
+        - A property named "amount"         = number
+        - A property named "category"       = string
+
+        interface Expense {
+            id: number;
+            description: string;
+            amount: number;
+            category: string;
+        }
+
+    - Move back to Props and update the data type of the property "expenses"
+
+        interface Props {
+            expenses: Expense[];
+        }
+
+
+- Deconstruct the property "expenses" of data type Props
+    - Then pass it as an argument value to the component's function
+
+    const ExpenseList = ({expenses}: Props) => {
+        ...
+    }
+
+
+- Switch back to the component's JSX mark-up
+    - Inside the JSX element <tbody>
+        
+    - Declare a blank object
+
+        <tbody>{}</tbody>
+
+    - Inside the object
+        - Use the method ".map()" on the array "expenses"
+
+            <tbody>
+                {expenses.map()}
+            </tbody>
+
+        - Pass an arrow function as an argument value to the method ".map()"
+
+            <tbody>
+                {expenses.map(() => {})}
+            </tbody>
+
+        - Declare a parameter variable "expense" 
+            - To store the current item of the array "expenses"
+
+            <tbody>
+                {expenses.map((expense) => {})}
+            </tbody>
+
+        - Map out each value in the parameter variable "expense"
+            - Into a JSX element <tr>
+
+            <tbody>
+                {expenses.map((expense) => <tr></tr>)}
+            </tbody>
+        
+        - On the JSX element <tr>
+            - Declare the property "id"
+            - Assign the value stored in "expense.id"
+
+            <tbody>
+                {expenses.map((expense) => <tr id={expense.id}></tr>)}
+            </tbody>
+
+        - Inside the JSX element <tr>
+            - Declare four (4) JSX element <td>
+            - Inside each JSX element <td>, assign the properties
+                - description
+                - amount
+                - category
+
+            <tbody>
+                {expenses.map((expense) => (
+                    <tr key={expense.id}>
+                        <td>{expense.category}</td>
+                        <td>{expense.amount}</td>
+                        <td>{expense.category}</td>
+                        <td></td>
+                    </tr>
+                ))}
+            </tbody>
+            
+        - On the 4th JSX element <td>
+            - Assign a JSX element <button>
+            - Declare property "className"
+            - Set to Bootstrap class "btn btn-outline-danger"
+            - Content set to "Delete"
+
+            <tbody>
+                {expenses.map((expense) => (
+                    <tr key={expense.id}>
+                        <td>{expense.description}</td>
+                        <td>{expense.amount}</td>
+                        <td>{expense.category}</td>
+                        <td>
+                            <button className="btn btn-outline-danger">Delete</button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+
+        - When the JSX element <button> is clicked
+            - This component notifies the parent component (App.tsx)
+                - That an "expense" item should be deleted
+
+            - To do that a callback function is needed
+
+
+- For the callback function, move back to the Props
+    - Add a new property named "onDelete"
+
+    - Set an arrow function as value
+    
+    - Declare parameter variable "id" of data type "number"
+        - Identifies the item in the array "expenses" based on its property "id"
+        - That is to be deleted
+        
+    - The function returns void
+
+        interface Props {
+            expenses: Expense[];
+            onDelete: (id: number) => void;
+        }
+
+
+- Deconstruct the property "onDelete" of data type Props
+    - Then pass it as an argument value to the component's function
+
+    const ExpenseList = ({ expenses, onDelete }: Props) => {
+        ...
+    }
+
+
+- Back on the JSX element <button>
+    - Declare the property "onClick"
+    
+    - Pass an arrow function as an argument value
+
+    - Inside the arrow function
+        - Call the property "onDelete()"
+        - Pass "expense.id" as an argument value
+
+        <button
+            className="btn btn-outline-danger"
+            onClick={() => onDelete(expense.id)}
+        >
+
+
+- Next, declare a JSX element <tfoot>
+    - Inside the JSX element <tfoot>
+        - Declare a JSX element <tr>
+
+    - Inside the JSX element <tr>
+        - Declare four (4) JSX element <td>
+
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+
+    - On the 1st JSX element <td>
+        - Assign the content "Total"
+
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+
+    - On the 2nd JSX element <td>
+        - Dynamically calculates the total of the value in the property "amount"
+
+        - Declare a blank object
+
+        - Inside the object
+            - Call the method ".reduce()" on the array "expenses"
+
+        - Pass an arrow function as argument value to the method ".reduce()"
+
+        - Declare two parameter variables on the arrow function
+            - accumulator   = stores the total
+            - expense       = current item of the array "expenses"
+
+        - Inside the arrow function
+            - Add the value stored in the property "amount" of the item (i.e. expense)
+            - With that current value of the accumulator
+            - Followed by passing the initial value for the accumulator (i.e. 0)
+
+        - After calling the method ".reduce()"
+            - Chain the method ".toFixed()"
+            - Pass the argument value of 2
+            
+            - This is to specify the number of digits after the decimal point
+
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td>
+                    $
+                    {expenses
+                        .reduce((accumulator, expense) => expense.amount + accumulator, 0)
+                        .toFixed(2)}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+
+    - Save the changes
+
+
+- Open the <App /> component (App.tsx)
+    - Import the <ExpenseList /> component
+
+        import ExpenseList from "./expense-list/components/ExpenseList";
+
+    - Declare the <ExpenseList /> component on this component's JSX mark-up
+
+        function App() {
+            return <div>
+                <ExpenseList />
+            </div>;
+        }
+
+    - Declare properties "expenses" on the <ExpenseList /> component
+        
+        function App() {
+            return <div>
+                <ExpenseList expenses={} />
+            </div>;
+        }
+
+    - Create an array of test data to be passed on the property "expenses"
+        - Declare an array of objects representing an item (i.e. expense)
+        - Save the array to a constant named "expenses"
+
+        const expenses = [
+            {id: 1, description: "aaa", amount: 10, category: "Utilities"},
+            {id: 2, description: "bbb", amount: 10, category: "Utilities"},
+            {id: 3, description: "ccc", amount: 10, category: "Utilities"},
+            {id: 4, description: "ddd", amount: 10, category: "Utilities"},
+        ];
+
+    - Pass the array "expenses" as value to the property "expenses"
+
+            function App() {
+            return <div>
+                <ExpenseList expenses={expenses} />
+            </div>;
+        }
+
+    - Next declare the property "onDelete"
+        - Pass an arrow function
+
+        - On the arrow function
+            - Pass the parameter variable "id"
+
+        - Inside the arrow function
+            - Pass the value of the parameter variable "id" to "console.log()"
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Renders the items from the dummy data passed as Props to the <ExpenseList /> component
+
+        - Clicking the button "Delete"
+            - Displays "Delete <array_item_id>" on the browser's JavaScript console
+
+    
+- Implement the functionality of the button "Delete"
+    - Use the State Hook to store state of the array "expenses"
+
+    - Call the function "useState()"
+        - Pass the array stored in the constant "expenses"
+        - As an argument value to the function "useState()"
+
+    - Deconstruct the returned object into a state variable & set (update) function
+
+        const [expenses, setExpenses] = useState([
+            { id: 1, description: "aaa", amount: 10, category: "Utilities" },
+            { id: 2, description: "bbb", amount: 10, category: "Utilities" },
+            { id: 3, description: "ccc", amount: 10, category: "Utilities" },
+            { id: 4, description: "ddd", amount: 10, category: "Utilities" },
+        ]);
+
+    - Move to the property "onDelete" of the <ExpenseList />component
+
+    - Refactor the body of the arrow function
+        - Call the function "setExpenses()"
+
+        - Call the method ".filter()" on the state variable "expenses"
+            - Then pass it as an argument value to the function "setExpenses()"
+        
+            <div>
+                <ExpenseList
+                    expenses={expenses}
+                    onDelete={(id) => setExpenses(expenses.filter())}
+                />
+            </div>
+
+        - On the method ".filter()"
+            - Pass the parameter variable "e" (i.e. inidividual expense)
+
+        - Inside the method ".filter()"
+            - Check if the property "id" of the "e" is NOT equal to "id"
+
+            <div>
+                <ExpenseList
+                    expenses={expenses}
+                    onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+                />
+            </div>
+
+        - The method ".filter()" iterates through the items in the array "expenses"
+            - Returns a new array except for the array item
+            - That matches the value stored in the parameter variable "id"
+                - Of the arrow function that called the set function "setExpenses()"
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - When the button "Delete" is clicked
+            - The item (i.e. expense) is dynamically removed from the list
+            - The amount in "Total" is dynamically recalculated
+
+
+- To cease rendering the JSX element <table>
+    - Open the <ExpenseList /> component (ExpenseList.tsx)
+
+    - At the starting line of the component's function
+        - Declare an "if statement"
+
+        - Checks for the length of the array "expenses"
+
+        - If the length === 0
+            - Then return a null
+            - Otherwise render the component's JSX mark-up
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - When the items of the items have all been removed
+            - The <ExpenseList /> component is NOT rendered anymore
+            - Or rather a null is return instead
+
