@@ -228,3 +228,9 @@ Building ExpenseFilter
                 expenses={visibleExpenses}
                 onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
              />
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Selecting the category rendered by the <ExpenseFilter /> component
+            - Filters the expenses rendered by the <ExpenseList /> component
