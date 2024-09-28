@@ -1,5 +1,6 @@
 import React from "react";
 
+// Define the shape of each expense
 interface Expense {
   id: number;
   description: string;
@@ -7,13 +8,13 @@ interface Expense {
   category: string;
 }
 
+// Defien the shape of Props
 interface Props {
   expenses: Expense[];
   onDelete: (id: number) => void;
 }
 
 const ExpenseList = ({ expenses, onDelete }: Props) => {
-  // If there no items present in the table return a blank page
   if (expenses.length === 0) return null;
 
   return (
@@ -26,7 +27,6 @@ const ExpenseList = ({ expenses, onDelete }: Props) => {
           <th></th>
         </tr>
       </thead>
-
       <tbody>
         {expenses.map((expense) => (
           <tr key={expense.id}>
@@ -44,14 +44,13 @@ const ExpenseList = ({ expenses, onDelete }: Props) => {
           </tr>
         ))}
       </tbody>
-
       <tfoot>
         <tr>
           <td>Total</td>
           <td>
             $
             {expenses
-              .reduce((acc, expenses) => expenses.amount + acc, 0)
+              .reduce((accumulator, expense) => expense.amount + accumulator, 0)
               .toFixed(2)}
           </td>
           <td></td>

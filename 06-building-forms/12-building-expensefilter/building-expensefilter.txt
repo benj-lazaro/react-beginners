@@ -1,96 +1,103 @@
 Building ExpenseFilter
 ----------------------
-- Building the <ExpenseFilter /> component
-    - This component is responsible for show filters
-    
-    - It filters displayed expenses by category
-        - NO category selected meant rendering all expenses
+- The next component to build for the mini-project "Expense Tracker" is the <ExpenseFilter /> component
+    - This component is solely responsible for showing category filters
+
+    - NOTE: The act of filtering is one on the <App /> component (App.tsx)
+        - This is the component that maintains the state
+
+        - When the user selects a "category" filter in the <ExpenseFilter /> component
+            - It notifies the <App /> component
+
+            - The <App /> component performs the act of filtering the dummy data
+                - Then rendering them on the DOM
 
 
-- In the folder "components"
+- Open the folder "src/expense-list"
     - Create a new file named "ExpenseFilter.tsx"
 
-    - This component returns a <select> element
-        - Contains <option> elements with hard-coded categories (for now)
 
+- Inside the file "ExpenseFilter.tsx"
+    - Use the shortcut "rafce" to generate component function boilerplate
 
-- The act of filtering is implemented at the <App /> component
-    - This is where the state is maintained
+    - On the component's JSX mark-up
+        - Remove the JSX element <div>
 
-    - Need to define the shape of the <ExpenseFilter /> component's Props
-        - Property name "onSelectCategory"
-        - Assigned with a function
-            - Defined with a parameter variable "category" of type "string"
-            - The function returns void
+        - Replace it with a JSX element <select> 
+            - Declare the property "className"
+            - Assign Bootstrap's class "form-select"
 
-    - Pass the Props object as argument value to the <ExpenseFilter /> component
+            const ExpenseFilter = () => {
+                return <select name="" id="" className="form-select"></select>;
+            };
 
-    - Add the attribute attribute "onChange" to the JSX mark-up <select>
-        - Assign an anonymous callback function
-        - The function accepts an "event" as argument value
-        
-        - Calls the Props' "onSelectCategory()" function
-            - Passing "event.target.value" as argument value
-        
-        - This returns the selected "value" of the corresponding <option> element
+        - Remove the properties "id" and "name"
 
+            const ExpenseFilter = () => {
+                return <select className="form-select"></select>;
+            };        
 
-- Import the <ExpenseFilter /> in the <App /> component
+        - Inside the JSX property <select>
+            - Declare the four (4) categories using the JSX element <option>
+            
+            - NOTE: For now, these items are hard-coded
 
-    import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
+            const ExpenseFilter = () => {
+                return (
+                    <select className="form-select">
+                        <option value="">All categories</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Entertainment">Entertainment</option>
+                    </select>
+                );
+            };
+                    
 
+    - Define the "shape" of the Props using an interface
+        - Declare the property "onSelect"
+        - Set it with an anonymous arrow function
 
-- Place the <ExpenseFilter /> component inside a <div> element
-    - The attribute "className" assigned with the value "mb-3" (Bootstrap class)
-        - Implements a "margin-bottom" of 3px to the <div> element
+        - On the arrow function
+            - Declare a paramter variable named "category"
+            - Data type of "string"
 
-    - Located just above the <ExpenseList /> component
+        - Inside the arrow function
+            - Returns "void"
 
-    - Set the "onSelectCategory" Props to an anonymous callback function
-        - It accepts an object named "category"
-            - Which holds the returned value from the <ExpenseFilter /> Props
-        
-        - Then displays the content of the "category" object on the console
+        interface Props {
+            onSelectCategory: (category: string) => void;
+        }
 
-        <div className="mb-3">
-            <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
-        </div>
+    - On the component's function declaration
+        - Pass Props as an argument value
+        - Deconstruct the property "onSelectCategory"
 
-
-- In the <App /> component
-    - Define a state variable for selecting the represented filter
-        - When the filter changes
-        - The <App /> component will re-render
-        - The list of expenses be updated
+        const ExpenseFilter = ({ onSelectCategory }: Props) => {
+            return (
+                ...
+            );
+        };
     
-    - Refactor <ExpenseFilter /> component's attribute "onSelectCategory"
-        - Instead of displaying the content of the object "category"
-        - It calls the state function "setSelectedCategory()"
-        - Pass the object "category" as an argument value
-    
-    - Create a local constant named "visibleExpenses"
-        - Assign a ternary expression
+    - On the JSX element <select>
+        - Declare the property "onChange"
+        - Set it to an anonymous arrow function
 
-        - Call the method ".filter()" on the object "expenses"
+        - On the arrow function
+            - Declare a parameter variable named "event"
 
-        - Pass an anonymous function to the ".filter()" method
-            - The function passes the object "e" (i.e. expenses) as argument value
-        
-        - Check if values of property ".category" and state variable "selectedCategory" are equal
-            - If truthy returns the value of "selectedCategory"
-                - Renders ONLY the expenses revelant to the selected category
+        - Inside the arrow function
+            - Call the property "onSelectCategory()"
+            - Pass "event.target.value" as an argument value to "onSelectCategory()"
 
-            - Otherwise returns the object "expenses"
-                - Renders all expenses
+            return (
+                <select
+                className="form-select"
+                onChange={(event) => onSelectCategory(event.target.value)}
+                >
+                    ...
+                </select>
+            )
 
-        const visibleExpenses = selectedCategory
-            ? expenses.filter((e) => e.category === selectedCategory)
-            : expenses;
 
-    - Refactor <ExpenseList /> component's "expenses" Props
-        - Pass the returned value of "visibleExpenses"
-
-        <ExpenseList
-            expenses={visibleExpenses}
-            onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
-        />
+- Open the <App /> component (App.tsx)
