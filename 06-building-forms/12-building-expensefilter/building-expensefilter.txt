@@ -101,3 +101,130 @@ Building ExpenseFilter
 
 
 - Open the <App /> component (App.tsx)
+    - Import the <ExpenseFilter /> component
+
+        import ExpenseFilter from "./expense-list/components/ExpenseFilter";
+
+    - On the component's JSX mark-up
+        - Add the <ExpenseFilter /> component on top of the <ExpenseList /> component
+
+        - Declare the property "onSelectCategory"
+            - Set it to an anonymous arrow function
+
+        - On the arrow function
+            - Declare the parameter variable "category"
+
+        - Inside the arrow function
+            - Pass the value of the parameter variable "category" to "console.log()"
+
+            return (
+                <div>                    
+                    <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
+
+                    <ExpenseList
+                        expenses={expenses}
+                        onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+                    />
+                </div>
+            );
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Renders both <ExpenseFilter /> and <ExpenseList /> components
+
+            - When a category is selected from the <ExpenseFilter /> component
+                - The chosen category is displayed on the browser's JavaScript console
+
+            - NOTE: The <ExpenseFilter /> component is too close to the <ExpenseList /> component
+
+        - To address this concern
+            - Add some "margin" below the <ExpenseFilter /> component
+
+            - Create a JSX element <div> above the <ExpenseFilter /> component
+                - Declare the property "className"
+                - Set it to Bootstrap's class "mb-3"
+                - NOTE: This translates to CSS property "margin-bottom: 3px"
+
+            - Then move the <ExpenseFilter /> component inside the JSX element <div>
+
+            return (
+                <div>
+                    <div className="mb-3">
+                        <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
+                    </div>
+
+                    <ExpenseList
+                        expenses={expenses}
+                        onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+                    />
+                </div>
+            );
+        
+        - Save the changes
+            - Vite reloads the React application
+            - Addresses the noted UI problem
+
+
+    - Next is to work on filtering
+        - Declare another State Hook
+            - To create another state variable that stores the selected category (i.e. filter)
+
+            - When the category changes
+                - The <App /> component will re-render
+                - The list inside <ExpenseList /> will be updated
+
+        - Call the function "useState()"
+            - Pass an argument value of empty string
+
+        - Destructure the returned object
+            - The state variable is named "selectedCategory"
+            - The set/update function is named "setSelectedCategory"
+
+            const [selectedCategory, setSelectedCategory] = useState("");
+
+    - Move back to the component's JSX mark-up
+        - On the <ExpenseFilter />
+
+        - Refactor the arrow function assigned to the property "onSelectCategory"
+            - Replace the call to "console.log()"
+            - To the set function "setSelectedCategory()"
+            - Pass the parameter variable "category" as an argument value to "setSelectedCategory()"
+
+            <ExpenseFilter
+                onSelectCategory={(category) => setSelectedCategory(category)}
+            />
+
+
+        - On the <ExpenseList />
+            - Instead of passing the state variable "expenses" to the property "expenses"
+                - Pass a non-existent "filtered list"
+
+            - Outside the <App /> component's JSX mark-up
+                - Declare a constant named "visibleExpenses"
+
+                - Assign a ternary operator
+                
+                - Checks if the state variable "selectedCategory" is truthy
+                    - It has an assigned value
+                    - NOT its initial empty string (e.g. falsy)
+                
+                - If truthy
+                    - Call the method ".filter()" on the state variable "expenses"
+                        - Accepts a parameter variable "e" (i.e. individual expense / item)
+                        - Check if the property "category" of "e" is equal to the value in the state variable "category"
+                        - Returns a new array with "filtered" items
+        
+                - Otherwise
+                    - Assign the value in state variable "expenses" to the constant "visibleExpenses"
+
+                const visibleExpenses = selectedCategory
+                    ? expenses.filter((e) => { e.category === selectedCategory }) : expenses;
+
+
+            - Pass the constant "visibleExpenses" to the property "expenses"
+
+            <ExpenseList
+                expenses={visibleExpenses}
+                onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+             />
