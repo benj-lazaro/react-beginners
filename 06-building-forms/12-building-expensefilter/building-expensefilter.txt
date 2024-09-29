@@ -1,76 +1,87 @@
 Building ExpenseFilter
 ----------------------
-- The next component to build for the mini-project "Expense Tracker" is the <ExpenseFilter /> component
-    - This component is solely responsible for showing category filters
+- The next component to build is the <ExpenseFilter />
+    - This is solely responsible for showing category "filters"
+        - NOT the act of filtering the list of items (i.e. expenses)
 
-    - NOTE: The act of filtering is one on the <App /> component (App.tsx)
-        - This is the component that maintains the state
+    - The act of "filtering" is performed by the <App /> component (App.tsx)
+        - As this component maintains the state of the application
 
-        - When the user selects a "category" filter in the <ExpenseFilter /> component
-            - It notifies the <App /> component
+    - When a user selects a category in the <ExpenseFilter /> component
+        - This component notifies a change of state to the <App /> component
 
-            - The <App /> component performs the act of filtering the dummy data
-                - Then rendering them on the DOM
+    - The <App /> component then performs the filtering of the dummy data
+        - Passes the "filtered" list of items to the <ExpenseList /> component
+
+    - The <ExpenseList /> component renders the filetered list of items in the DOM
 
 
-- Open the folder "src/expense-list"
+- To create the new component <ExpenseFilter />
+    - Open the folder "src/expense-tracker/components"
+
     - Create a new file named "ExpenseFilter.tsx"
 
+    - Use the shortcut "rafce"
+        - To generate the component function boilerplate code
 
-- Inside the file "ExpenseFilter.tsx"
-    - Use the shortcut "rafce" to generate component function boilerplate
 
-    - On the component's JSX mark-up
-        - Remove the JSX element <div>
 
-        - Replace it with a JSX element <select> 
-            - Declare the property "className"
-            - Assign Bootstrap's class "form-select"
+- On the <ExpenseFilter /> component's mark-up
+    - Remove the generated JSX element <div>
 
-            const ExpenseFilter = () => {
-                return <select name="" id="" className="form-select"></select>;
-            };
+    - Replace it with a JSX element <select>
+        - Declare the property "className"
+            - Assign the Bootstrap class "form-select"
 
-        - Remove the properties "id" and "name"
+        - Remove the properties "name" and "id"
 
-            const ExpenseFilter = () => {
-                return <select className="form-select"></select>;
-            };        
+        const ExpenseFilter = ({ onSelectCategory }: Props) => {
+            return <select className="form-select"></select>;
+        };
 
-        - Inside the JSX property <select>
-            - Declare the four (4) categories using the JSX element <option>
-            
-            - NOTE: For now, these items are hard-coded
 
-            const ExpenseFilter = () => {
-                return (
-                    <select className="form-select">
-                        <option value="">All categories</option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Entertainment">Entertainment</option>
-                    </select>
-                );
-            };
-                    
+- Inside the JSX element <selec>
+    - Add four (4) JSX elements <option>
+    
+    - Assign the following as a value to the property "value" & content of the JSX element
+        - "" for "All"
+        - "Groceries" for "Groceries"
+        - "Utiltiies" for "Utilities"
+        - "Entertainment" for "Entertainment"
+    
+        - NOTE: The value are intentionally hard-coded for now
 
-    - Define the "shape" of the Props using an interface
-        - Declare the property "onSelect"
-        - Set it with an anonymous arrow function
+        return (
+            <select className="form-select">
+                <option value="">All</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Entertainment">Entertainment</option>
+            </select>
+        );
 
-        - On the arrow function
-            - Declare a paramter variable named "category"
-            - Data type of "string"
 
-        - Inside the arrow function
-            - Returns "void"
+- In order for the <ExpenseFilter /> to inform the <App /> when a change of state occurred
+    - Define the shape of the <ExpenseFilter /> component's properties (Props) using interface
+
+    - Add a property named "onSelect"
+        - Assign an anonymous arrow function as value
+
+    - On the arrow function
+        - Declare the parameter variable named "category" of data type "string"
+
+        - The variable "category" stores the user-selected category
+            - The value is returned by the arrow function (yet to be defined)
+            - That is assigned as value to the property "onChange" of the JSX element <select>
+
+    - Inisde the arrow function
+        - Returns void
 
         interface Props {
             onSelectCategory: (category: string) => void;
         }
 
-    - On the component's function declaration
-        - Pass Props as an argument value
+    - Add the Props as an argument value to the component's function declaration
         - Deconstruct the property "onSelectCategory"
 
         const ExpenseFilter = ({ onSelectCategory }: Props) => {
@@ -78,159 +89,187 @@ Building ExpenseFilter
                 ...
             );
         };
-    
+
     - On the JSX element <select>
         - Declare the property "onChange"
-        - Set it to an anonymous arrow function
+            - Assign an anonymous arrow function as value
+
+            <select className="form-select" onChange={() => {}}>
 
         - On the arrow function
-            - Declare a parameter variable named "event"
+            - Declare the parameter variable named "event"
+                - This variable holds the object "event"
+
+            - The object "event" has a property named "target"
+                - It returns the selected (clicked) JSX element in the DOM
 
         - Inside the arrow function
-            - Call the property "onSelectCategory()"
-            - Pass "event.target.value" as an argument value to "onSelectCategory()"
+            - Call the property "onSelectCategory" like a function
+            - Pass the "event.target.value" as an argument value to "onSelectCategory()"
 
-            return (
                 <select
-                className="form-select"
-                onChange={(event) => onSelectCategory(event.target.value)}
-                >
-                    ...
+                    className="form-select"
+                    onChange={(event) => onSelectCategory(event.target.value)}
+                    >
+                    <option value="">All</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Entertainment">Entertainment</option>
                 </select>
-            )
+
+            - NOTE: The property "value" of the object "event.target"
+                - Returns the corresponding value assigned to the property "value" 
+                - Of the selected (clicked) JSX element <option>
+
+                    <option value="">All</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Entertainment">Entertainment</option>
 
 
 - Open the <App /> component (App.tsx)
     - Import the <ExpenseFilter /> component
 
-        import ExpenseFilter from "./expense-list/components/ExpenseFilter";
+        import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
+    
+    - In the component's JSX mark-up
+        - Add the <ExpenseFilter /> component above the <ExpenseList />
 
-    - On the component's JSX mark-up
-        - Add the <ExpenseFilter /> component on top of the <ExpenseList /> component
+            return (
+                <div>
+                <ExpenseFilter />
 
-        - Declare the property "onSelectCategory"
-            - Set it to an anonymous arrow function
+                <ExpenseList
+                    expenses={expenses}
+                    onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+                />
+                </div>
+            );
+
+    - On the <ExpenseFilter /> component
+        - Set the property "onSelectCategory"
+            - Assign an anonymous arrow function
 
         - On the arrow function
-            - Declare the parameter variable "category"
+            - Add the parameter variable named "category"
+            - This contains an object regarding the selected category
 
         - Inside the arrow function
             - Pass the value of the parameter variable "category" to "console.log()"
 
-            return (
-                <div>                    
-                    <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
-
-                    <ExpenseList
-                        expenses={expenses}
-                        onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
-                    />
-                </div>
-            );
+            <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
 
         - Save the changes
             - Vite reloads the React application
+            
+            - The <ExpenseFilter /> component is rendered in the DOM
+                - Just above the <ExpenseList /> component
 
-            - Renders both <ExpenseFilter /> and <ExpenseList /> components
+            - Selecting a "category" from the list
+                - Displays the corresponding value taken from the property "value"
+                - Of the selected JSX element <option> in the browser's JavaScript console
 
-            - When a category is selected from the <ExpenseFilter /> component
-                - The chosen category is displayed on the browser's JavaScript console
-
-            - NOTE: The <ExpenseFilter /> component is too close to the <ExpenseList /> component
+            - NOTE: the <ExpenseFilter /> component is too close to the <ExpenseList />
 
         - To address this concern
-            - Add some "margin" below the <ExpenseFilter /> component
-
-            - Create a JSX element <div> above the <ExpenseFilter /> component
+            - Add a JSX element <div>
                 - Declare the property "className"
-                - Set it to Bootstrap's class "mb-3"
-                - NOTE: This translates to CSS property "margin-bottom: 3px"
+                - Assign Bootstrap class "mb-3" as value
+                - NOTE: "mb-3" translates to "margin-bottom: 3px"
 
-            - Then move the <ExpenseFilter /> component inside the JSX element <div>
+            - Move the <ExpenseFilter /> component into the JSX element <div>
 
-            return (
-                <div>
-                    <div className="mb-3">
-                        <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
-                    </div>
-
-                    <ExpenseList
-                        expenses={expenses}
-                        onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
-                    />
+                <div className="mb-3">
+                    <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
                 </div>
-            );
-        
+
         - Save the changes
             - Vite reloads the React application
-            - Addresses the noted UI problem
+            
+            - The <ExpenseFilter /> component is now propperly spaced from the <ExpenseList />
 
 
-    - Next is to work on filtering
-        - Declare another State Hook
-            - To create another state variable that stores the selected category (i.e. filter)
+- To implement the action of filtering in the <App /> component
+    - Requires another state variable to represent the selected "filter" category
+        - When the value of the "filter" changes
+        - The <App /> component will be rendered
+        - Then list passed to the <ExpenseList /> component will be updated
 
-            - When the category changes
-                - The <App /> component will re-render
-                - The list inside <ExpenseList /> will be updated
-
+    - Create a state variable and its corresponding set / update function using State Hook
         - Call the function "useState()"
-            - Pass an argument value of empty string
+            - Pass an empty string as an argument value
 
-        - Destructure the returned object
-            - The state variable is named "selectedCategory"
-            - The set/update function is named "setSelectedCategory"
+        - Save the returned object to a constant
+            - Desconstruct the returned object
+            - Pull the state variable and name it "selectedCategory"
+            - Pull the set / update function and name it "setSelectedCategory"
 
             const [selectedCategory, setSelectedCategory] = useState("");
 
-    - Move back to the component's JSX mark-up
-        - On the <ExpenseFilter />
+    - When a user selects a category from the <ExpenseFilter /> component
+        - The arrow function assigned as value to the property "onSelectCategory" is called
 
-        - Refactor the arrow function assigned to the property "onSelectCategory"
-            - Replace the call to "console.log()"
-            - To the set function "setSelectedCategory()"
-            - Pass the parameter variable "category" as an argument value to "setSelectedCategory()"
+        - Instead of logging the selected "category" to the browser's JavaScript console
+            - Calls the set / update function "setSelectedCategory()" is called
+            - Pass the parameter variable "category" as an argument value
 
-            <ExpenseFilter
-                onSelectCategory={(category) => setSelectedCategory(category)}
-            />
+                <div className="mb-3">
+                    <ExpenseFilter
+                        onSelectCategory={(category) => setSelectedCategory(category)}
+                    />
+                </div>
 
+        - When a user selects a category
+            - The state will be updated
+            - The component <App /> is re-rendered 
+            - The updated list sent to the <ExpenseList /> component is next
+    
+    - On the <ExpenseList /> mark-up
+        - Instead of passing the state variable "expense" as value
+            - To the property "expenses" of the <ExpenseList /> component
+            - Pass a "filtered" list instead
 
-        - On the <ExpenseList />
-            - Instead of passing the state variable "expenses" to the property "expenses"
-                - Pass a non-existent "filtered list"
+        - To create a "filtered" list
+            - Declare a constant named "visibleExpenses"
+                - Assign a ternary expression as value
 
-            - Outside the <App /> component's JSX mark-up
-                - Declare a constant named "visibleExpenses"
+            - The ternary expression checks
+                - If the state variable "selectedCategory" is truthy
+                - NOTE: the state variable is initially assigned with an empty string (e.g. falsy)
 
-                - Assign a ternary operator
-                
-                - Checks if the state variable "selectedCategory" is truthy
-                    - It has an assigned value
-                    - NOT its initial empty string (e.g. falsy)
-                
-                - If truthy
-                    - Call the method ".filter()" on the state variable "expenses"
-                        - Accepts a parameter variable "e" (i.e. individual expense / item)
-                        - Check if the property "category" of "e" is equal to the value in the state variable "category"
-                        - Returns a new array with "filtered" items
-        
-                - Otherwise
-                    - Assign the value in state variable "expenses" to the constant "visibleExpenses"
+            - If the truthy
+                - Calls the method ".filter()" on the state variable "expenses"
+                - Pass an anonymous arrow function as an argument value to the method ".filter()"
+
+                - In the arrow function
+                    - Declare a parameter variable "e" (an expense object)
+
+                - Inside the arrow function
+                    - Check if the property "category" of "e" is strictly equal
+                    - To the state variable "selectedCategory"
+                    - Returns a list items based on the value in the state variable "selectedCategory"
+            
+            - Otherwise (NOT truthy or the user has NOT selected a category yet)
+                - Assign the state variable "expenses" to the constant "visibleExpenses"
+                    - Renders all of the items stored in the state variable "expenses"
 
                 const visibleExpenses = selectedCategory
-                    ? expenses.filter((e) => { e.category === selectedCategory }) : expenses;
+                    ? expenses.filter((e) => e.category === selectedCategory)
+                    : expenses;
 
+        - Assign the constant "visibleExpenses" as a value to the property "expenses"
+            - Of the <ExpenseList /> component
 
-            - Pass the constant "visibleExpenses" to the property "expenses"
+                <ExpenseList
+                    expenses={visibleExpenses}
+                    onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+                />
 
-            <ExpenseList
-                expenses={visibleExpenses}
-                onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
-             />
+        - Save the changes
+            - Vite reloads the React application
 
-    - Save the changes
-        - Vite reloads the React application
-
-        - Selecting the category rendered by the <ExpenseFilter /> component
-            - Filters the expenses rendered by the <ExpenseList /> component
+            - When the user selects a category from the <ExpenseFilter /> component
+                - The <App /> component receives a state update
+                - The <App /> component re-renders itself
+                - Pass an updated state variable "expenses" to the <ExpenseList /> component
+                - The <ExpenseList /> component renders an updated list in the DOM

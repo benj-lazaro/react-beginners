@@ -3,7 +3,6 @@ import ExpenseList from "./expense-tracker/components/ExpenseList";
 import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
 
 function App() {
-  // State Hook
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const [expenses, setExpenses] = useState([
@@ -33,4 +32,5 @@ function App() {
   );
 }
 
+// Export the React App component
 export default App;
