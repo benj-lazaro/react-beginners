@@ -1,0 +1,227 @@
+Building ExpenseForm
+--------------------
+- The next component to build is the <ExpenseForm />
+    - It returns a form with three (3) fields
+        - Description   = string field
+        - Amount        = number field
+        - Category      = a drop-down menu with dynamically generated items
+
+    - Import this component to the <App /> component
+        - Add this before the <ExpenseFilter /> component
+
+
+- To create the new component <ExpenseForm />
+    - Open the folder "src/expense-tracker/components"
+
+    - Create a new file named "ExpenseForm.tsx"
+
+    - Use the shortcut "rafce"
+        - To generate the component function boilerplate code
+
+
+- In the <ExpenseForm /> component (ExpenseForm.tsx)
+    - Replace the generated JSX element <div>
+        - With the JSX element <form>
+
+    - Inside the JSX element <form>
+        - Add a JSX element <div>
+        - Declare property "className" 
+        - Assign Bootstrap class "mb-3"
+
+        <form>
+            <div className="mb-3"></div>
+        </form>
+
+    - Inside the JSX element <div>
+        - Add a JSX element <label>
+            - Declare property "className"
+            - Assign Bootstrap class "form-label"
+
+            - On the property "htmlFor"
+            - Assign the value "description"
+
+            - Assign content to "Description"
+
+        - Then add a JSX element <input>
+            - Declare property "className"
+            - Assign Bootstrap class "form-control"
+        
+            - Declare property "id"
+            - Assign the value "description"
+
+        <form>
+            <div className="mb-3">
+                <label htmlFor="description" className="form-label">Description</label>
+                <input id="description" type="text" className="form-control" />
+            </div>
+        </form>
+
+    - Add the 2nd JSX element <div>
+        - Add a JSX element <label>
+            - Declare property "className"
+            - Assign Bootstrap class "form-label"
+
+            - On the property "htmlFor"
+            - Assign the value "amount"
+
+            - Assign content to "Amount"
+
+        - Then add a JSX element <input>
+            - Declare property "className"
+            - Assign Bootstrap class "form-control"
+        
+            - Declare property "type"
+            - Assign the value "number"
+
+            - Declare property "id"
+            - Assign the value "amount"
+    
+        <form>
+            <div className="mb-3">
+                <label htmlFor="description" className="form-label">Description</label>
+                <input id="description" type="text" className="form-control" />
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="amount" className="form-label">Amount</label>
+                <input id="amount" type="number" className="form-control" />
+            </div>
+        </form>
+
+    - Add the last JSX element <div>
+        - Add a JSX element <label>
+            - Declare property "className"
+            - Assign Bootstrap class "form-label"
+
+            - On the property "htmlFor"
+            - Assign the value "category"
+
+            - Assign content to "Category"
+
+        - Add a JSX element <select>
+            - Declare property "className"
+            - Assign Bootstrap class "form-select"
+
+        - Inside the JSX element <select>
+            - Add an empty JSX element <option>
+
+            - NOTE: The remaining categories are to be generated dynamically
+                - To be defined in a single place (i.e. <App /> component)
+
+
+- To dynamically generate the list of categories
+    - Open the <App /> component (App.tsx)
+
+    - Outside the component's function declaration
+        - Create a local constant named "categories"
+        - Assign an array of strings (i.e. categories)
+        - Then export the constant so that other modules (i.e. components) can use it
+
+        export const categories = ["Groceries", "Utilities", "Entertainment"];
+
+
+- To import the constant "categories" into the <ExpenseFilter /> component
+    - Open the <ExpenseFilter /> component (ExpenseFilter.tsx)
+
+    - Import the constant "categories" from the <App /> component
+    
+        import { categories } from "../../App";
+
+    - On the component's JSX mark-up
+
+    - Replace the last three (3) JSX element <option> with a blank object
+    
+    - Inside the blank object
+        - Call the ".map()" method on the imported constant "categories"
+
+    - Pass an arrow function as an argument value to the method ".map()"
+        - Declare a parameter variable "category"
+            - This variable holds the current item read from the array
+        
+    - Inside the arrow function
+        - Map each value in the variable "category" inside the JSX element <option>
+
+    - On the JSX element <option>
+        - Declare the property "id"
+            - Assign the value in the constant "category"
+        
+        - Declare the property "value"
+            - Assign the value in the constant "category"
+
+        - Assign the value in the constant "category" as content
+
+            <option value="">All</option>
+            {categories.map((category) => (
+                <option key={category} value={category}>
+                    {category}
+                </option>
+            ))}
+
+        - Save the changes
+
+        - Copy the object that maps out the constant "category" into JSX element <option>
+
+
+- Move back to the <ExpenseForm /> component
+    - Import the constant "categories" from the <App /> component
+    
+        import { categories } from "../../App";
+
+    - On the component's JSX mark-up
+        - The line succeeding the JSX element <option>
+        - Paste the copied object from <ExpenseFilter /> component
+
+        <select name="category" id="" className="form-select">
+          <option value=""></option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+
+    - Add a JSX element <button>
+        - Declare the property "clasaName"
+        - Assign the Bootstrap class "btn btn-primary"
+        - Add the content "Submit"
+
+
+- Back to the <App /> component
+    - Import the <ExpenseForm /> component
+
+        import ExpenseForm from "./expense-tracker/components/ExpenseForm";
+
+    - In the componet's JSX mark-up
+        - Add a JSX element <div>
+        - Declare the property "className"
+        - Assign the Bootstrap class "mb-5"
+
+    - In the JSX element <div>
+        - Add the <ExpenseForm /> component
+
+        <div>
+            <div className="mb-5">
+                <ExpenseForm></ExpenseForm>
+            </div>
+
+            <div className="mb-3">
+                <ExpenseFilter
+                    onSelectCategory={(category) => setSelectedCategory(category)}
+                />
+            </div>
+
+            <ExpenseList
+                expenses={visibleExpenses}
+                onDelete={(id) => setExpenses(expenses.filter((e) => e.id !== id))}
+            />
+        </div>
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Renders the three (3) components in the DOM
+            - <ExpenseForm />
+            - <ExpenseFilter />
+            - <ExpenseList />
+
+        - The categories are dynamically generated
