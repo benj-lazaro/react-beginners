@@ -1,4 +1,4 @@
-Integrating with React Hook Form & Zod
+Integrating with React Hook Form & Zod 
 --------------------------------------
 - To implement validation on the <ExpenseForm /> component
     - Using React Hook Form & Zod
@@ -357,4 +357,4 @@ Integrating with React Hook Form & Zod
 
         - Clicking the "Submit" button without any input
             - Renders the custom validation error messages of respective form fields
-                    
+
