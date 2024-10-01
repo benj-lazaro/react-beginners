@@ -1,0 +1,360 @@
+Integrating with React Hook Form & Zod
+--------------------------------------
+- To implement validation on the <ExpenseForm /> component
+    - Using React Hook Form & Zod
+
+
+- Open the <ExpenseForm /> component (ExpenseForm.tsx)
+    - Import the Zod library
+
+        import { z } from "zod";
+
+    - Call the method ".object()" outside of the component's function declaration
+        - To create a schema
+    
+        z.object();
+
+    - Pass a configuration object as an argument value to the method ".object()"
+    
+        z.object({});
+
+    - The configuration object contains the following properties & validation rules
+        - Property named "description" of data type "string"
+            - It has a minimum length of 3 characters
+            - It has a maximum length of 50 characters
+
+        - Property named "amount" of data type "number"
+            - It has a minimum value of "0.01"
+            - It has a maximum value of "100_000"
+            - NOTE: The "_" character is used to visually separate the "thousands" digits
+        
+        - Property named "category" of data type "enum"
+            - NOTE: "enum" is a data type that represents "one of many values"
+            
+            - Passes an array of object named "categories" as value to the method ".enum()"
+                - This object had already been defined in the <App /> component           
+
+            z.object({
+                description: z.string().min(3).max(50),
+                amount: z.number().min(0.01).max(100_000),
+                category: z.enum(categories);
+            });
+
+            - The object named "categories" triggers a TypeScript compilation error
+                - Zod expects "categories" to be a READ-ONLY array
+
+            - To address this concern
+                - Open the <App /> component (App.tsx)
+
+                - Export the declaration of the constant named "categories" as a "const"
+
+                    export const categories = ["Groceries", "Utilities", "Entertainment"] as const;
+
+                - Save the changes
+                    - TypeScript compilation error on "categories" has been addressed
+
+    - Back to the <ExpenseForm /> component
+        - Save the returned object contaning the schema to a constant named "schema"
+
+            const schema = z.object({
+                description: z.string().min(3).max(50),
+                amount: z.number().min(0.01).max(100_000),
+                category: z.enum(categories),
+            });
+
+    - Create a TypeScript "type" using Zod's property ".infer"
+        - Followed by <typeof schema>
+        - Save the returned object to a "type" named "ExpenseFormData"
+
+            type ExpenseFormData = z.infer<typeof schema>;
+
+    - Next is to import the React Hook Form & zodResolver
+        - Beneath the "import" statement for the Zod library
+
+            import { z } from "zod";
+            import { useForm } from "react-hook-form";
+            import { zodResolver } from "@hookform/resolvers/zod";
+            ...
+
+    - At the start of the component's function declaration
+        - Call the React Form Hook's function "useForm()"
+
+        - Followed by the the type of the "ExpenseFormData"
+
+            useForm<ExpenseFormData>();
+
+        - Pass a configuration object as an argument value to the function "useForm()"
+
+        - In the configuration object
+            - Set the property "resolver" to the function "zodResolver()"
+            - Pass the constant "schema" as an argument value
+
+            useForm<ExpenseFormData>({ resolver: zodResolver(schema) });
+
+        - Destructure the returned object as constant
+            - Grab the functions "register()", "handleSubmit()" & "formState()"
+            
+            - Then Destructure the function "formState()" to grab the returned object "errors"
+
+            const {
+                register,
+                handleSubmit,
+                formState: { errors },
+            } = useForm<ExpenseFormData>({ resolver: zodResolver(schema) });
+
+        
+        - Register each JSX element fields 
+            - Starting with JSX element <input> with the property "id" set to the value "description"
+            
+            - Add an blank object
+
+            - Inside the blank object
+                - Call the function "register()"
+                - Pass "description" as an argument value
+                - Then spread the returned object using the spread operator (...)
+
+            <input
+                {...register("description")}
+                id="description"
+                type="text"
+                className="form-control"
+            />
+
+        - Next is the JSX element <input> with the property "id" set to the value "amount"
+
+            <input
+                {...register("amount")}
+                id="amount"
+                type="number"
+                className="form-control"
+            />
+
+        - Lastly, the JSX element <select> with the property "id" set to the value "category"
+
+            <select {...register("category")} id="category" className="form-select">
+                <option value=""></option>
+                {categories.map((category) => (
+                    <option key={category} value={category}>
+                        {category}
+                    </option>
+                ))}
+            </select>
+
+        - Add the validation messages for the corresponding JSX element fields
+
+        - On the JSX element <input> with the property "id" set to the value "description"
+            - Below the line following the JSX element , add a blank object
+
+            - Inside the blank object
+                - Perform a logical AND operation
+
+                - Calls the property "description" of the object "errors"
+
+                - If it returns is truhty 
+                    - Dynamically render a JSX element <p>
+                    - Declare the property "className"
+                    - Assign it with Bootstrap class "text-danger"
+                    - Render the value of "errors.description.message"
+
+                - Otherwise, do nothing
+
+                {errors.description && (
+                    <p className="text-danger">{errors.description.message}</p>
+                )}
+       
+        - Implement the same validation message to the remaining of the JSX elements
+            - JSX element <input> with the property "id" set to the value "amount"
+            - JSX element <select> with the property "id" set to the value "category"
+
+                {errors.amount && (
+                    <p className="text-danger">{errors.amount.message}</p>
+                )}
+
+                ...
+
+                {errors.category && (
+                    <p className="text-danger">{errors.category.message}</p>
+                )}
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - TypeScript compiler reports the returns the error
+                - "Uncaught ReferenceError: Cannot access "categories" before initialization"
+                
+                - Specifically points to the line when defining the schema
+
+                    category: z.enum(categories),
+
+                - The object "categories" were import from the <App /> component
+
+                - In the <App /> component
+                    - The <ExpenseForm /> component was import first
+                    - Before the const "categories" was defined
+
+                - When React reads the schema definition in the <ExpenseForm /> component
+                    - The object "categories" is uninitialized
+
+        - To address this concern
+            - In the <App /> component, cut the declaration of the constant "categories"
+
+                export const categories = ["Groceries", "Utilities", "Entertainment"] as const;
+
+            - In the folder "expense-tracker"
+                - Outside the folder "components"
+                - Create a file named "categories.ts"
+                - This file functions as a data file
+
+            - Paste the declaration of the constant "categories" here
+                - Export the constant "categories" as a default object
+
+                    const categories = ["Groceries", "Utilities", "Entertainment"] as const;
+
+                    export default categories;
+
+                - Save the changes
+
+            - Import the object "categories" into the <App /> component (App.tsx)
+
+                import categories from "./expense-tracker/categories";
+
+                - Save the changes
+
+
+            - Import the object "categories" into the <ExpenseForm /> component (ExpenseForm.tsx)
+
+                import categories from "../categories";
+
+                - Save the changes
+
+
+            - Import the object "categories" into the <ExpenseFilter /> component (ExpenseFilter.tsx)
+
+                import categories from "../categories";
+
+                - Save the changes
+
+            - The TypeScript compilation error has now been addressed
+
+
+    - Next is to handle the form submission
+
+    - Move back to the <ExpenseForm /> component (ExpenseForm.tsx)
+
+    - On the JSX element <form>
+        - Declare the property "onSubmit"
+        - Assign the function "handleSubmit()"
+
+        - Pass an anonymous arrow function to the function "handleSubmit()"
+
+        - On the arrow function
+            - Declare a parameter variable named "data"
+
+        - Inside the arrow function
+            - Pass the variable "data" as an argument value to "console.log()"
+
+            <form onSubmit={handleSubmit((data) => console.log(data))}>
+                ...
+            </form>
+        
+        - Save the changes
+
+
+    - Next is to check if the validation error messages are working
+        - Reload the React app in the browser
+
+        - Click on the "Submit" button
+
+        - Corresponding error messages should have been rendered
+
+
+    - Custom the validation error messages of the form's fields
+
+    - Back on the schema's definition
+        - For the property "description"
+
+        - Pass a blank object as a 2nd argument value to the helper method ".min()"
+            - Declare the property "message"
+            - Assign the value "Description should at least be 3 characters."
+
+            const schema = z.object({
+                description: z
+                    .string()
+                    .min(3, { message: "Description should at least be 3 characters." })
+                    .max(50),
+                amount: z.number().min(0.01).max(100_000),
+                category: z.enum(categories),
+            });
+
+        - For the property "amount"
+            - While registering this field, instruct React Hook Form to interpret the value as a number
+
+            - On the JSX element <input> with property "id" set to the value of "amount"
+                - Pass a blank object as a 2nd argument value to the function "register()"
+
+                - In the blank object 
+                    - Declare the property "valueAsNumber"
+                    - Assign as value a boolean true
+
+                    <input
+                        {...register("amount", { valueAsNumber: true })}
+                        id="amount"
+                        type="number"
+                        className="form-control"
+                    />
+            
+            - Switch back to the schema's definition
+                - For the property "amount"
+
+                - Pass a blank object as an argument value to the helper method ".number()" 
+
+                - In the blank object
+                    - Declare the property "invalid_type_error"
+                    - Assign the value "Amount is required."
+
+                const schema = z.object({
+                    description: z
+                        .string()
+                        .min(3, { message: "Description should at least be 3 characters." })
+                        .max(50),
+                    amount: z
+                        .number({ invalid_type_error: "Amount is required." })
+                        .min(0.01)
+                        .max(100_000),
+                    category: z.enum(categories),
+                });
+
+        - For the property "category"
+            - Pass a blank object as a 2nd argument value to the method ".enum()"
+
+            - Inside the blank object
+                - Declare the property "errorMap"
+                - Assign an anonymous arrow function as a value
+
+            - Inside the arrow function
+                - Add a blank object
+                - Declare the property "message"
+                - Assign the value "Category is required."
+                - Returns the object
+
+                const schema = z.object({
+                    description: z
+                        .string()
+                        .min(3, { message: "Description should at least be 3 characters." })
+                        .max(50),
+                    amount: z
+                        .number({ invalid_type_error: "Amount is required." })
+                        .min(0.01)
+                        .max(100_000),
+                    category: z.enum(categories, {
+                        errorMap: () => ({ message: "Category is required." }),
+                    }),
+                });
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Clicking the "Submit" button without any input
+            - Renders the custom validation error messages of respective form fields
+                    
