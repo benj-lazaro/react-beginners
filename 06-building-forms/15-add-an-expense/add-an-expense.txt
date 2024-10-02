@@ -1,0 +1,128 @@
+Adding An Expense 
+-----------------
+- To implement the ability to add an expense (i.e. item) to the state variable "expenses"
+
+
+- Open the <ExpenseForm /> component (ExpenseForm.tsx)
+    - On the line prior to the declaration of the component's function
+    
+    - Define the Props of the component using an interface
+        - Declare the property "onSubmit"
+            - Assign an arrow function as value
+
+        - In the arrow function
+            - Declare a parameter variable "data"
+            - With the type of "ExpenseFormData"
+
+        - Inside the arrow function
+            - Returns void
+
+            interface Props {
+                onSubmit: (data: ExpenseFormData) => void;
+            }
+
+
+- Deconstruct & add the "onSubmit" as argument value to the component's function declaration
+
+    const ExpenseForm = ({ onSubmit} : Props) => {
+        ...
+    }
+
+
+- On the property "onSubmit" of the JSX element <form>
+    - Pass the prop "onSubmit" as an argument value to the function "handleSubmit()"
+
+    <form onSubmit={handleSubmit(onSubmit)}>
+        ...
+    </form>
+
+
+- Open the <App /> component (App.tsx)   
+    - On the <ExpenseForm /> component
+        - Add the prop "onSubmit"
+            - Assign an anonymous arrow function as value
+
+        - In the arrow function
+            - Declare a paramter variable named "data"
+
+        - Inside the arrow function
+            - Pass the paramter variable "data" to "console.log()"
+
+        <ExpenseForm onSubmit={(data) => console.log(data)}></ExpenseForm>
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - User-typed input on the forms fields when submitted
+            - Returns the object "expense" content on the browser's JavaScript console
+    
+
+- To add the new "expense" into the state variable "expenses"
+    - Back to the property "onSubmit" of the <ExpenseForm />
+
+    - Refactor the arrow function
+        - Replace the parameter variable "data" with "expense"
+
+        - Inside the arrow function
+            - Call the set function "setExpenses()"
+            - Pass a new array as an argument value
+
+        - Inside the new array
+            - Spread the content of the state variable "expenses"
+            - Followed by a new object
+
+        - Inside the new object
+            - Spread the properties of the object "expense"
+            - Followed by a property named "id"
+            - Set the value of the property "id" with the expression "expenses.length + 1"
+
+        <ExpenseForm onSubmit={expense => setExpenses([...expenses, {...expense, id: expenses.length + 1}])}></ExpenseForm>
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Clicking the "Submit" button after providing data on the fields
+            - The new expenses get added & rendered in the <ExpenseList /> component
+
+
+- To clear the form's fields after clicking the "Submit" button
+    - Switch back to the <ExpenseForm /> component
+
+    - Grab the function "reset" from the React Form Hook
+
+        const ExpenseForm = ({ onSubmit} : Props) => {
+            const {
+                register,
+                handleSubmit,
+                reset,
+                formState: { errors },
+            } = useForm<ExpenseFormData>({ resolver: zodResolver(schema) });
+            ...
+        }
+
+    - On the property "onSubmit" of the JSX element <form>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+        ...
+        </form>
+
+        - Replace the argument value (i.e. prop "onSubmit") passed to the function "handleSubmit()"
+            - With an anonymous arrow function
+
+        - In the arrow function
+            - Declare a parameter variable named "data"
+            - This will serve as a placeholder for the prop "onSubmit"
+
+        - Inside the arrow function
+            - Calls the function "onSubmit()"
+            - Pass the parameter vairable "data" as an argument value to "onSubmit()"
+
+            - Then calls the function "reset()"
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Clicking the "Submit" button after providing data on the fields
+            - The new expenses get added & rendered in the <ExpenseList /> component
+
+            - Form's fields gets cleared
