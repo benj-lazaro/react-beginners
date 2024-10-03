@@ -1,0 +1,22 @@
+Introduction
+------------
+- This section explores connecting the front-end to a back-end
+
+
+- Back-end is the part of an application that run on the server
+    - Think of it as an engine of the application that powers the front-end
+
+    - It provides the
+        - Business logic
+        - Data management
+        - Security features = authentication & authorization
+
+
+- Backend frameworks
+    - Express.js
+    - Django
+    - Ruby on Rails
+    - Spring
+    - ASP.NET Core
+
+    - NOTE: Building back-ends is outside the scope of this course
