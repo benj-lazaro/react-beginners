@@ -1,0 +1,110 @@
+Understanding the Effect Hook
+-----------------------------
+- Before learning how to connect the front-end to a back-end
+    - Understanding how to use React's "Effect Hook" is required
+
+    - React components are expected to be PURE functions
+        - It should NOT have any side effects
+        - It should return the same result given the same input
+
+    - To keep a component pure
+        - To keep the changes OUTSIDE the render phase
+
+    - There are situation side effets that may be needed by a component
+        - Store data in the local storage (of the browser)
+        - Call the server to fetch or save data
+        - Manually modify a DOM element
+
+        - NOTE: NONE of these are about rendering a component
+            - These have NOTHING to do with returning a JSX mark-up
+
+    - To implement these side effects
+        - Use "Effect Hook"
+
+
+- Using the Effect Hook
+    - Informs React to execute a piece of code (i.e. side effect) ONLY AFTER a component is rendered
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Add a JSX element <input>
+        - Declare property "className"
+        - Assign Bootstrap's class "form-control"
+
+    - When the app starts
+        - The mouse cursor will focus on the recently added JSX element <input>
+
+    - Use React's "Reference Hook" to get a reference on the targeted JSX element <input>
+        - Call the function "useRef()"
+            - Pass a null as an argument value to the function "useRef()"
+        
+        - Place the JSX element <input> data type in-between "useRef" and "()"
+            - The data type is "HTMLInputElement" enclosed in <>
+
+        - Save the returned "reference object" to a constant named "ref"
+
+            const ref = useRef<HTMLInputElement>(null);
+
+        - To associate the "reference object" with the targeted JSX element <input>
+            - Declare the property "ref"
+            - Assign the constant "ref" (i.e. reference object) as value
+        
+            <input ref={ref} type="text" className="form-control" />
+
+
+    - Use the "Effect Hook" to implement the "side effect" (i.e. focus)
+        - Call the function "useEffect()"
+            - Pass an anonymous arrow function as an argument value
+
+        - Inside the body of the arrow function
+            - Add an "if statement" to check 
+                - If the property "current" of the object "ref" is defined
+
+            - If true
+                - Call the method ".focus" of the object "ref.current"
+
+            - Otherwise
+                - Do nothing
+
+            useEffect(() => {
+                if (ref.current) ref.current.focus();
+            });
+
+
+        - NOTE: The arrow function (i.e. "focus") passed to the function "useEffect()"
+            - Will ONLY be called AFTER the component is rendered
+    
+
+- The React "Effect Hook" just like the "Reference Hook" & "State Hook"
+    - The function "useEffect()"
+        - Can ONLY be called at the top-level of a component
+        - Can be called MULTIPLE TIMES, each for different purposes
+
+    - If there are multiple calls to "useEffect()"
+        - React executes each of them IN ORDER
+        - AFTER each render of the component
+
+
+- In the example code
+    - To implement another side effect of updating the property "title" of the DOM's "document"
+
+    - At the top-level of the component
+        - Call the function "useEffect()"
+            - Pass an anonymous arrow function as an argument value
+
+        - Inside the body of the arrow function
+            - Set the property "title" of the DOM element "document"
+            - To the value to "MyApp"
+
+            useEffect(() => {
+                document.title = "MyApp";
+            });
+
+- Save the changes
+    - Vite reloads the React application
+
+    - Mouse cursor got focused on the form's input field
+
+    - The title of the document has been set to "MyApp"
