@@ -1,0 +1,243 @@
+Effect Dependencies
+-------------------
+- Function passed as an argument value to "React Effect Hook" 
+    - Gets executed AFTER each render (of the component)
+        - This is the default behavior
+
+    - There are situations wherein this default behavior needs to be overriden
+        - To have more control on when the passed function will be executed
+
+
+- In the example code
+    - In the folder "src/components"
+
+    - Create a new component named "ProductList.tsx"
+        - Use the shorcut "rafce" to generate component function boilerplate code
+
+    - Declare a "State Hook"
+        - Pass an empty array as an argument value to the function "useState()"
+        - Declare a state variable named "products"
+        - Declare a set / update function named "setProducts"
+
+            const [products, setProducts] = useState([]);
+
+    - Declare an "Effect Hook"
+        - Pass an anonymous arrow function as an argument value to the function "useEffect()"
+
+        - Inside the body of the arrow function (a callback function)
+            - Call "console.log()"
+                - Pass the content "Fetching products"
+
+            - Call the set function "setProducts()"
+                - Pass a new array
+                - To update the content of the state variable "products"
+
+            - NOTE: This is to "simulate" fetching data from a remote server
+
+            useEffect(() => {
+                console.log("Fetching products");
+                setProducts(["Clothing", "Household"]);
+            });
+
+            - This triggers an TypeScript compilation error 
+                - Type "string" is not assignable to type "never"
+                
+                - TypeScript does NOT know the data type of the items to be stored in the array
+                    - That was initially passed as an argument value to the function "useState()"
+
+            - To address this concern
+                - On the "State Hook" declaration
+                    - Declare the data type of the array returned by the function "useState()"
+                    - Place the data type "<string[]>" in-between "useState" & "()"
+
+                    const [products, setProducts] = useState<string[]>([]);
+
+                - Save the changes
+                    - Addresses the TypeScript compilation error
+
+
+    - Open the <App /> component (App.tsx)
+        - Import the <ProductList /> component
+
+            import ProductList from "./components/ProductList";
+        
+        - On the JSX mark-up, add the <ProductList /> component
+
+            const App = () => {
+                return (
+                    <div>
+                        <ProductList />
+                    </div>
+                );
+            };
+        
+        - WARNING: This causes the React application to perform an INFINITE LOOP
+            - The function inside the "Effect Hook" get executed
+                - AFTER the component is rendered
+
+            - This function is the set/update function of the "State Hook"
+                - Updates the value stored in the state variable 
+                - A change of state causes a trigger for the component to be re-rendered
+
+            - Triggers an infinite loop of
+                - Updating state
+                - Re-rendering the component
+                - Execute the "effect" (i.e. function called by the "Effect Hook")
+
+        - To address this
+            - Tell React to run the "effect" inside an "Effect Hook" only once
+                - The first time the component is rendered
+        
+            - Back on the <ProductList /> component
+                - Pass an empty array as a 2nd argument value to the function "useEffect()"
+                
+            - NOTE: This array is referred as an "array of dependencies"
+
+                - If there are NO declared "array of dependencies"
+                    - The "effect" = function declared inside an "Effect Hook"
+                    - Will be executed AFTER EVERY render of the component
+                
+                - An empty "array of dependencies"
+                    - The "effect" will be executed ONLY ONCE
+                    - After the 1st render of the component
+
+                - If any of the values passed to the "array of dependencies" changes
+                    - The "effect" gets executed again
+
+            - Save the changes
+                - Addresses the INFINITE LOOP
+
+
+- Take the example code to the next level
+    - Add a drop-down list of categories
+    
+    - When a user selects a "category"
+        - Show products in the selected category
+
+    - In the <App /> component's JSX mark-up
+        - Add a JSX element <select> just above the <ProductList /> component
+            - Remove the properties "id" & "name"
+
+            - Declare the property "className"
+                - Assign the Bootstrap class "form-select" as value
+
+            <select className="form-select"></select>
+
+            <ProductList />
+
+        - Inside the JSX element <select>
+            - Add three (3) JSX element <option>
+
+            - The 2nd & 3rd JSX element <option> will have its property "value" & content set to
+                - "Clothing"
+                - "Household"
+        
+            <select className="form-select">
+                <option value=""></option>
+                <option value="Clothing">Clothing</option>
+                <option value="Household">Household</option>
+            </select>
+
+            <ProductList />
+
+    - Keep track of the selected category using a state variable
+        - When a state is change the <ProductList /> component is re-rendered
+
+        - Call the function "useState()"
+            - Pass an emtpy string as an argument value
+
+            - Desconstruct the returned object into
+                - State variable named "category"
+                - Set / update function named "setCategory"
+
+            - Save it as a constant
+
+            const [category, setCategory] = useState("");
+
+    - Handle the change event of the JSX element <select>
+        - Declare the property "onChange"
+        - Pass an anonymous arrow function as a value
+
+        - In the arrow function
+            - Declare a parameter variable named "event"
+
+        - In the body of the arrow function
+            - Call the set / update function "setCategory()"
+            - Pass "event.target.value" as an argument value
+
+            <select
+                className="form-select"
+                onChange={(event) => setCategory(event.target.value)}
+            >
+                ... 
+            </select>
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - Renders a drop-down list
+                - Containing the items that were added by the set function "setCategory()"
+
+            - Selcting a category
+                - Updates the state of the <App /> component
+                
+                - Use "React Dev Tools" to verify the state update
+                    - Select the component "App"
+
+                    - Under "hooks"
+                        - Look at the value of the field "State"
+
+                    - Select a category
+                        - The value of the "State" changes to the selected category
+
+
+- Now to pass the selected category as a Prop to the <ProductList /> component
+    - Open the <ProductList /> component (ProductList.tsx)
+        - Use an interface to define the shape of the Props
+    
+        - Use an "inline shortcut" instead without explicitly using an "interface"
+            - Since the Props will ONLY contain one (1) property
+            - A property named "category" of data type "string"
+
+            const ProductList = ({category}: {category: string}) => {
+                ...
+            }
+
+
+    - Refactor the "console.log()" called by the "Effect Hook"
+        - To include the value in the Props "category"
+
+            useEffect(() => {
+                console.log("Fetching products in ", category);
+                setProducts(["Clothing", "Household"]);
+            }, []);
+
+    - Switch back to the JSX mark-up of the <App /> component (App.tsx)
+        - Declare the property "category"
+        - Assign the selected category as value
+
+            <ProductList category={category} />
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Selecting a category from the drop-down list
+            - Does NOT change the value returned in the browser's JavaScript console
+
+        - This is due to the empty array passed as a 2nd argument to the function "useEffect()"
+            - This informs React to execute the corresponding "effect" ONLY ONCE
+            - It is NOT dependent on any value changes
+
+    - To address this problem
+        - Pass "category" as an item into the array of the function "useEffect()"
+
+        - This informs React that the corresponding "effect" is DEPENDENT on the value of "category"
+            - Any changes in the value of "category"
+            - The corresponding "effect" gets executed again
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Selecting a category from the drop-down list
+                - The changes is reflected on the browser's JavaScript console
+        
