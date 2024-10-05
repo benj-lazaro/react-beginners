@@ -1,0 +1,66 @@
+Effect Clean Up
+---------------
+- Sometimes the code passed to the "Effect Hook" requires a clean Up
+    - A "clean up" undo whatever the "Effect Hook" was doing
+
+
+- To provide a "clean up" to the function that is passed to an "Effect Hook"
+    - Inside the function
+    
+    - Declare a "return" statement
+        - Followed by an anonymous arrow function
+
+    - Inside the arrow function
+        - Call the function that contains the "clean up" code
+    
+    - NOTE: This is NOT always necessary
+
+
+- In the exam code
+    - Open the <App /> component (App.tsx)
+
+    - Create two functions to "simulate" a connection & disconnection to a remote server
+        - Returns a message on the browser's JavaScript console
+
+        const connect = () => console.log("Connecting");
+        const disconnect = () => console.log("Disconnecting");
+
+
+    - Create an effect using the function "useEffect()"
+        - That calls the function "connect()" after the <App /> component is rendered on the DOM
+
+        useEffect(() => {
+            connect();
+
+        });
+
+    - Inside the "effect", add the "clean up"
+        - Declare a "return" statement
+
+        - Followed by an anonymous arrow function
+
+        - Inside the arrow function
+            - Calls the function "disconnect()"
+
+        useEffect(() => {
+            connect();
+
+            return () => disconnect();
+        })            
+            
+        - NOTE: The "clean up" is executed when the <App /> component is unmounted from the DOM
+    
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - On the browser's JavaScript console
+            - The message "Connecting" is displayed
+            
+            - Then followed by the "Disconnecting" message
+            
+                - NOTE: The "clean up" code is called after the <App /> component gets unmounted from the DOM
+                - The React application gets executed in "Strict Mode"
+                - The <App /> component gets rendered twice
+
+            - Lastly the message "Connecting" is displayed
