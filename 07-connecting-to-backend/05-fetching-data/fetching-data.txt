@@ -1,0 +1,186 @@
+Fetching Data
+-------------
+- To fetch data from a remote server
+    - Using a fake backend called "{JSON} Placeholder"
+        - It is a free fake but realiable API for testing & prototyping
+
+    - It offers various endpoints for getting dummy data
+        - The endpoint "users" will be used to demonstrate how it works
+
+    - Website (https://jsonplaceholder.typicode.com/)  
+
+
+- To send a HTTP request to the server
+    - Use the 3rd-party library "Axios"
+    - Website (https://axios-http.com/)
+
+    - To install via npm
+
+        npm i axios@1.3.4
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Import the "Axios" library
+
+        import axios from "axios";
+
+
+    - Use the State Hook function "useState()"
+        - To create a state variable (and associated set function)
+            - To store the fetched data of users from the "{JSON} Placeholder"
+
+        - Pass an empty array as an argument value to the function "useState()"
+            - To initialize the state variable named "users"
+
+            const [users, setUsers] = useState([]);
+
+
+    - Use the Effect Hook function "useEffect()"
+        - Pass an anonymous arrow function as an argument value
+
+        - Inside the arrow function
+            - Call the method ".get()" of the Axios library
+
+        - Pass the targeted endpoint "users" as an argument value to the method ".get()"
+            - Enclose the endpoint URL in quotes
+            - Endpoint URL (https://jsonplaceholder.typicode.com/users)
+
+            useEffect(() => {
+                axios.get("https://jsonplaceholder.typicode.com/users");
+            });
+
+
+        - NOTE: The method ".get()" returns a promise
+            - A "promise" is an object that holds the eventual result or failure 
+                - Of an asynchronous (i.e. long running) operation
+
+            - All promises has access to the method ".then()"
+                - Wherein it accepts a callback function
+                
+                - The callback function is executed
+                    - When the promise is resolved & the result is ready
+
+
+        - Chain the method ".then()" to the ".get()"
+
+        - Pass an anonymous arrow function as an argument value to the method ".then()"
+            - Declare the parameter variable "res" (i.e. result)
+
+            - Inside the arrow function
+                - Pass the parameter variable "res" to the "console.log()"
+
+                - Chain the property "data" to the object stored in the variable "res"
+                    - To specifically retrieve the objects containing user data
+
+            useEffect(() => {
+                axios
+                    .get("https://jsonplaceholder.typicode.com/users")
+                    .then((res) => console.log(res.data));
+            });
+
+
+        - Save the changes
+            - Vite reloads the React application
+            - Returns a response object from the "{JSON} Placeholder" 
+                - The property "data" contains the user objects
+
+
+    - To implement auto-completion and type safety to the code
+        - When specifically access properties of the objects returned by the property "data"
+        - Helps prevent from accessing invalid properties
+
+        - Outside the component's function declaration
+            - Define the shape of the object "Users" using interface
+
+            - For this example, only the properites "id" and "name" will be retrieved
+                - From the objects returned by property "data"
+
+            interface User {
+                id: number;
+                name: string;
+            }
+
+        - On the Effect Hook,
+            - When calling the method ".get()", pass the intereface "User" between "get" and "()"
+            - In order to specify the type of data to be fetched
+            - On this example, an array of User (i.e. "User[]")
+
+            useEffect(() => {
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users")
+                    .then((res) => console.log(res.data));
+            });
+
+
+            - On the arrow function passed as an argument value to the method ".then()"
+                - Replace the "console.log()" statement
+                - With a call to the set function "setUsers()"
+                - Then pass the object "res.data" as an argument value
+            
+            useEffect(() => {
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users")
+                    .then((res) => setUsers(res.data));
+            });
+
+
+            - This triggers a TypeScript compilation error on "res.data"
+                - This is because the state variable "users" was initialized with an empty array
+                - TypeScript does NOT know the data type
+
+            - To address this concern
+                - Declare the data type of an array of User (i.e. "User[]")
+                - In-between "useState" and "()", enclosed within <>
+                
+                const [users, setUsers] = useState<User[]>([]);
+
+        - Pass an "Effect Hook" dependency in the form of an empty array
+            - As a 2nd argument value to the function "useEffect()"
+            - This is to prevent from triggering an INFINITE LOOP
+
+            useEffect(() => {
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users")
+                    .then((res) => setUsers(res.data));
+            }, []);
+
+
+    - Next is to render the fetched data on the component's JSX mark-up
+        - Replace the JSX element <div> with <ul>
+
+        - Inside the JSX element <ul>
+            - Add an emtpy object
+
+        - Inside the empty object
+            - Call the method ".map()" on the state variable "users"
+
+        - Pass an anonymous arrow object as an argument value to the method ".map()"
+
+        - In the arrow function
+            - Declare the parameter variable "user"
+
+        - Inside the arrow function body
+            - Map out each object into the JSX element <li>
+
+            - Declare the property "key"
+                - Assign the object "user.id" as value
+
+        - As content to the JSX element <li>
+            - Assign the object "user.name"
+
+            return (
+                <ul>
+                    {users.map((user) => (
+                        <li key={user.id}>{user.name}</li>
+                    ))}
+                </ul>
+            );
+
+
+        - Save the changes
+            - Vite reloads the React application
+            
+            - Renders an unordered list of users 
+                - Fetched from the "{JSON} Placeholder"
