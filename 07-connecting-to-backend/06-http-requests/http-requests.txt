@@ -1,0 +1,39 @@
+Understanding HTTP Requests
+---------------------------
+- What happens under the hood when calling the method ".get()" of the Axios library
+    - Axios sends an HTTP request to the remote server
+        - HTTP = stands for "HyperText Transfer Protocol"
+        - A protocol for transferring data over the Internet
+
+    - The remote server responds with an HTTP response 
+        - This contains HTML, CSS and other resources
+        - Needed to render the requested content (e.g. web page) on the browser
+
+    - In HTTP, every request & response has two (2) sections
+        - Header
+            - Specifies the metadata
+
+        - Body
+            - Gets the data
+
+
+- To view an HTTP request in action using Chrome
+    - Launch Chrome
+    
+    - Launch Chrome Dev Tools (CTRL + SHIFT + I)
+
+    - Click the tab labelled "Network"
+
+    - Click the button "Fetch/XHR"
+        - To filter HTTP request traffic
+        - XHR = stands for "XmlHttpRequest" 
+
+    - Refresh the React application
+
+    - Click the endpoint "users"
+
+    - Click the tab "Preview"
+        - Views the properly formatted data returned from the server 
+
+    - Click the tab "Reponse"
+        - View the body of the response sent by the server in plain text
