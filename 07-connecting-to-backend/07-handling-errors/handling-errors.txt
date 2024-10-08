@@ -1,0 +1,100 @@
+Handling Errors
+---------------
+- In JavaScript, all promises has access to the method ".catch()"
+    - It is used for catching (connectivity) errors
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Chain the method ".catch()" after the method ".then()"
+
+    - Pass an anonymous arrow function
+        - This serves as a callback function
+        - Called ONLY when a connectivity related error occurred
+
+    - In the arrow function
+        - Declare a parameter variable named "err"
+        - This holds the "error" object returned by Axios that contains error related information
+
+    - Inside the body of the arrow function
+        - Pass the error object (stored in "err") to the "console.log()"
+
+        useEffect(() => {
+            axios
+                .get<User[]>("https://jsonplaceholder.typicode.com/users")
+                .then((res) => setUsers(res.data))
+                .catch((err) => console.log(err));
+        }, []);
+
+
+    - When a connectivity-related error occurs
+        - Axios returns an error object (i.e. AxiosError)
+        - Containing valuable properties that provide detailed information
+            - Property "message"    = Descriptive error message
+            - Property "status"     = HTTP error status code
+
+    - To render the error message on the DOM
+        - Declare a "State Hook" variable & set / update function
+        - Initialize the state variable "error" with an empty string
+
+        const [error, setError] = useState("");
+
+
+    - Back to the method ".catch()"
+        - Instead of passing the error object "err" to the "console.log()"
+
+        - Pass the error object "err" with its property "message" 
+            - As an argument value to the set / update function "setError()"
+
+        useEffect(() => {
+            axios
+                .get<User[]>("https://jsonplaceholder.typicode.com/users")
+                .then((res) => setUsers(res.data))
+                .catch((err) => setErrro(err.message));
+        }, []);        
+
+
+    - Switch to the component's JSX mark-up
+        - Add a fragment
+
+        - Move the JSX element <ul> inside the fragment
+
+        - On the line of code above the JSX element <ul>
+
+        - Add an empty object
+
+        - Inside the empty object
+            - Add the state variable "error"
+
+            - Add the && operator
+
+            - Add a JSX element <p>
+                - Declare the property "className"
+                - Assign it with the Bootstrap class "text-danger"
+
+            - Inside the JSX element <p>
+                - Add an empty object
+
+            - Inside the empty object
+                - Add the state variable "error"
+
+        return (
+            <>
+                {error && <p className="text-danger">{error}</p>}
+
+                <ul>
+                    {users.map((user) => (
+                        <li key={user.id}>{user.name}</li>
+                    ))}
+                </ul>
+            </>
+        );
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - If intentionally implemented an incorrect "endpoint"
+        - The value of the object "err" property "message" stored in the state variable "error" is rendered on the DOM
+
