@@ -1,4 +1,4 @@
-Working with Async & Await
+Working with Async & Await 
 --------------------------
 - An alternative from using the methods ".then()" & ".catch()" for error handling
     - Is to use JavaScript keywords "async" & "await" instead
