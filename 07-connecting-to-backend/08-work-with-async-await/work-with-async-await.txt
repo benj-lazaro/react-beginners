@@ -1,0 +1,104 @@
+Working with Async & Await
+--------------------------
+- An alternative from using the methods ".then()" & ".catch()" for error handling
+    - Is to use JavaScript keywords "async" & "await" instead
+
+    - However using both "async" & "await" with "React Effect Hook"
+        - Requires a lot of code
+        - As compared to using the methods ".then()" & ".catch()"
+
+
+- On the example code
+    - Open the <App /> component (App.tsx)
+
+    - On the component's React Effect Hook
+        - Remove the line of code of the methods ".then()" & ".catch()"
+
+    - Inside the body of the arrow function that is passed as an argument value to the function "useEffect()"
+        - Add a new anonymous arrow function
+        - Save it as a constant named "fetchUser"
+        - Mark the arrow function using the keyword "async"
+
+    - Mark the call to Axios' method ".get() as "await"
+        - Save the returned object response to a constant named "res"
+        - Then move the constant "res" into the body of the arrow function marked as "async"
+        
+        useEffect(() => {
+            const fetchUsers = async () => {
+                const res = await axios.get<User[]>(
+                    "https://jsonplaceholder.typicode.com/xusers"
+                );
+            };
+        }, []);
+
+    - Followed by a call to the set / update function "setUsers()" of the "React State Hook"
+        - Pass the object "res.data" as an argument value
+
+        useEffect(() => {
+            const fetchUsers = async () => {
+                const res = await axios.get<User[]>(
+                    "https://jsonplaceholder.typicode.com/xusers"
+                );
+                setUsers(res.data);
+            };
+        }, []);
+
+    - Outside the constant "fetchUser"
+        - Call the function "fetchUser"
+
+        useEffect(() => {
+            const fetchUsers = async () => {
+                const res = await axios.get<User[]>(
+                    "https://jsonplaceholder.typicode.com/xusers"
+                );
+                setUsers(res.data);
+            };
+
+            fetchUsers();
+        }, []);
+
+
+    - To implement code to handle an error or rejection of the request
+        - Wrap the constant "res" inside a "try-catch" block
+
+        - Define a "try" block on the line prior to the constant "res"
+            - Move the constant "res" inside
+            - Along with the call to the set function "setUsers()"
+
+        - Define a "catch" block
+            - Pass the object "err" as an argument value
+            - Call the set function "setError()"
+            - Pass the object "err.message" as an argument value
+
+            - Triggers an TypeScript compilation error on the object "err"
+                - "err" is of type "unknown"
+
+            - To address this concern
+                - Wrap the object "err" in parenthesis
+
+                - Inisde the parenthesis
+                    - Add "as AxiosError" right after the object "err"
+                    - Refactor the "import" statement of Axios to pull "AxiosError" from the library
+
+                    import axios, { AxiosError } from "axios";
+
+                - Save the changes
+                    - TypeScript compilation error addressed
+
+        useEffect(() => {
+            const fetchUsers = async () => {
+                try {
+                    const res = await axios.get<User[]>(
+                        "https://jsonplaceholder.typicode.com/xusers"
+                    );
+
+                    setUsers(res.data);
+                } catch (err) {
+                    setError((err as AxiosError).message);
+                }
+            };
+
+            fetchUsers();
+        }, []);
+
+        
