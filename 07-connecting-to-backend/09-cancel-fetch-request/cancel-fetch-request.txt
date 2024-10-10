@@ -1,0 +1,116 @@
+Cancelling Fetch Request
+------------------------
+- It is best practice when fetching data using a "React Effect Hook"
+    - Provide a clean-up function for cancelling the fetch request
+    - In case the data is NO longer needed
+
+
+- This is quite helpful when working in "Strict Mode" (i.e. development)
+    - This prevents the React application 
+        - From submitting a fetch request TWICE to the remote server
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Inside the "React Effect Hook" 
+        - Prior to the using the method ".get()" of the Axios library
+
+        - Declare a new instance of the class AbortController()
+            - This is a built-in class on modern browsers
+            - That allows to abort or cancel asynchronous operations
+            - e.g. fetch request, DOM manipulation & any opearation that takes time to complete
+
+        - Save the instance into a constant named "controller"
+            - This is the clean-up function
+
+            useEffect(() => {
+                const controller = new AbortController();
+                ...
+            })
+
+    - Pass an "AxiosRequestConfig" object as 2nd argument to the Axios method ".get()"
+        - This is an "configuration" object 
+    
+    - Inside the "configuration" object
+        - Declare the property "signal"
+        - Assign the value "controller.signal"
+
+            useEffect(() => {
+                const controller = new AbortController();
+
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+                    signal: controller.signal,
+                })
+                ...
+            })
+
+    - On the line after the call to the method ".catch()"
+        - Add a "return" statement that calls an anonymous arrow function
+
+        - Inside the arrow function
+            - Calls the method ".abort()" of the object "controller"
+
+            useEffect(() => {
+                const controller = new AbortController();
+
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+                    signal: controller.signal,
+                    })
+                    .then((res) => setUsers(res.data))
+                    .catch((err) => setError(err.message));
+
+                return () => controller.abort();
+            }, []);
+
+    - On the method ".catch()", refactor the code
+        - Check if the object "err" is an instance of "CanceledError"
+            - The class is defined within the Axios library
+
+        - If the condition is truthy
+            - Return immediately using a "return" statement
+
+        - Otherwise
+            - Calls the set function "setError()"
+            - With the object "err.message" passed as an argument value
+
+            useEffect(() => {
+                const controller = new AbortController();
+
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+                    signal: controller.signal,
+                    })
+                    .then((res) => setUsers(res.data))
+                    .catch((err) => {
+                        if (err instanceof CanceledError) return;
+                        setError(err.message);
+                    });
+
+                return () => controller.abort();
+            }, []);
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - If there are NO errors encountered fetching data
+            - The list of users are rendered in the DOM
+
+        - If there are error (intentionally)
+            - The error "Request failed with status code 404" is rendred in the DOM
+            - List of users are (obviously) NOT rendered
+
+        - NOTE: The call to the remote server is performed only ONCE
+            - The 1st call was canceled due to the default behavior of "Strict Mode"
+                - React unmounts the <App /> after the 1st call
+                - The clean-up function is called & the fetch request is canceled
+                
+                - This is evident in the Chrome Dev Tools
+                    - Under the tab "Network"
+                    - The first endpoint "users" has the "(canceled)" status
+            
+            - The 2nd call succeeds in fetching the requested data from the server
+            
+
