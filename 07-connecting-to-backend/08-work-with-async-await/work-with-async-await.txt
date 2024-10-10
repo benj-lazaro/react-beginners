@@ -43,7 +43,7 @@ Working with Async & Await
             };
         }, []);
 
-    - Outside the constant "fetchUser"
+    - Right after the declaration of the constant "fetchUser"
         - Call the function "fetchUser"
 
         useEffect(() => {
