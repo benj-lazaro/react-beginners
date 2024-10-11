@@ -1,0 +1,102 @@
+Showing a Loading Indicator
+---------------------------
+- To render a "loading indicator" on the DOM
+    - When connecting to a remote server
+    
+    - Requires declaring a new "React State Hook" 
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Add new "React State Hook"
+        - State variable named "isLoading" initialized with a boolean value of "false"
+        - Set function named "setLoading"
+
+    - Inside the "React Effect Hook"
+        - Above the line of code calling the method ".get()" of the Axios library
+
+        - Call the set function "setLoading()"
+            - Pass a boolean value of "true" as an argument value
+
+            - This signals for the "loading indicator" to be enabled
+        
+        - Next to hide the "loading indicator" when the promise has been settled / canceled
+            - Refactor the methods ".then()" and ".catch()"
+                - To include a call to the set function "setLoading()"
+                - Pass the boolean value of "false" as an argumetn value
+            
+            useEffect(() => {
+                const controller = new AbortController();
+
+                setLoading(true);
+
+                axios
+                    .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+                        signal: controller.signal,
+                    })
+                    .then((res) => {
+                        setUsers(res.data);
+                        setLoading(false);
+                    })
+                    .catch((err) => {
+                        if (err instanceof CanceledError) return;
+                            setError(err.message);
+                            setLoading(false);
+                    });
+
+                return () => controller.abort();
+            }, []);
+
+
+        - NOTE: Calling the set function "setLoading()" right after the call to the Axios library
+            - Is NOT advisable due to calling a remote server is an asynchronous operation
+
+            - Doing so it will NOT await for the result or rejection of the asynchronous operation
+                - Instead, it will immediately disable & hide the "loading indicator" mark-up
+        
+        - A better way of implementing is with the use of the method ".finally()"
+            - Placing a call to the set function "setLoading()"
+            - Passing the boolean value of "false" as an argument value
+            - HOWEVER, this approach does NOT work with the "Strict Mode" enable
+
+    - To show the "loading indicator" in the DOM
+        - On the component's mark-up
+
+        - Just above the JSX element <ul>
+            - Add an empty object
+
+        - Inside the empty object
+            - Add the state variable "isLoading"
+
+            - An && operator
+
+            - A JSX element <div>
+                - Declare the property "className"
+                - Assign the Bootstrap class "spinner-border"
+
+            return (
+                <>
+                    {error && <p className="text-danger">{error}</p>}
+
+                    { isLoading && <div className="spinner-border"></div>}
+                    ...
+                </>
+            );
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - The "loading indicator" is displayed
+            - As it retrieves data from the remote server
+
+        - In the event that the indicator went by fast, simulate a slow connection            
+            - Launch the Chrome Dev Tools
+            
+            - Click the tab "Network
+
+            - Click the button "No throttling" 
+            
+            - Select the menu item "3G"
+                - Simulates a slow "3G" connection
+                - Slow enough to witness the "loading indicator" in the DOM
