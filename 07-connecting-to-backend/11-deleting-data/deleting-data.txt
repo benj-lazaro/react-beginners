@@ -1,0 +1,165 @@
+Deleting Data
+-------------
+- To delete a user from the rendered list in the DOM
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - On the component's JSX mark-up
+        - Add a JSX element <button> inside the JSX element <li>
+            - Declare the property "className"
+            - Assign the Bootstrap class "btn btn-outline-danger"
+            - Add the content "Delete"
+
+            <ul>
+                {users.map((user) => (
+                    <li key={user.id}>
+                        {user.name}{" "}
+                        <button className="btn btn-outline-danger">Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The "Delete" button is rendered besides each user in the list
+                - The button is rendered unevenly and too close to each user entry
+
+        - To address this concern is to improve the look & feel of the JSX elements <ul> & <li>
+            - Declare the property "className" for the JSX element <ul>
+                - Assign the Bootstrap class "list-group" as value
+
+            - Declare the property "className" for the JSX element <li>
+                - Assign the Bootstrap class "list-group-item" as value
+
+            - To align the buttons to the right-hand side of each JSX element <li>
+                - Convert each JSX element <li> into a "Flex Container"
+                    - Then "justify content between" items inside the container
+
+                - To do so, add the Bootstrap classes "d-flex" and "justify-content-between" as values
+
+            <ul className="list-group">
+                {users.map((user) => (
+                    <li key={user.id}
+                     className="list-group-item d-flex justify-content-between"
+                    >
+                        {user.name}{" "}
+                        <button className="btn btn-outline-danger">Delete</button>
+                    </li>
+                ))}
+            </ul>
+
+        - Remove the generated {" "} besides the {user.name}
+
+        - Save the changes
+            - Vite reloads the React application
+            - The "Delete" button is rendered and aligned property 
+
+
+    - To implement the "delete" functionality
+        - There are two (2) approaches
+            - Optimisitic update (preferred)
+                - Updates the UI
+                - Then calls the server
+                - Resulting to a responsive UI
+
+            - Pessimistic update
+                - Calls the server
+                - Then update the UI
+                - Resulting to a little bit slow UI
+
+        - In the JSX element <button>
+            - Declare the property "onClick"
+            - Assign an anonymous arrow function
+
+        - Inside the arrow function
+            - Call the (to be declared) function "deleteUser()"
+            - Passes the object "user" as an argument value
+
+        - Just before the component's JSX mark-up
+            - Add an arrow function
+            - Declare the parameter variable "user" of type "User" (defined interface)
+
+        - Inside the arrow function
+            - Calls the set/update function "setUsers()"
+                - Pass all object "users" as an argument value
+                - Call the method ".filter()" 
+
+            - Pass an anonymous arrow function as argument value to the method ".filter()"
+                - Declare the parameter variable "u" (i.e. user)
+
+            - Inside the arrow function
+                - Copy the object in the parameter variable "u" to a new array
+                - EXCEPT for the object "u" with the property "id" EQUAL to the property "id" of the object "user"
+
+            - Save the function to a constant named "deleteUser"
+
+            const deleteUser = (user: User) => {
+                setUsers(users.filter((u) => u.id !== user.id));
+            };
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Clicking the "Delete" button removes the user
+                - Updates the UI instantly
+
+
+    - To call the server to persist the changes done in the UI
+        - On the line below after calling the set / update function "setUsers()"
+
+        - Call the method ".delete()" of the Axios library
+            - Pass the URL (https://jsonplaceholder.typicode.com/users) as an argument value
+            - Add the property "id" of object stored in the parameter variable "user" at the end of the URL
+
+            const deleteUser = (user: User) => {
+                setUsers(users.filter((u) => u.id !== user.id));
+
+                axios.delete("https://jsonplaceholder.typicode.com/users" + user.id);
+            };
+
+        - Chain the method ".catch()"
+            - Pass an anonymous arrow function as an argument value
+
+            - On the arrow function
+                - Declare the parameter variable "err"
+
+            - In the body of the arrow function
+                - Call the set / update function "setError()"
+                - Pass the object "err.message" as an argument value
+
+                axios
+                    .delete("https://jsonplaceholder.typicode.com/users" + user.id)
+                    .catch((err) => {
+                        setError(err.message);
+                });
+
+            - Declare a constant named "originalUsers"
+                - Right after the declaration of the function "deleteUser()"
+                - Assign an array as value
+
+                - Inside the array
+                    - Use the spread operator (...) on the state variable "users"
+
+            - Right after the call the to set / update function "setError()"
+                - Call the set / update function "setUsers()"
+                - Pass the constant "originalUsers" as an argument value
+
+                - This restores the original list of users
+                    - When an error in connecting to a remote server is encountered
+
+        - Save the changes
+            - Vite reloads the React application
+            
+            - When an connectivity issue is encountered when deleting a user
+                - The corresponding error message is displayed
+                - The original user list is restored
+    
+
+
+
+
+        
+
