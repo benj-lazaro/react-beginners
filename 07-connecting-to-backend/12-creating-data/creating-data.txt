@@ -1,0 +1,169 @@
+Creating Data
+-------------
+- To create a new user to be added to the rendered list in the DOM
+    - Using the Optimistic update approach
+        - Updates the UI first
+        - Then call the remote server to update the changes
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - Add a JSX element <button> right above the JSX element <ul>
+        - Declare the property "className"
+        - Assign the Bootstrap class "btn btn-primary mb-3"
+        - Add the content "Add"
+
+        - Declare the property "onClick"
+        - Assign the yet to be declared constant (containing a function) named "addUser"
+
+            <button className="btn btn-primary mb-3" onClick={addUser}>Add</button>
+    
+    - Just below the constant "deleteUser"
+        - Declare a new constant named "addUser"
+
+        - Assign an anonymous arrow function as value
+
+        - Inside the body of the arrow function
+            - Declare a new constant named "newUser"
+                - Add a blank object as value
+
+        - Inside the blank object
+            - Declare the property "id"
+                - Assign the number value of 0 as value
+
+            - Declare the property "name"
+                - Assign the string value "Mosh" as value
+
+        - Call the set / update function "setUser()"
+            - Pass a new array as an argument value
+
+        - Inside the new array
+            - Pass the constant "newUser"
+            - Then pass the desconstructed state variable "users"
+
+            const addUser = () => {
+                const newUser = { id: 0, name: "Mosh" };
+                setUsers([newUser, ...users]);
+            };
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Clicking the "Add" button
+                - Add the user "Mosh" to the list rendered in the DOM
+    
+        - Call the method ".post()" of the Axios library
+            - Pass the URL "https://jsonplaceholder.typicode.com/users/" as the 1st argument value
+            - Pass the constant "newUser" as the 2nd argument value
+
+        - Chain the method ".then()"
+            - Pass an anonymous arrow function as an argument value
+
+        - In the arrow function
+            - Declare the parameter variable "res"
+                - Contains the object "response" returned from the remote server after a successful connection
+
+        - Inside the body of the arrow function
+            - Call the set / update function "setUsers()"
+            - Pass an array as an argument value
+
+        - Inside the array
+            - Pass the object "res.data" as the 1st argument value
+            - Pass the desconstructed state variable "users" as the 2nd argument value
+
+            const addUser = () => {
+                const newUser = { id: 0, name: "Mosh" };
+                setUsers([newUser, ...users]);
+                axios
+                    .post("https://jsonplaceholder.typicode.com/users", newUser)
+                    .then((res) => setUsers(res.data));
+            };
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Clicking the "Add" button
+                - Add the user "Mosh" to the list rendered in the DOM
+
+            - Launch the Chrome Dev Tools
+                - Click the tab "Network"
+                - Click the latest endpoint "users" with the status of "201"
+                - Click the tab "Payload"
+                    - Displays the submitted user object to the remote server
+
+                - Click the tab "Preview"
+                    - Displays the response object returned from the remote server
+        
+        - Refactor the recent code of the method ".then()" to make it more readable
+            - Destructure the property "data" from the returned response object
+            - Wrap the the parameter variable "res" in {}
+            - Rename "res" to "data"
+                - Followed by ": savedUser"
+                - NOTE: "savedUser" is ONLY an alias of the property "data"
+
+            - Rename the argument value "res.data" to "savedUser"
+
+            const addUser = () => {
+                const newUser = { id: 0, name: "Mosh" };
+                setUsers([newUser, ...users]);
+                axios
+                    .post("https://jsonplaceholder.typicode.com/users", newUser)
+                    .then(({ data: savedUser }) => setUsers([savedUser, ...users]));
+            };                
+
+    
+        - Chain the method ".catch()"
+            - Pass an anonymous arrow function as an argument value
+
+        - In the arrow function
+            - Declare the parameter variable named "err"
+
+        - Inside the arrow function
+            - Call the set / update function "setError()"
+            - Pass the object "err.message" as an argument value
+
+            const addUser = () => {
+                const newUser = { id: 0, name: "Mosh" };
+                setUsers([newUser, ...users]);
+                axios
+                    .post("https://jsonplaceholder.typicode.com/users", newUser)
+                    .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
+                    .catch((err) => setError(err.message));
+            };             
+
+        - To restore the the list to its original state in the event of a connectivity setError
+            - Declare a new constant named "originalUsers"
+                - On the line above the constant "newUser"
+                - Assign a new array as value
+            
+            - Inside the new array
+                - Deconstruct the value of the state variable "users"
+
+                const originalUsers = [...users];
+
+        - Back to the method ".catch()"
+            - Just below the set / update function "setError()"
+            - Call the set / update function "setUsers()"
+            - Pass the constant "originalUsers" as an argument value
+
+            const addUser = () => {
+                const newUser = { id: 0, name: "Mosh" };
+                setUsers([newUser, ...users]);
+                axios
+                    .post("https://jsonplaceholder.typicode.com/users", newUser)
+                    .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
+                    .catch((err) => {
+                        setError(err.message);
+                        setUsers(originalUsers);
+                    });
+            };            
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Clicking the "Add" button
+                - Add the user "Mosh" to the list rendered in the DOM
+
+            - In the event of a connectivity error
+                - The original list is restored
