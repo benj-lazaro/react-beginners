@@ -1,0 +1,191 @@
+Updating Data
+-------------
+- To update a current user info rendered in the DOM
+    - Update data is hard-coded to save time
+    - In a real-world scenario, a form will be required to receive the update data
+
+
+- In the example code
+    - Open the <App /> component (App.tsx)
+
+    - On the component's JSX mark-up
+        - Inside the JSX element <li>
+            - Just below the object "{user.name}"
+
+        - Add a new JSX element <div>
+
+        - Then add a new JSX element <button> below it
+            - Declare the property "className"
+            - Assign the Bootstrap class "btn btn-outline-secondary"
+            - Add the content "Update"
+
+        - Move both JSX element <button> containing content of "Update" & "Delete"
+            - Inside the recently added JSX element <div>
+
+            <button className="btn btn-outline-secondary">
+                Update
+            </button>
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - User names and buttons "Update" & "Delete" rendered in the DOM
+                - The buttons are too close to each other
+
+            - To address this concern
+                - On the JSX element <button> with the content of "Update"
+                - Add the Bootstrap class "mx-1" (i.e. horizontal-margin of 1px)
+
+            <button className="btn btn-outline-secondary mx-1">
+                Update
+            </button>
+
+        - Save the changes
+              - Vite reloads the React application
+
+              - The buttons "Update" & "Delete" are now well-spaced
+
+
+    - Next to implement the update functionality
+
+    - On the JSX element <button> with the content of "Update"
+        - Declare the property "onClick"
+            - Assign an anonymous arrow function as value
+
+        - Inside the body of the arrow function
+            - Call the (to be declared) function "updateUser()"
+            - Pass the parameter variable "user" as an argument value
+
+            <button
+                className="btn btn-outline-secondary mx-1"
+                onClick={updateUser(user)}
+            >
+                Update
+            </button>
+    
+    - Below the constant "addUser"
+        - Add an arrow function
+            - Declare a parameter variable "user" of interface "User"
+
+        - Inside the body of the arrow function
+            - Declare a constant named "updatedUser"
+            - Assign a blank object as a value
+
+        - Inside the blank object
+            - Use the spread operator (...) on the parameter variable "user"
+            - Followed by the property "name"
+            - Assign with a value based on the object "user.name" 
+                - Add a "!" at the end
+
+            - Save to a constant named "updatedUser"
+
+        - Call the set / update function "setUsers()"
+            - Call the method ".map()" on the state variable "users"
+            - Pass an anonymous arrow function as an argument value
+
+        - In the arrow function
+            - Declare the parameter variable "u"
+                - This holds the current user to be updatedUser
+
+            - Check if property "id" of the object "u" is STRICTLY EQUAL
+                - To the property "id" of the object "user"
+
+            - Return the value of the constant "updatedUser"
+                - Otherwise, just return the same object "u"
+
+            const updateUser = (user: User) => {
+                const updatedUser = { ...user, name: user.name + "!" };
+
+                setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+            };
+            
+        - Save the changes
+            - Vite reloads the React application
+
+            - When the "Update" button is clicked
+                - The rendered username is appended with an "!" mark at the end
+                - Clicking the button again appends another "!" mark
+
+
+    - Next is to call the remote server to save the changes
+
+    - Back to the constant "updatedUser"
+        - Right after the call to the set / update function "setUsers()"
+
+        - Call the method ".patch()" of the Axios library
+            - This updates one or more of the object's properties
+            - The method ".put()" replaces the object
+
+        - Pass the URL "https://jsonplaceholder.typicode.com/users/" as the 1st argument value
+            - Add the object "user.id" at the end of the URL
+            - Pass the constant "updatedUser" as the 2nd argument value
+
+            const updateUser = (user: User) => {
+                const updatedUser = { ...user, name: user.name + "!" };
+
+                setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+                axios.patch("https://jsonplaceholder.typicode.com/users/" + user.id, updatedUser);
+            };
+            
+
+        - Chain the method ".catch()"
+            - Pass an anonymous arrow function as an argument value
+
+            - In the arrow function
+                - Declare the parameter variable "err"
+
+            - Inside the body of the arrow function
+                - Call the set / update function "setError()"
+                - Pass the object "err.message" as an argument value
+
+            axios
+                .patch(
+                    "https://jsonplaceholder.typicode.com/users/" + user.id,
+                    updatedUser
+                 )
+            .catch((err) => setError(err.message));
+
+
+        - Move to the line above the constant declaration of "updatedUser"
+
+        - Declare a constant named "originalUsers"
+            - Assign an empty array
+
+        - Inside the empty array
+            - Deconstruct the state variable "users" with the spread operator (...)
+
+            const originalUsers = [...users];
+
+        - Move back into the method ".catch()"
+            - Call the set / update function "setUsers()"
+            - Pass the constant "originalUsers" as an argument value
+
+            axios
+                .patch(
+                    "https://jsonplaceholder.typicode.com/users/" + user.id,
+                    updatedUser
+                )
+                .catch((err) => {
+                    setError(err.message);
+                    setUsers(originalUsers);
+            });
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Launch Chrome's Dev Tools
+                - Click the tab "Network"
+
+                - Click the "Update" button in the DOM
+
+                - A PATCH request is set to the remote server
+                    - With a "status code" of 200
+                
+                - Click the tab "Payload"
+                    - The property "name" contains the updated value
+
+                - Click the tab "Response"
+                    - Shows the updated object in detail that was returned from the server
+            
