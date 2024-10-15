@@ -1,0 +1,132 @@
+Creating a Reusable API Client
+------------------------------
+- To address the duplicated backend URL in the current iteration of the application
+    - Create a (reusable) separate module that stores default configuration settings for making HTTP calls
+
+
+- In the example code
+    - Inside the folder "src"
+        - Create a new folder named "services"
+            - This stores the basic modules that provide services (functionalities) to the application
+            - Services are NOT about the UI, they are about the functionalities
+
+    - Create a new file named "api-client.ts"
+
+    - Create a new access client with a custom configuration
+
+    - Import the "axios" from the Axios module
+
+        import axios from "axios";
+
+    - Call the method ".create()" from the object "axios"
+        - Pass a configuration object as an argument value
+
+    - Inside the configuration object
+        - Declare the property "baseURL"
+        - Assign the URL (without including the endpoints) as an argument value
+
+        axios.create({
+            baseURL: "https://jsonplaceholder.typicode.com"
+        });
+
+        - NOTE: This is also where HTTP "headers" are set
+            - These "headers" are passed at every HTTP request
+            - Some free API services require an "API key" to be included at every HTTP request
+
+            axios.create({
+                baseURL: "https://jsonplaceholder.typicode.com"
+                headers: {
+                    "api-key": ...
+                }
+            });
+
+    - Export the axios client as a default object from this module
+
+        export default axios.create({
+            baseURL: "https://jsonplaceholder.typicode.com"
+        });    
+
+    - Save the changes
+    
+
+    - Switch over to the <App /> component (App.tsx)
+        - Import the "apiClient" from the created module "./services/api-client"
+
+            import apiClient from "./services/api-client";
+
+        - Save the changes
+
+
+    - Switch back to "apiClient.ts"
+        - Import the object "CanceledError" from the Axios library
+
+            import axios, { CanceledError} from "axios";
+
+        - Export "CanceledError" as a named object
+
+            export { CanceledError };
+
+        - Save the changes
+
+
+    - Switch back to the <App /> component
+        - Delete the "import" statement for the Axios library
+
+            import axios, { Axios, CanceledError } from "axios";
+
+        - Import the "CanceledError" on the same "import" statement as the "apiClient"
+
+            import apiClient, { CanceledError } from "./services/api-client";
+
+        - Search instances of "axios"
+            - Replace it with "apiClient"
+
+        - All remove all instances of the base URL
+            - Leave behind their respective endpoints
+
+            apiClient
+                .get<User[]>("/users", {
+                    signal: controller.signal,
+                })
+                .then((res) => {
+                    setUsers(res.data);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    if (err instanceof CanceledError) return;
+                    setError(err.message);
+                    setLoading(false);
+                });
+
+            ...
+
+            apiClient.delete("/users/" + user.id).catch((err) => {
+                setError(err.message);
+                setUsers(originalUsers);
+            });
+
+
+            ...
+
+            apiClient
+                .post("/users", newUser)
+                .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
+                .catch((err) => {
+                    setError(err.message);
+                    setUsers(originalUsers);
+            });
+
+            ...
+
+            apiClient.patch("/users/" + user.id, updatedUser).catch((err) => {
+                setError(err.message);
+                setUsers(originalUsers);
+            });
+
+            ...
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Functionality of the previous code iteration is retained
+                - The code is now cleaner and organized
