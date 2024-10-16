@@ -1,0 +1,320 @@
+Extracting User Service
+-----------------------
+- In the given code example
+    - The <App /> component is a little bit too concerned on
+        - Making HTTP requests
+        - Cancelling HTTP requests
+        - Knows about the HTTP request methods (e.g. .get(), .post(), .patch() & .delete())
+        - Knows about the remote API server's endpoints
+
+    - The <App /> component should ONLY be focused on its primary responsibility
+        - Returning JSX mark-up
+        - Handling user interactions at a high-level
+
+    - To improve the example code
+        - Extract all the logic around making HTTP requests 
+            - Place them into a separate "service"
+
+        - This allows to separate concerns
+            - Making the code more modular & reusable
+
+        - Potentially can reuse this new "service" in other components
+            - If that component would require making a HTTP request
+
+
+- In the folder "src/services"
+    - Create a new file named "user-services.ts"
+
+    - Import the "apiClient" from "./api-client"
+
+        import apiClient from "./api-client";
+
+    - Next is to create an empty class named "UserService"
+        - This will contain the HTTP request methods
+
+        class UserService {
+
+        }
+
+    - Export a new instance of the class "UserService" as a default object
+
+        import apiClient from "./api-client";
+
+        class UserService {
+
+        }
+
+        export default new UserService();
+
+
+    - Back on the class "UserService"
+        - Add a method named "getAllUsers()"
+
+            class UserService {
+                getAllUsers() {
+
+                }
+            }
+
+
+    - Switch to the <App /> component (App.tsx)
+        - Inside the "React Effect Hook"
+        - Grab the declaration of the constant "controller"
+
+            const controller = new AbortController();
+
+
+    - Switch back to the "user-services.ts"
+        - Paste the code within the method "getAllUsers()"
+
+            class UserService {
+                getAllUsers() {
+                    const controller = new AbortController();
+
+                }
+            }
+
+
+    - Switch back to the <App /> component
+        - Grab the line of code "apiClient.get()"
+
+            apiClient
+                .get<User[]>("/users", {
+                signal: controller.signal,
+            })
+
+
+    - Switch back to the "user-services.ts"
+        - Paste it below the declaration of the constant "controller"
+
+        - Return the "promised object" from the apiClient 
+            - By prefixing a "return" keyword
+
+            class UserService {
+                getAllUsers() {
+                    const controller = new AbortController();
+
+                    return apiClient.get<User[]>("/users", {
+                        signal: controller.signal,
+                    })
+                }
+            }
+
+
+    - Switch back to the <App /> component
+        - Grab the declaration of the interface "User"
+
+    - Switch back to the "user-services.ts"
+        - Paste it right after the "import" statement
+
+        - Export the interface "User" from this module
+            - So that the <App /> component can have access to it
+
+            import apiClient from "./api-client";
+            
+            export interface User {
+                id: number;
+                name: string;
+            }
+
+
+    - Switch back to the <App /> component
+        - Import the interface "user" & instance of the class "UserService"
+            - From the "user-services.ts"
+        
+            import userService, { User } from "./services/user-services";
+
+
+        - Replace "apiClient.get()" with "userService.getAllUsers()"
+
+            userService.getAllUsers()
+                .then((res) => {
+                    setUsers(res.data);
+                    setLoading(false);
+                    })
+                .catch((err) => {
+                    if (err instanceof CanceledError) return;
+
+                    setError(err.message);
+                    setLoading(false);
+                });
+        
+
+    - Switch back to the "user-services.ts"
+        - In the method "getAllUsers()"
+            - Save the "promised object" returned by the apiClient 
+                - To a constant named "request"
+
+            - At the end of the method, return an object containing the following properties
+                - The constant "request" which contains the "promised object"
+                - A user-defined method named "cancel"
+
+            - The property "cancel" contains an anonymous arrow function as a value
+                - It calls the method ".abort()" of the object stored in the constant "controller"
+
+            getAllUsers() {
+                const controller = new AbortController();
+
+                const request = apiClient.get<User[]>("/users", {
+                    signal: controller.signal,
+                })
+
+                return { request, cancel: () => controller.abort() }
+            }
+
+
+    - Switch back to the <App /> component
+        - Save the returned object returned by the method ".getAllUsers()"
+            - As a destructured value stored in a constant
+            - Into a separate statement
+
+        - Refactor the chained method ".then()"
+            - Chaining the ".then()" method with the object "request"
+
+        - Refactor the "return" statement
+            - Instead of calling "controller.abort()"
+            - It calls the function "cancel()"
+
+            const { request, cancel } = userService.getAllUsers();
+
+            request
+                .then((res) => {
+                    setUsers(res.data);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    if (err instanceof CanceledError) return;
+
+                    setError(err.message);
+                    setLoading(false);
+                });
+
+            return () => cancel();
+
+
+    - Switch back to the "user-services.ts"
+        - Add a new method named "deleteUser()" to the class "UserService"
+        
+        - Declare a parameter variable named "id"
+            - With the data type of number
+
+            deleteUser(id: number) {
+                
+            }
+
+    
+    - Switch back to the <App /> component
+        - Grab the line of code "apiClient.delete("/users/" + user.id)"
+
+
+    - Switch back to the "user-services.ts"
+        - Paste it within the method "deleteUser()"
+        - Rename "user.id" to "id"
+
+        - Return the "promised object" returned by the apiClient
+            - By prefixing the line of code with a "return" statement
+
+            deleteUser(id: number) {
+                return apiClient.delete("/users/" + id); 
+            }
+
+
+    - Switch back to the <App /> component
+        - Chain the method ".catch()" to the object "UserService"
+            - Which calls the method ".deleteUser()"
+            - Passes the property "id" of the object "user" as an argument value
+
+            userService.deleteUser(user.id).catch((err) => {
+                setError(err.message);
+                setUsers(originalUsers);
+            });
+
+
+    - Switch back to the "user-services.ts"
+        - Add a new method named "createUser()" to the class "UserService"
+
+        - Declare a parameter variable named "user"
+            - Data type of interface "User"
+
+            createUser(user: User) {
+
+            }
+
+        
+    - Switch back to the <App /> component
+        - Grab the line of code "apiClient.post("/users", newUser)"
+
+
+    - Switch back to the "user-services.ts"
+        - Paste it within the method "createUser()"
+        - Rename "newUser" to "user"
+
+        - Return the "promised object" returned by the apiClient
+            - By prefixing the line of code with a "return" statement
+
+            createUser(user: User) {
+                return apiClient.post("/users", user)
+            }
+
+
+    - Switch back to the <App /> component
+        - Chain the method ".then()" to the object "UserService"
+            - Which calls the method ".createUser()"
+            - Passes the object "newUser" as an argument value
+
+            userService
+                .createUser(newUser)
+                .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
+                .catch((err) => {
+                    setError(err.message);
+                    setUsers(originalUsers);
+            });
+
+
+    - Switch back to the "user-services.ts"
+        - Add a new method named "createUser()" to the class "UserService"
+
+        - Declare a parameter variable named "user"
+            - Data type of interface "User"
+
+            updateUser(user: User) {
+        
+            }
+
+
+    - Switch back to the <App /> component
+        - Grab the line of code "apiClient.patch("/users/" + user.id, updatedUser)"
+
+
+    - Switch back to the "user-services.ts"
+        - Paste it within the method "updateUser()"
+        - Rename "updatedUser" to "user"
+
+        - Return the "promised object" returned by the apiClient
+            - By prefixing the line of code with a "return" statement
+
+            updateUser(user: User) {
+                return apiClient.patch("/users/" + user.id, user)
+            }
+
+
+    - Switch back to the <App /> component
+        - Chain the method ".catch()" to the object "UserService"
+            - Which calls the method ".updateUser()"
+            - Passes the object "updatedUser" as an argument value
+        
+            userService.updateUser(updatedUser).catch((err) => {
+                setError(err.message);
+                setUsers(originalUsers);
+            });
+
+    
+    - Switch back to the <App /> component
+        - Remove the "apiClient" from the "import" statement
+
+        - This is due to all of the interactions with the remote API
+            - Is done through the "userService"
+
+            import { useEffect, useState } from "react";
+            import { CanceledError } from "./services/api-client";
+            import userService, { User } from "./services/user-services";
