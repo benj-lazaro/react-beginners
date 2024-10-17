@@ -1,0 +1,253 @@
+Generic HTTP Service
+--------------------
+- The class "UserService" encapsulates all the logic for making HTTP requests
+    - In the event of creating another "service" class (e.g. managing posts)
+        - That class will methods that are almost identical
+
+    - With the only difference being the "endpoints" and "objects" 
+        - That are sent / received from the remote server
+    
+    - To address this concern
+        - Create a generic HTTP service class
+
+
+- In the example code
+    - In the folder "src/services"
+
+    - Create a new file named "http-service.ts"
+
+    - Open the TypeScript file "user-services.ts"
+        - Copy the entire codebase
+
+    - Move back to the file "http-service.ts"
+        - Paste the codebase
+
+    - Modify the codebase line-by-line
+        - Any reference to "user" is to be removed or make it (rename) generic
+
+    - Rename the class "UserService" to "HttpService"
+
+        class HttpService { 
+            ....
+        }
+
+    - Rename the method name "getAllUsers()" to "getAll()"
+
+        getAll() {
+            ...
+        }
+
+    - Delete the interface "User"
+
+        export interface User {
+            id: number;
+            name: string;
+        }
+
+
+    - Inside the method "getAll()"
+        - The interface "User" assigned to the constant "request" generated a TypeScript compilation error
+            - Cannot find name "User"
+            - This is due to the deletion of the interface "User"
+
+        - To address this concern
+            - Replace "User" with a generic "type" parameter
+                - This is to prevent the method from being coupled with a specific data
+
+            - In-between the method name "getAll" & "()"
+                - Insert a pair of <>
+
+                - Inside insert "T"
+                    - "T" in this context is called a "Generic Type" parameter
+                    - It is a placeholder for a type
+                
+            - Rename "User" with "T"
+
+            getAll<T>() {
+                const controller = new AbortController();
+
+                const request = apiClient.get<T[]>("/users", {
+                    signal: controller.signal,
+                })
+
+                return { request, cancel: () => controller.abort() }
+            }
+
+    - Outside the method "getAll()" but inside the class "HttpService"
+        - Add a property named "endpoint"
+            - Assign it with a data type of "string"
+
+            class HttpService {
+
+                endpoint: string;
+                ...
+            
+            }
+
+        - Followed by a call to a constructor function
+            - In order to create an instance of this class (i.e. HttpService)
+
+        - Declare a parameter variable named "endpoint"
+            - Assign it with a data type of "string"
+
+        - Inside the function
+            - Initialize the property "endpoint"
+            - With the value inside the parameter variable "endpoint"
+
+            constructor(endpoint: string) {
+                this.endpoint = endpoint;
+            } 
+
+    - Move back to the method "getAll()"
+        - Replace the endpoint "/users" with "this.endpoint"
+
+            getAll<T>() {
+                const controller = new AbortController();
+
+                const request = apiClient.get<T[]>(this.endpoint, {
+                    signal: controller.signal,
+                })
+
+                return { request, cancel: () => controller.abort() }
+            }        
+
+
+    - On the method "deleteUser()"
+        - Rename the method name "deleteUser()" to "delete()"
+        - Rename the endpoint '"/users/" + id' with 'this.endpoint + "/" + id'
+        
+            delete(id: number) {
+                return apiClient.delete(this.endpoint + "/" + id); 
+            }
+
+
+    - On the method "createUser()"
+        - Rename the method name "createUser()" to "create()"
+
+        - Rename the parameter variable "user" to "entity"
+            - Change the data type from "User" to "T"
+
+        - Insert <T> between the method name "create" & "()"
+
+        - Rename the endpoint "/users" to "this.endpoint"
+        
+        - On the apiClient method ".post()"
+            - Change the 2nd arguement value from "user" to "entity"
+        
+            create<T>(entity: T) {
+                return apiClient.post(this.endpoint, entity)
+            }
+
+
+    - On the method "updateUser()"
+        - Rename the method name "updateUser()" to "update()"
+
+        - Insert <T> between the method name "create" & "()"
+
+        - Rename the parameter variable "user" to "entity"
+            - Change the data type from "User" to "T"
+
+        - Rename the endpoint '"/users/" + user.id' to 'this.endpoint + "/" + entity.id'
+            - Triggers a TypeScript compilation error
+            - Property "id" does not exist on type "T"
+
+            - To address this concern
+                - Add a constraint to the type "T"
+                    - Need to inform the TypeScript compiler that objects of type "T"
+                    - Should have a property called "id"
+
+                - To implement the constraint is by using an "interface"
+
+                - Outside the class "HttpService"
+                    - Declare an interface named "Entity"
+
+                    - It contains a property named "id" of 
+                        - With a data type of "number"
+
+                        interface Entity {
+                            id: number;
+                        }
+
+                - Refactor the Generic parameter "T"
+                    -  Extend the property defined in the interface "Entity" 
+                        - Using the keyword "extends"
+
+                        update<T extends Entity>(entity: T) {
+                            ...
+                        }
+                       
+        - On the apiClient method ".patch()"
+            - Change the 2nd arguement value from "user" to "entity"
+
+            update<T extends Entity>(entity: T) {
+                return apiClient.patch(this.endpoint + "/" + entity.id, entity);
+            }
+
+
+    - Delete the line of code "export default new UserService();"
+
+        - Replace it with a new function named "create"
+            - Assign an anonymous arrow function as value
+
+        - In the arrow function
+            - Declare the parameter variable named "endpoint"
+                - Assign it with a data type of "string"
+
+        - Inside the body of the arrow function
+            - Call a new instance of the class "HttpService"
+            - Pass the parameter variable "endpoint" as an argument value
+
+            const create = (endpoint: string) => new HttpService(endpoint);
+
+        - Export the constant "create" as a default object from this module
+
+            export default create;
+
+    
+    - Move back to the file "user-service.ts"
+        - Delete the entire code of the class "UserService"
+
+        - Import the function "create" from the module "http-service.ts"
+
+            import create from "./http-service";
+
+        - Refactor the "export" statement of the module
+            - Export the imported function "create()" as a default object from this module
+
+            - Pass the value "/users" as an argument value
+                - This is the defined endpoint for this service
+
+        - Remove the "import" statement from the apiClient
+
+            import create from "./http-service";
+
+            export interface User {
+                id: number;
+                name: string;
+            }
+
+            export default create("/users");
+
+        
+    - Open the <App /> component (App.tsx)
+        - It contains a bunch of error
+
+        - The service "userService" has no longer has methods i.e. updateUser()
+            - It now has a bunch of generic methods 
+
+        - Rename methods by removing "users" or "user" from their name
+
+            userService.getAll()
+            ...
+            userService.delete()
+            ...
+            userService.create()
+            ...
+            userService.update()
+
+
+        - In the line of code that makes a call to the method "userSerivce.getAll()"
+            - Pass the data type "User" inside the pair of <>
+            - In-between the method name "getAll" & "()"
+
+            const { request, cancel } = userService.getAll<User>();
