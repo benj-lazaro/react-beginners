@@ -1,0 +1,75 @@
+Creating a Custom Data Fetching Hook
+------------------------------------
+- The purpose of creating a custom hook is
+    - To share functionalities & state variable(s) across different components
+    - By moving the logic that will be reused across components into a custom hook
+    - This reduces code duplication among components
+
+
+- In the example code
+    - In the folder "src"
+        - Create a new folder named "hooks"
+
+    - Inside the folder "hooks"
+        - Create a new file named "useUsers.ts"
+        - This is just a regular TypeScript module
+
+        - NOTE: By convention, all hooks should BEGIN with the word "use"
+
+    - Inside the file "useUsers.ts"
+        - Define a function named "useUsers"
+        - Assign an anonymous arrow function as a value
+        - Then export the function as a default object from this module
+        
+            const useUsers = () => {
+                
+            }
+
+            export default useUser;
+
+
+    - Open the <App /> component (App.tsx)
+        - Identify the piece of logic that can be shared among hypothetical components
+            - In the example code these are the state variables, set functions & effect hook
+
+        - Grab the declaration of the "React State Hook" & "React Effect Hook"
+            - Except for the event handlers
+            - As the event handlers are specific to the <App /> component
+
+    
+    - Move back to "useUsers.ts"
+        - Paste the grabbed code within the function "useUsers()"
+
+        - Import associated libraries
+            - To address the TypeScript compilation errors
+
+            import { useEffect, useState } from "react";
+            import userService, { User } from "../services/user-services";
+            import { CanceledError } from "../services/api-client";
+
+        - At the last line of code of the function "useUsers()"
+            - Return state variables & set / update functions
+                - As properties of an object
+                - So that they can used by the <App /> and other components
+
+            return { users, error, isLoading, setUsers, setError };
+
+    
+    - Move back to the <App /> component
+        - Import the custom hook "useUsers"
+
+            import useUsers from "./hooks/useUsers";
+
+
+        - Inside the declaration of the function "App()"
+            - Call the custom hook "useUsers"
+            
+            - Use the spread operator (...)
+                - To deconstruct the returned object
+                - Extract the returned state variables & set functions
+
+            - Save the properties into a constant
+
+            const { users, error, isLoading, setUsers, setError } = useUsers();
+
+
