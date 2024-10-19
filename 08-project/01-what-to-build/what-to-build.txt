@@ -1,0 +1,25 @@
+What We'll Build
+----------------
+- Build a Video Game Discovery app
+    - Inspiration taken from the Rawg website (https://rawg.io/)
+    - A popular video game discovery platform
+
+    - UI features taken from Rawg & to be implemented in the project
+        - Toggle between Dark / Light Mode
+        
+        - Search for games
+        
+        - Filter games by genre | platform 
+
+        - Sort the list of games
+            - By Relevance, Data added, Name, Release date, Popularity, Average rating
+
+        - As the thumbnails of the games are loading
+            - Loading skeletons are rendered
+
+
+- To build this project
+    - Will take the pragmatic & hands-on approach
+        - Make it work
+        - Refactor
+        - Improve
