@@ -1,0 +1,41 @@
+Setting Up The Project
+----------------------
+- Create a new project using Vite
+
+    npm create vite@4.1.0
+
+    - Provide the name "game-hub" for the Project name
+    - Select "React" for the framework
+    - Select "TypeScript" for the variant
+
+
+- Move into the folder named "game-hub"
+
+    cd game-hub
+
+
+- Install all of the dependencies
+
+    npm i
+
+
+- Run the project
+
+    npm run dev
+
+    - Click the returned URL
+    - Default browser loads a basic React application
+
+
+- Initialize a "local Git repository" on the project folder
+
+    git init
+
+
+- Add all of the files & changes in the current directory into the "Staging Area"
+
+    git add .
+
+
+- Commit the files from the "Staging Area" into the "local Git repository"
+    git commit -m "Initial commit"
