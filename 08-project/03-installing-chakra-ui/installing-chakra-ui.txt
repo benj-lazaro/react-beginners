@@ -1,0 +1,97 @@
+Installing Chakra UI 
+--------------------
+- Chakra UI is a simple, modular and accessible component library
+    - Provides the building blocks to build React applications
+    - Website (https://v2.chakra-ui.com/)
+
+
+- To install Chakra UI using Vite
+    - Go to the website (https://v2.chakra-ui.com/)
+    - Click the page "Getting Started"
+    - Scroll down to the "Framework Guide"
+    - Click the card "Vite"
+
+    - To install dependencies via terminal
+
+        npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
+
+
+- Setup the "CharkaProvider" at the root of the React application
+    - Go the directory "src"
+
+    - Open the file "main.tsx"
+
+    - Copy the "import" statement for Chakra UI
+        - Paste it right AFTER React import statements
+
+        import React from "react";
+        import ReactDOM from "react-dom/client";
+        import { ChakraProvider } from "@chakra-ui/react";
+
+    - Wrap the <App /> component within the <ChakraProvider /> component
+    
+        ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+            <React.StrictMode>
+                <ChakraProvider>
+                    <App />
+                </ChakraProvider>
+            </React.StrictMode>
+        )
+
+
+- To ensure that Chakra UI is installed properly
+    - Open the <App /> component (App.tsx)
+
+    - Remove the Vite generated "import" statements
+        - As well as code within the function "App()"
+
+        function App() {
+
+        }
+
+        export default App
+
+
+    - Import a button component from the Chakra UI library
+
+        import { Button, ButtonGroup } from '@chakra-ui/react'
+
+
+    - Search for the component "Button" on Chakra UI's website
+        - Copy the code for JSX element <button>
+        - Reference (https://v2.chakra-ui.com/docs/components/button/usage)
+
+
+    - Inside the function "App()"
+        - Add a "return" statement
+        - Paste by the JSX element <button> copied from Chakra UI's website
+
+        import { Button, ButtonGroup } from "@chakra-ui/react";
+
+        function App() {
+            return <Button colorScheme="blue">Button</Button>;
+        }
+
+        export default App;
+    
+    - Save the changes
+        - Vite reloads the React application
+
+        - A stylized button is rendered on the DOM
+    
+        - Clicking the button    
+            - A dark Blue outline surrounds the button
+            - This is due to the default styles implemented in Vite projects
+
+        - To address this concern
+            - Open the file "index.css"
+            - Delete the entire content of the file
+
+            - Save the changes
+                - Vite reloads the React application
+
+        - Clicking the button   
+            - The dark Blue outline the surrounds the button is now gone
+
+    - Chakra UI is now confirmed to be installed property
+        
