@@ -13,6 +13,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "framer-motion": "^11.11.9",
+    "npm": "^10.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
