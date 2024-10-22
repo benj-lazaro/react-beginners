@@ -1,0 +1,176 @@
+Creating a Responsive Layout
+----------------------------
+- To create a reseponsive layout
+    - For resolutions > 1024px
+        - A Navigation Bar at the top
+        - An Aside Panel at the left
+        - Then a Main Area at the right-hand side of the Aside Panel
+    
+    - For resolutions < 1024px (mobile devices)
+        - A Navigation Bar at the top
+        - Then a Main Area below the Navigation Bar
+        - The Aside Panel is hidden
+
+    - To implement this feature is to use Chakra UI's <Grid /> component
+        - This component works exactly like "CSS Grid"
+
+
+- In the project code
+    - Open the <App /> component (App.tsx)
+
+    - On the component's JSX mark-up
+        - Remove the previously added <Button /> component imported from Chakra UI
+        - As well as its associated "import" statement
+
+        function App() {
+            return 
+        }
+
+        export default App;
+
+
+    - Import a <Grid /> component from the Chakra UI library in the JSX mark-up
+
+        import { Grid } from "@chakra-ui/react";
+
+        function App() {
+            return <Grid></Grid>
+        }
+
+        export default App;
+
+    
+    - Declare the property "templateAreas"
+        - To define the layout of the <Grid /> component in the DOM
+            - Backticks are used due to enclose multiple strings (in "")
+
+        - First two columns named "nav nav"
+            - For the Navigation Bar
+
+        - On the 2nd row (in the DOM), add two other columns named "aside main"
+            - For the Aside Panel as well as for the Main Area
+
+        import { Grid } from "@chakra-ui/react";
+
+        function App() {
+            return <Grid templateAreas={`"nav nav" "aside main"`}></Grid>;
+        }
+
+        export default App;
+
+    
+    - Add a <GridItem /> component as content to the <Grid /> component
+        - Assign the content string "Nav"
+        
+        - Declare the property "area"
+            - Assign the corresponding "template area" of "nav" as value
+
+        - Declare the property "bg"
+            - Assign the background color of "coral" as value
+            - The value "coral" is a valid CSS color value
+
+        <GridItem area="nav" bg="coral">Nav</GridItem>
+
+    
+    - Add another <GridItem /> component
+        - Assign the content string "Aside"
+
+        - Declare the property "area"
+            - Assign the corresponding "template area" of "aside" as value
+
+        - Declare the property "bg"
+            - Assign the background color of "gold" as value
+
+        <GridItem area="aside" bg="gold">Aside</GridItem>
+
+    
+    - Then another <GridItem /> component
+        - Assigh the content string "Main"
+
+        - Declare the property "area"
+            - Assign the corresponding "template area" of "main" as value
+
+        - Declare the property "bg"
+            - Assign the background color of "dodgerblue" as value
+
+        <GridItem area="main" bg="dodgerblue">Main</GridItem>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Renders all three CSS Grid areas in the DOM
+
+
+    - To make the Grid layout reseponsive
+        - In the property "templateAreas" of the <Grid /> component
+            - Cut out the values enclosed in backticks
+            - Replace it with an empty object
+        
+        - Inside the empty object
+            - Define the corresponding breakpoint properties
+            - i.e. base, sm, md, lg, xl
+            - Reference (https://v2.chakra-ui.com/docs/styled-system/responsive-styles)
+
+        - For mobile devices
+            - Declare the property "base"
+            - Paste the cut out values earlier
+
+            - Reduce the value "nav" into one (1) instance
+            - Remove the value "aside"
+
+            <Grid templateAreas={{
+                base: `"nav" "main"`,
+            }}>
+                ...
+            </Grid>
+
+        - For large-screen devices (i.e. wider than 1024px)
+            - Declare the property "base"
+            - Paste the cut out values earlier
+
+            <Grid templateAreas={{
+                base: `"nav" "main"`,
+                lg: `"nav nav" "aside main"`
+            }}>
+                ...
+            </Grid>
+    
+    - Save the changes
+        - Vite reloads the React application
+
+        - Enable Chrome's Dev Tools
+
+        - Viewing the React app in resolutions > 1024px
+            - All CSS Grid areas are rendered as expected
+
+        - Viewing the React app in resolutions < 1024px
+            - The CSS Grid area "Aside" is stil rendered
+
+    - To address this concern
+        - To ensure the CSS Grid area "Aside" to be rendered ONLY on screen resolution > 1024px
+            - Wrap the corresponding <GridItem /> inside a <Show /> component
+
+        - Import the <Show /> into the <App /> component
+
+            import { Grid, GridItem, Show } from "@chakra-ui/react";
+
+        - Add a <Show /> component
+            - Declare the property "above"
+            - Assign the breakpoint name "lg" as value
+
+            - NOTE: Render this <GridItem /> component ONLY on screen resolution > 1024px
+
+        - Move the corresponding <GridItem /> inside the <Show /> component
+
+            <Show above="lg">
+                <GridItem area="aside" bg="gold">
+                    Aside
+                </GridItem>
+            </Show>
+  
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - CSS Grid areas are now rendered properly accordingly to the device's screen resolution
