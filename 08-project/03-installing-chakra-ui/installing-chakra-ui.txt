@@ -58,7 +58,7 @@ Installing Chakra UI
 
 
     - Search for the component "Button" on Chakra UI's website
-        - Copy the code for JSX element <button>
+        - Copy the code for Chakra UI's <Button /> component
         - Reference (https://v2.chakra-ui.com/docs/components/button/usage)
 
 
