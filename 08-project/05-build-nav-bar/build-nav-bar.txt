@@ -1,0 +1,142 @@
+Building the Navigation Bar
+---------------------------
+- Build the basic layout for the project's Navigation Bar
+    - Remove the previous "test" code
+
+    - Add the application's logo into the Navigation Bar
+
+
+- In the project code
+    - In the folder "src"
+        - Create a new folder named "components"
+
+    - Inside the folder "components"
+        - Create a new file named "NavBar.tsx"
+
+    - Inside the file "NavBar.tsx"
+        - Use the shortcut "rafce"
+            - To generate the corresponding component function code
+
+        - Replace the JSX element <div> with the Chakra UI component <HStack>
+            - This is to layout items (to be added) in the Navigation Bar horizontally
+
+            - Type "<HStack" followed by a Tab to generate the corresponding "import" statement
+       
+            - Then remove the generated "import" statement for react
+
+                import { HStack } from '@chakra-ui/react'
+
+                const NavBar = () => {
+                    return (
+                        <HStack>
+                    
+                        </HStack>
+                    )
+                }
+
+
+        - Add the component <Image /> as content to <HStack>
+            - Include the component in the "import" statement
+
+                import { HStack, Image } from "@chakra-ui/react";
+
+                const NavBar = () => {
+                    return (
+                        <HStack>
+                            <Image />
+                        </HStack>
+                    );
+                };
+
+
+        - Import the application's logo (logo.webp) as an object using an "import" statement
+
+                import logo from "../assets/logo.webp";
+
+            - NOTE: .webp images are highly optimized images for the web
+
+
+        - Back to the component <Image />
+            - Declare the property "src"
+            - Assign the imported object "logo" as value
+
+                const NavBar = () => {
+                    return (
+                        <HStack>
+                            <Image src={logo} />
+                        </HStack>
+                    );
+                };
+
+
+        - Save the changes
+            - Next is to add the <NavBar /> component (NavBar.tsx) to the <App /> component
+
+
+    - Open the <App /> component (App.tsx)
+        - On the <GridItem /> component with the string content "Nav"
+
+        - Replace the string content "Nav" with a <NavBar /> component
+
+            <GridItem area="nav" bg="coral">
+                <NavBar />
+            </GridItem>
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Renders the application logo on the Navigation Bar
+                - The rendered logo is way too large
+
+        
+        - To address this concern
+            - Switch back to the component <NavBar /> (NavBar.tsx)
+
+            - On the component <Image />
+                - Declare the property "boxSize"
+                - Assign the "60px" as value
+
+                <Image src={logo} boxSize="60px" />
+
+
+            - Save the changes
+                - Vite reloads the React application
+
+                - The size of the logo image is now resized appropriately
+
+
+        - Add a component <Text /> right after the <Image />
+            - Assign the string content "NavBar"
+
+                import { HStack, Image, Text } from "@chakra-ui/react";
+                import logo from "../assets/logo.webp";
+
+                const NavBar = () => {
+                    return (
+                        <HStack>
+                            <Image src={logo} boxSize="60px" />
+                            <Text>NavBar</Text>
+                        </HStack>
+                    );
+                };
+
+
+            - Save the changes
+                - Vite reloads the React application
+                
+                - The text "NavBar" is rendered (horizontally) right after the application's image logo
+
+
+    - Switch back to the <App /> component
+        - Remove the initial background color of "coral"" 
+            - From the corresponding <GridItem /> component
+
+            <GridItem area="nav">
+                <NavBar />
+            </GridItem>
+
+
+        - Save the changes
+            - Vite reloads the React application
+            
+            - The previous background color of the Navigation Bar has now been removed
