@@ -1,0 +1,107 @@
+Implementing the Dark Mode
+--------------------------
+- To implement the Dark Mode on the project application
+    - This is done using Chakra UI's "Color Mode"
+    
+    - To customize the default theme (i.e. "light") that comes with Chakra UI
+
+    - Reference (https://v2.chakra-ui.com/docs/styled-system/color-mode)
+
+
+- In the project code
+    - In the folder "src"
+        - Create a new file named "theme.ts"
+
+    - Inside the file "theme.ts"
+        - Import the function named "extendTheme" 
+        - Import the interface named "ThemeConfig"
+            - From the Chakra UI library
+
+        import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+
+    - Create a configuration object named "config"
+        - Annotate it with interface "ThemeConfig"
+            - Save it as a constant
+
+        - Assign an empty object
+
+        - Inside the object
+            - Declare the property "initialColorMode"
+            - Assign a string value of "dark"
+
+            const config: ThemeConfig = {
+                initialColorMode: "dark"
+            };
+        
+
+        - Call the function "extendTheme()"
+            - Pass the configuration object "config" as an argument value
+            - Save the returned color theme into a constant named "theme"
+
+            const theme = extendTheme({config});
+
+
+        - Export the constant "theme"
+            - As a default JavaScript object from this module
+
+            export default theme;
+
+
+    - Open the file "main.tsx"
+        - On the line AFTER the "import" statement for the "App"
+            - Import the object "theme" from the file "theme.ts"
+
+            ...
+            import App from "./App";
+            import theme from "./theme";
+            ...
+
+        
+        - In the component <ChakraProvider />
+            - Declare the property "theme"
+            - Assign the object "theme" as value
+
+            <ChakraProvider theme={theme}>
+            ...
+            </ChakraProvider>
+
+
+        - Before the component <App />
+            - Add a new component named "<ColorModeScript />
+
+            - Declare the property "initialColorMode"
+                - Assign the object "theme.config.initialColorMode" as value
+
+            <ChakraProvider theme={theme}>
+                <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+                <App />
+            </ChakraProvider>
+
+    
+    - Save the changes
+        - Vite reloads the Reach application
+
+        - Refreshing the DOM
+            - The color mode of the application remains light
+            - Chakra UI stores the current Color Mode in the browser's local storage
+
+    - To coax changes on the Color Mode
+        - Launch Chrome's Dev Tools
+
+        - Click the tab named "Application"
+        
+        - Expand the icon named "Local Storage"
+        
+        - Click the running "localhost:<port_number>"
+            - Diplays the current value of the key "chakra-ui-color-mode"
+            - Initially assigned with the value "light"
+
+        - Delete the current key
+            - Perform a right-mouse click
+            - Select "Delete"
+
+        - Refresh the browser
+            - The Dark Mode is now the current Color Mode
+        
+        - Looking at the Local Storage again
+            - The key "chakra-ui-color-mode" is now set to the value of "dark"
