@@ -1,0 +1,142 @@
+Building Color Moder Switch
+---------------------------
+- Adding a switch for toggling the application's Color Mode
+
+
+- In the project code
+    - In the folder "components"
+        - Create a new file named "ColorModeSwitch.tsx"
+
+        - Use the shortcut "rafce" 
+            - To generate component function boilerplate code
+
+    - On the JSX mark-up of the file "ColorModeSwitch.tsx"
+        - Replace the generated JSX element <div>
+            - By importing a <HStack /> component
+
+        - Inside the <HStack /> component
+            - Import a <Switch /> component
+            - Then a <Text /> component
+
+        - Inside the <Text /> component
+            - Add the string content "Dark Mode"
+
+            import { HStack, Switch, Text } from "@chakra-ui/react";
+
+            const ColorModeSwitch = () => {
+                return (
+                    <HStack>
+                        <Switch />
+                        <Text>Dark Mode</Text>
+                    </HStack>
+                );
+            };
+
+            export default ColorModeSwitch;
+        
+
+    - Import a custom hook from the Chakra UI named "useColorMode"
+
+            import { HStack, Switch, Text, useColorMode } from "@chakra-ui/react";
+
+    
+    - On the 1st line within the component's function
+        - Call the custom hook "useColorMode"
+        
+        - This returns an object with two (2) properties
+            - A function named "toggleColorMode"
+            - A property named "colorMode" (i.e. represents the current Color Mode)
+
+        - Destructure and save the returned object into a constant
+
+            const { toggleColorMode, colorMode} = useColorMode();
+
+    
+    - On the component's JSX mark-up
+        - Initialize the component <Switch />
+            - Declare the property "isChecked"
+                - Assign the expression "colorMode === 'dark'" as value
+
+            - Declare the property "onChange"
+                - Assign the function "toggleColorMode" as value
+
+            <HStack>
+                <Switch isChecked={colorMode === "dark"} onChange={toggleColorMode} />
+                <Text>Dark Mode</Text>
+            </HStack>
+
+
+    - Add the <ColorModeSwitch /> (ColorModeSwitch.tsx) into the <NavBar />  (NavBar.tsx) component
+        - Replace the comonent <Text /> with <ColorModeSwitch />
+        - Remove the "Text" from the "import" statement
+
+            import { HStack, Image } from "@chakra-ui/react";
+            import logo from "../assets/logo.webp";
+            import ColorModeSwitch from "./ColorModeSwitch";
+
+            const NavBar = () => {
+                return (
+                    <HStack>
+                        <Image src={logo} boxSize="60px" />
+                        <ColorModeSwitch />
+                    </HStack>
+                );
+            };
+
+
+        - Switch to the <App /> component (App.tsx)
+            - Remove the property "bg" & their corresponding values 
+                - From the corresponding <GridItem /> components
+
+            - Save the changes
+                - Vite reloads the React application
+
+
+        - Switch back to the <ColorModeSwitch /> component (ColorModeSwitch.tsx)
+            - Declare the property "colorScheme"
+                - Assign the value "green" as value
+
+            - This is to change the default background color of the toggle switch
+
+            return (
+                <HStack>
+                    <Switch
+                        colorScheme="green"
+                        isChecked={colorMode === "dark"}
+                        onChange={toggleColorMode}
+                    />
+                    <Text>Dark Mode</Text>
+                </HStack>
+            );
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Custom background colors of the Aside Panel and Main Area removed
+
+            - Background color of the toggle switch is green
+
+            - Clicking the toggle button
+                - Switches from Dark Mode to Light Mode
+                - And vice-versa if clicked again
+
+
+        - Switch back to the <NavBar /> component (NavBar.tsx)
+            - Push the toggle switch to the right-hand side of the Navigation Bar
+
+            - In the <HStack /> component
+                - Declare the property "justifyContent"
+                    - Assign the string "space-between" as value
+                    - NOTE: This functions like a CSS Flex container
+
+                - Declare the property "padding"
+                    - Assign "10px" as value
+            
+            return (
+                <HStack justifyContent="space-between" padding="10px">
+                    <Image src={logo} boxSize="60px" />
+                    <ColorModeSwitch />
+                </HStack>
+            );
+
