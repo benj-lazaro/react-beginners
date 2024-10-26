@@ -208,3 +208,33 @@ Fetching the Games
             - A list of (20) games fetched from RAWG's API
                 - Then rendered an unordered list in the DOM
 
+
+    - Back to the <GameGrid /> component's JSX mark-up
+        - Enclose the the JSX element <ul> in a Fragment
+
+        - Above the JSX element <ul>
+            - Add an empty object
+        
+        - Inside the empty object
+            - Add the expression "error && <Text>{error}</Text>"
+
+            return (
+                <>
+                    {error && <Text>{error}</Text>}
+
+                    <ul>
+                        {games.map((game) => (
+                        <li key={game.id}>{game.name}</li>
+                        ))}
+                    </ul>
+                </>
+            );
+
+
+        - To simulate an error
+            - Purposely refactor the endpoint "/games" passed as value to the method ".get()"
+
+        - Save the changes
+            - Vite reloads the react application
+
+            - Renders the error message "Request failed with status code 404" in the DOM
