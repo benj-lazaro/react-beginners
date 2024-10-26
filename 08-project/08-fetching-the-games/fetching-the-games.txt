@@ -1,0 +1,210 @@
+Fetching the Games
+------------------
+- To fetch a list of video games using RAWG's API
+    - Get an API Key (https://rawg.io/login?forward=developer)
+    - Create a new account or login using an existing account
+    - Then copy the generated API Key
+
+
+- On the project code
+    - Install the Axios library
+
+        npm i axios
+
+    - Inside the folder "src"
+        - Create a new folder named "services"
+
+    - Inside the foler "services"
+        - Create a new file named "api-client.ts"
+
+    - Inside the file "api-client.ts"
+        - Import the Axios library
+
+            import axios from "axios"; 
+
+        - Call the method ".create()"
+            - To create an instance of the Axios library
+
+        - Pass a custom "configuration object" as argument value
+            - Declare the property "baseURL"
+                - Assign the API's baseURL (https://api.rawg.io/api) as value
+                - NOTE: Removed the "games" endpoint
+                
+                - Reference (https://api.rawg.io/docs/#operation/games_list)
+
+
+            - Declare the prorperty "params"
+                - Assign an empty object as value
+
+            - Inside the empty object
+                - Declare the property "key"
+                - Assign the generated API key (enclosed in quotes) as value
+
+                axios.create({
+                    baseURL: "https://api.rawg.io/api/",
+                    params: {
+                        key: "<generated_API_key>"
+                    }
+                });
+
+
+        - Export the instance as a default object from this module
+
+                export default axios.create({
+                    baseURL: "https://api.rawg.io/api/",
+                    params: {
+                        key: "<generated_API_key>"
+                    }
+                });
+
+        - Save the changes
+
+
+    - In the folder names "components"
+        - Create a new component named "GameGrid.tsx"
+
+    - Inside the component <GameGrid />
+        - Use the shortcut "rafce"
+            - To generate the component function boilerplate code
+
+        - Declare a state variable & set function for storing game objects
+            - Initialize the state variable "games" to an empty array
+
+        - Then another state variable & set function for handling error messages
+            - Initialize the state variable "error" to an empty storing
+
+                const [games, setGames] = useState([]);
+                const [error, setError] = useState("");
+
+
+        - Declare a Effect Hook to send a fetch request to the backend
+            - Import the "api-client.ts"
+
+                import apiClient from "../services/api-client";
+
+            - Call the function "useEffect()"
+                - Pass an anonymous arrow function as an argument value
+
+            - Inside the arrow function
+                - Call the method ".get()" of the object "apiClient"
+                - Pass the endpoint "/games"
+
+                - NOTE: This sends a request to the "/games" endpoint of the RAWG's API server
+
+            - Chain the method ".then()"
+                - Pass an anonymous arrow function as argument value
+
+                - In the arrow function
+                    - Use the returned object "res" as a parameter variable
+
+                - Inside the arrow function
+                    - Call the set function "setGames()"
+
+                    useEffect(() => {
+                        apiClient.get("/games").then(res => setGames());
+                    });
+        
+
+                - Define the interface that represents the "shape" of the "res" object
+                    - This will be passed as an argument value to the function "setGames()"
+                
+                
+            - Define two interfaces named "FetchGamesResponse" & "Games"
+                - Outside the component function declaration
+
+                    interface Game {
+                        id: number;
+                        name: string;
+                    }
+
+                    interface FetchGamesResponse {
+                        count: number;
+                        results: Game[];
+                    };
+
+
+            - Back to the Effect Hook
+                - Use the <> to provide a generic type argument in-between the call to the method ".get()"
+
+                - On the chained method ".then()"
+                    - Pass the object "res.data.results" as argument value to the set function "setGames()"
+
+                    useEffect(() => {
+                        apiClient
+                        .get<FetchGamesResponse>("/games")
+                        .then((res) => setGames(res.data.results));
+                    });
+
+
+                - Inform the TypeScript compiler that the state variable "games" us a "Game" array
+
+                    const [games, setGames] = useState<Game[]>([]);
+
+
+            - Next chain the method ".catch()"
+                - Pass an anonymous arrow function as an argument value
+
+                - In the arrow function
+                    - Declare the parameter variable "err"
+                    
+                - Inside the arrow function
+                    - Calls the set function "setError()"
+                    - Pass the object "err.message" as an argument value
+
+                    useEffect(() => {
+                        apiClient
+                        .get<FetchGamesResponse>("/games")
+                        .then((res) => setGames(res.data.results))
+                        .catch((err) => setError(err.message));
+                    });
+        
+        - In the <GameGrid /> component's JSX mark-up
+            - Remove the generated JSX element <div>
+
+            - Add a JSX element <ul>
+
+            - Inside the JSX element <ul>
+                - Add an empty object
+
+            - Inside the empty object
+                - Call the method ".map()" on the state variable "games"
+
+            - Pass an anonymous arrow function as argument value to the method ".map()"
+                - Declare the parameter variable "game"
+
+            - Inside the arrow function
+                - Add the JSX element <li>
+                
+                - Declare the property "key"
+                    - Assign the object "game.id" as value
+
+                - Assign the object "game.name" as content to the JSX element <li>
+
+                    <ul>
+                        {games.map((game) => (
+                            <li key={game.id}>{game.name}</li>
+                        ))}
+                    </ul>
+            
+            - Save the changes
+
+
+    - Open the <App /> component (App.tsx)
+        - In the component <GridItem /> with the string content "Main"
+
+        - Replace "Main" with <GameGrid />
+
+            import GameGrid from "./components/GameGrid";
+            ...
+
+            GridItem area="main">
+                <GameGrid />
+            </GridItem>
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - A list of (20) games fetched from RAWG's API
+                - Then rendered an unordered list in the DOM
+
