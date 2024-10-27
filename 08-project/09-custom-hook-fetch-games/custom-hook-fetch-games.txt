@@ -1,0 +1,239 @@
+Creating a Custom Hook for Fetching Games
+-----------------------------------------
+- The component <GameGrid /> is involved with HTTP requests
+    - It knows about types of HTTP request sent
+    - It knows about the endpoint
+
+    - A component SHOULD ONLY be concerned about
+        - JSX mark-up
+        - User interaction at a high-level
+
+    - It is better to move the following inside a custom hook
+        - Logic behind the HTTP requests (and cancellation)
+        - State & Effect Hooks
+
+    - Hooks can ALSO be used to separate concerns
+        - To make the component <GameGrid /> modular & reusable
+
+
+- In the project code
+    - In the folder "src"
+        - Create a new folder named "hooks"
+
+    - Inside the folder "hooks"
+        - Create a new file named "useGames.ts"
+
+    - Inside the file "useGames.ts"
+        - Define a function named "useGames"
+        - Assign an anonymous arrow function as value
+        - Export the function as a default object from this module
+
+            const useGames = () => {
+
+            }
+
+            export default useGames;
+
+
+    - Open the <GameGrid /> component (GameGrid.tsx)
+        - Grab the entire code (logic) of the component's function "GameGrid()"
+
+    - Switch back to the "useGames.ts"
+        - Paste the code inside the arrow function of "useGames()"
+
+        - Resolve the TypeScript compilation errors
+            - By implementing the corresponding "import" statements
+        
+            import { useEffect, useState } from "react";
+            import apiClient from "../services/api-client";
+
+            const useGames = () => {
+                const [games, setGames] = useState<Game[]>([]);
+                const [error, setError] = useState("");
+
+                useEffect(() => {
+                    apiClient
+                        .get<FetchGamesResponse>("/games")
+                        .then((res) => setGames(res.data.results))
+                        .catch((err) => setError(err.message));
+                });
+            };
+
+            export default useGames;
+
+
+    - Switch back to the <GameGrid /> component
+        - Grab the interfaces "Game" & "FetchGamesResponse"
+
+    
+    - Switch back to the "useGames.ts"
+        - Paste the interfaces
+        - Right above the declaration of the constant "useGames"
+
+            import { useEffect, useState } from "react";
+            import apiClient from "../services/api-client";
+
+            interface Game {
+                id: number;
+                name: string;
+            }
+
+            interface FetchGamesResponse {
+                count: number;
+                results: Game[];
+            }
+
+            const useGames = () => {
+                const [games, setGames] = useState<Game[]>([]);
+                const [error, setError] = useState("");
+
+                useEffect(() => {
+                    apiClient
+                        .get<FetchGamesResponse>("/games")
+                        .then((res) => setGames(res.data.results))
+                        .catch((err) => setError(err.message));
+                });
+            };
+
+            export default useGames;
+
+
+    - Return the state variables "games" & "error" to the calling component
+        - Add a "return" statement after the Effect Hook
+        - Returns an object that contains the state variables "games" & "error"
+
+            const useGames = () => {
+                const [games, setGames] = useState<Game[]>([]);
+                const [error, setError] = useState("");
+
+                useEffect(() => {
+                    apiClient
+                        .get<FetchGamesResponse>("/games")
+                        .then((res) => setGames(res.data.results))
+                        .catch((err) => setError(err.message));
+                });
+
+                return { games, error };
+            };
+
+            export default useGames;
+
+    
+    - Switch back to the <GameGrid /> component
+        - Clean up the "import" statements
+
+        - Inside the function "GameGrid"
+            - Call the custom hook "useGames"
+                - Save and destructure the returned object in a constant 
+
+            - This makes the component primarily responsible ONLY for returning JSX mark-up
+
+            import { Text } from "@chakra-ui/react";
+            import useGames from "../hooks/useGames";
+
+            const GameGrid = () => {
+                const { games, error } = useGames();
+
+                return (
+                    <>
+                        {error && <Text>{error}</Text>}
+
+                        <ul>
+                            {games.map((game) => (
+                                <li key={game.id}>{game.name}</li>
+                            ))}
+                        </ul>
+                    </>
+                );
+            };
+
+            export default GameGrid;
+
+
+    - Save the changes
+        - Vite reloads the React application
+    
+    - Switch back to the custom hook "useGames.ts"
+        - Add an array of dependencies in the Effect Hook 
+        - NOTE: Without it, the application will CONSTANTLY sending request to the API server
+
+            useEffect(() => {
+                apiClient
+                    .get<FetchGamesResponse>("/games")
+                    .then((res) => setGames(res.data.results))
+                    .catch((err) => setError(err.message));
+            }, []);
+
+
+        - Implement the logic for handling cancellations
+
+        - Inside the Effect Hook
+            - Create a controller object 
+            - Declare a constant named "controller"
+            - Assign a new instance of AbortController()
+
+            const controller = new AbortController();
+
+
+        - In the method ".get()"
+            - Pass an object as a 2nd argument value
+            
+            - Inside the object
+                - Declare the property "signal"
+                - Assign "controll.signal" as value
+            
+            useEffect(() => {
+                const controller = new AbortController();
+
+                apiClient
+                    .get<FetchGamesResponse>("/games", { signal: controller.signal })
+                    .then((res) => setGames(res.data.results))
+                    .catch((err) => setError(err.message));
+            }, []);
+
+
+        - Inside Effect Hook, right after the call to the "apiClient"
+            - Return a clean-up function
+            - An anonymous arrow function that simply calls "controller.abort()"
+
+            useEffect(() => {
+                const controller = new AbortController();
+
+                apiClient
+                    .get<FetchGamesResponse>("/games", { signal: controller.signal })
+                    .then((res) => setGames(res.data.results))
+                    .catch((err) => setError(err.message));
+
+                return () => controller.abort();
+            }, []);
+
+
+        - In the chained method ".catch()"
+            - Add a block of code prior to call the set function "setError()"
+
+            - Check if the object "err" is an instance of "CanceledError"
+                - Return back to the calling module
+                - Otherwise, pass the object "err.message" as an argument value to the set function "setError()"
+
+            useEffect(() => {
+                const controller = new AbortController();
+
+                apiClient
+                    .get<FetchGamesResponse>("/games", { signal: controller.signal })
+                    .then((res) => setGames(res.data.results))
+                    .catch((err) => {
+                        if (err instanceof CanceledError) return;
+                        setError(err.message);
+                    });
+
+                return () => controller.abort();
+            }, []);
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Fetches (20) games from the RAWG API server
+
+        - Renders the name of games in the DOM
+        
