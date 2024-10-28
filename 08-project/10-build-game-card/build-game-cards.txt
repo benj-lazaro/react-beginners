@@ -1,0 +1,200 @@
+Building Game Cards
+-------------------
+- Replace the unsorted list of games with game cards
+
+
+- In the project code
+    - In the folder components, create a new component named "GameCard.tsx"
+
+    - Inside the <GameCard /> component
+        - Use the "rafce" shortcut to generate component function boilerplate code
+
+        - Pass a "game" object as prop to this component
+            - Use an interface named "Props" to define its shape
+
+            - Declare the property "game"
+                - Assign the interface "Game" as its data type
+
+            import { Game } from "../hooks/useGames";
+            
+            interface Props {
+                game: Game;
+            }
+
+        
+    - Open the custom hook "useGames.ts"
+        - Export the interface named "Game"
+        - Save the changes
+
+    - Switch back to the <GameCard /> component
+        - Pass the props "game" as a props to the anonymous arrow function
+
+            const GameCard = ({game}: Props) => {
+                return <div>GameCard</div>;
+            };
+
+
+        - In the component's JSX mark-up
+            - Remove the generated JSX element <div>
+            - Replace it with a <Card /> component
+
+            const GameCard = ({ game }: Props) => {
+                return <Card>
+                    
+                </Card>;
+            };
+
+
+        - Inside the component <Card />
+            - Add a <Image /> component
+
+            const GameCard = ({ game }: Props) => {
+                return (
+                    <Card>
+                        <Image />
+                    </Card>
+                );
+            };
+
+      
+    - Switch back to "useGames.ts"
+        - Add a new property "bacground_image"
+        - Assign the data type of "string"
+
+            export interface Game {
+                id: number;
+                name: string;
+                background_image: string;
+            }
+
+            - Save the changes
+
+    - Switch back to the <GameCard /> component
+        - On the <Image /> component
+            - Declare the property "src"
+            - Assign the object "game.bacground_image"
+
+            const GameCard = ({ game }: Props) => {
+                return (
+                        <Card>
+                            <Image src={game.background_image} />
+                        </Card>
+                    );
+                };
+
+        
+        - Next is to add a <CardBody /> component
+
+            const GameCard = ({ game }: Props) => {
+                return (
+                        <Card>
+                            <Image src={game.background_image} />
+                            <CardBody></CardBody>
+                        </Card>
+                    );
+                };
+
+        - Inside the <CardBody /> component
+            - Add a <Heading /> component
+            - Add {game.name} as content
+
+            import { Game } from "../hooks/useGames";
+            import { Card, CardBody, Heading, Image } from "@chakra-ui/react";
+
+            const GameCard = ({ game }: Props) => {
+                return (
+                    <Card>
+                        <Image src={game.background_image} />
+                        <CardBody>
+                            <Heading>{game.name}</Heading>
+                        </CardBody>
+                    </Card>
+                );
+            };
+
+            - Save the changes
+
+
+    - Switch to the <GameGrid /> component
+        - Replace the JSX element <ul> with a <SimpleGrid /> component
+
+        - Declare the property "columns"
+            - Assign an object with a value of 3 (pixels)
+
+        - Declare the property "spacing"
+            - Assign an object with a value of 10 (pixels)
+
+        - Replace the JSX element <li> with the <GameCard /> component
+            - Declare the property "key"
+                - Assign an object with a value of "game.id"
+            
+            - Declare the property "game"
+                - Assign an object with the prop "game"
+
+            <SimpleGrid columns={3} spacing={10}>
+                {games.map((game) => (
+                    <GameCard key={game.id} game={game} />
+                ))}
+            </SimpleGrid>
+
+
+    - Switch to the <GameCard /> component
+        - In the <Card /> component
+            - Declare the property "borderRadius"
+                - Assign an object with a value of 10 (pixels)
+
+            - Declare the property "overflow"
+                - Assign the string value of "hidden"
+        
+            <Card borderRadius={10} overflow="hidden">
+                <Image src={game.background_image} />
+                <CardBody>
+                    <Heading>{game.name}</Heading>
+                </CardBody>
+            </Card>
+    
+
+        - In the <Heading /> component
+            - Declare the property "fontSize"
+                - Assign the value of "2xl"
+                - Reference (https://v2.chakra-ui.com/docs/components/text/usage#changing-the-font-size)
+
+            
+            <Card borderRadius={10} overflow="hidden">
+                <Image src={game.background_image} />
+                <CardBody>
+                    <Heading fontSize="2xl">{game.name}</Heading>
+                </CardBody>
+            </Card>
+            
+
+    - Switch to the <GameGrid /> component
+        - In the <SimpleGrid /> component
+            - Change the value assigned to the property "columns"
+                - With an object that contains the following properties & values
+                    - sm = 1
+                    - md = 2
+                    - lg = 3
+                    - xl = 5
+                
+                - NOTE: This refers to the number of columns per device screen size (i.e sm, md, lg or xl)
+
+            - Declare the property "padding"
+                - Assign a value of "10px"
+
+            <SimpleGrid
+                columns={{ sm: 1, md: 2, lg: 3, xl: 5 }}
+                padding="10px"
+                spacing={10}
+            >
+                {games.map((game) => (
+                    <GameCard key={game.id} game={game} />
+                ))}
+            </SimpleGrid>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Renders the images and names of the 20 video games in the DOM
+            - The number of columns rendered corresponds to the device's screen size
