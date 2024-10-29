@@ -1,0 +1,323 @@
+Displaying Platform Icons
+-------------------------
+- Displaying the corresponding platform icons of each video game
+    - This is done by accessing the object received from RAWG's API server
+
+    - In the property "results"
+        - Contains an array of objects
+
+    - Each object has a property named "parent_platforms"
+        - That contains an array of objects
+    
+    - Each object has a property "platform"
+        - That contains a bunch of objects
+            - But each object is NOT a "platform" object
+            - It is an object that has a property named "platform"
+
+        - The object assigned to the property "platform" has the following properties
+            - "id" assigned with an id number
+            - "name" assigned with the string name of the platform
+            - "slug" assigned with the string name of the platform in lowercase
+            
+            - NOTE: This object is the "platform" object
+
+            - NOTE: This is considered as a "design smell"
+                - The property "parent_platforms" contains an array of objects
+                - Each object contains a property "platform"
+                - The property "platform" contains another object
+                    - That stores the "platform" object
+
+
+- On the project code
+    - Open the file "useGames.ts"
+        - Add a new interface named "Platform"
+            - This represents the object stored in the "parent_platforms"
+
+            - Declare the following properties & data types
+                - "id" which is a number
+                - "name" which is a string
+                - "slug" which is also a string
+
+            interface Platform {
+                id: number;
+                name: string;
+                slug: string;
+            }
+
+
+        - In the interface "Game"    
+            - Add the property "parent_platforms"
+                - With a data type of an array of objects
+                    - Each object has a property named "platform"
+                    - With a data type of interface "Platform"
+            
+            export interface Game {
+                id: number;
+                name: string;
+                background_image: string;
+                parent_platforms: { platform: Platform }[];
+            }
+
+
+        - Save the changes
+
+
+    - Open the <GameCard /> component (GameCard.tsx)
+        - Right after the component <Heading />
+            - Add an empty object
+
+        - Inside the empty object
+            - Call the method ".map()" to the object "game.parent_platforms"
+            - Pass an anonymous arrow function as an argument value
+
+        - In the arrow function
+            - Deconstruct the returned object
+                - Grab the property "platform"
+                - Use it as a parameter variable
+
+            - Map the returned object in the Chakra UI component <Text />
+                - Add an empty object as content
+            
+            - Inside the empty object access "platform.name"
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The corresponding platform names are rendered
+                - Below the name of each video game
+
+    
+    - Next is to render the platform's icons
+        - Using the React Icons library
+
+        - Install React Icons via npm
+
+            npm i react-icons@4.7.1
+
+    
+    - In the folder "components"
+        - Create a new component named "PlatformIconList.tsx"
+            - This will host the logic responsible for rendering platform's icon
+
+    - In the <PlatformIconList /> component
+        - Define a new interface named "Props"
+
+        - Declare the property named "platforms"
+            - Assign an array of interface "Platform" objects
+
+            interface Props {
+                platforms: Platform[]
+            }
+
+            - The "Platform[]" triggers an TypeScript compilation error
+
+            - To address this concern
+                - Open the file "useGames.ts"
+
+                - Export the interface "Platform"
+
+                export interface Platform {
+                    id: number;
+                    name: string;
+                    slug: string;
+                }
+
+                - Save the changes
+
+        - Import the interface "Platform"
+
+            import { Platform } from '../hooks/useGames'
+        
+
+        - Pass the object returned by interface "Props"
+            - As an argument value to the component function "PlatformIconList"
+
+            const PlatformIconList = ({platforms} : Props) => {
+                return (
+                    <div>PlatformIconList</div>
+                )
+            }
+
+
+    - Switch back to the component <GameCard />
+        - Grabe the object right after the <Heading /> component
+
+
+    - Switch back to the component <PlatformIconList />
+        - Replace the JSX element <div> with a fragment
+
+        - Inside the fragment
+            - Paste the grabbed object from the component <GameCard />
+
+            - Replace "game.parent_platforms" with "platforms"
+
+            - Replace the {platform} with "platform"
+            
+            const PlatformIconList = ({ platforms }: Props) => {
+                return (
+                    <>
+                        {platforms.map((platform) => (
+                            <Text>{platform.name}</Text>
+                        ))}
+                    </>
+                );
+            };
+
+
+    - Switch to the <GameCard /> component
+        - Add the component <PlatformIconList /> right after the <Heading />
+
+        - Declare the property "platforms"
+            - Assign an empty object as value
+
+        - Inside the object
+            - Call the method ".map()" to the object "game.parent_platforms"
+
+            - Pass an anonymous arrow function as an argument value to the method ".map()"
+
+        - In the arrow function
+            - Declare a parameter variable named "p" (i.e. platform)
+
+            - Map each "p" into a "platform" object
+                - Construting an array of "platform" objects
+        
+        - Save the changes
+            - Vite reloads the React application
+            - Renders the name of supported platforms for each video game
+
+        - Next is to replace the platform names with icons
+
+
+    - Switch back to the <PlatformIconList /> component
+        - Remove the generated "import" statement for React
+
+        - Import a bunch of components from the React Icons library
+
+            import {
+                FaWindows,
+                FaPlaystation,
+                FaXbox,
+                FaApple,
+                FaLinux,
+                FaAndroid,
+            } from "react-icons/fa";
+            import { MdPhoneIphone } from "react-icons/md";
+            import { SiNintendo } from "react-icons/si";
+            import { BsGlobe } from "react-icons/bs";
+
+        - Inside the component function "PlatformIconList"
+            - Define an object
+            - Save it as a constant named "iconMap"
+
+            const iconMap = {};
+
+
+        - Inside the object
+            - It is going to have keys that represents the property "slug" of each platform
+            
+            const iconMap = {
+                pc: FaWindows,
+                playstation: FaPlaystation,
+                xbox: FaXbox,
+                nintendo: SiNintendo,
+                mac: FaApple,
+                linux: FaLinux,
+                android: FaAndroid,
+                ios: MdPhoneIphone,
+                web: BsGlobe,
+            };
+
+
+
+        - Remove the <Text /> component
+
+        - Replace it with the <Icon /> component from Chakra UI
+            - Declare the property "as"
+                - Assign the object "iconMap[platform.slug]" as value
+
+            <Icon as={iconMap[platform.slug]} />
+
+            - A TypeScript compilation error on the object "iconMap[platform.slug]"
+                - Element implicitly has an "any" type 
+                - Because expression of type "string" can't be used to index type
+
+            - To address this concern
+                - Annotate the constant "iconMap"
+                    - With an "index signature"
+                    - Each "key" is of data type "string"
+                
+                - Then each "key" is mapped to a data type of "IconType"
+                    - The "IconType" is defined in the React Icons library
+
+            const iconMap: { [key: string]: IconType } = {
+                pc: FaWindows,
+                playstation: FaPlaystation,
+                xbox: FaXbox,
+                nintendo: SiNintendo,
+                mac: FaApple,
+                linux: FaLinux,
+                android: FaAndroid,
+                ios: MdPhoneIphone,
+                web: BsGlobe,
+            };
+            
+
+        - Replace fragment with a component <HStack />
+
+            return (
+                <HStack>
+                {platforms.map((platform) => (
+                    <Icon as={iconMap[platform.slug]} />
+                ))}
+                </HStack>
+            );
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Platform icons are rendered horizontally
+
+
+        - Change the color of the platform icons darker
+            - In the <Icon /> component
+
+            - Declare the property "color"
+                - Assign the value of "gray.500"
+
+            <Icon as={iconMap[platform.slug]} color="gray.500" />
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - The platform icons are now darker in color
+
+
+        - Add some spacing between the name of the video games & their platform icons
+           - In the <HStack /> component
+
+            - Declare the property "marginY"
+                - Assign the value of "1"
+
+                - NOTE: The value of "1" is a multiple of "theme.space"
+                    -  In Chakra UI, this has a value of "4px"
+
+
+            return (
+                <HStack marginY="10px">
+                    {platforms.map((platform) => (
+                        <Icon as={iconMap[platform.slug]} color="gray.500" />
+                    ))}
+                </HStack>
+            );
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The video game names & platform icons are spaced better
+
+
+    
