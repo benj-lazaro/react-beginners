@@ -1,0 +1,160 @@
+Displaying Critic Score
+-----------------------
+- Adding a badge that contains the score that game critics have assigned on each game
+    - In the object returned by RAWG API
+        - The score is stored in the property named "metacritic"
+        - It is a number between 0 and 100
+
+    - The logic for rendering the critic code in the DOM
+        - Will be implemented on a separate component
+
+    - In addition
+        - The color of the badge containing the critic score is dependent on the score value
+        - High score will be rendered in Green
+        - Medium score will be rendered in Yellow
+
+
+- In the project code
+    - Open the file "useGames.ts"
+
+    - In the interface named "Game"
+        - Add a new property named "metacritic"
+        - Assign the data type of number
+
+            export interface Game {
+                id: number;
+                name: string;
+                background_image: string;
+                parent_platforms: { platform: Platform }[];
+                metacritic: number;
+            }
+
+        - Save the changes
+
+
+    - In the folder "components"
+        - Create a new component named "CriticScore.tsx"
+
+
+    - In the component <CriticScore />
+        - Define the Props for receiving the "metacritic" score
+
+            interface Props {
+                score: number;
+            }
+
+
+    - Deconstruct the Props 
+        - Pass it as an argument value of data type "Props" to the component's arrow function
+
+            const CriticScore = ({ score }: Props) => {
+                return <div>CriticScore</div>;
+            };
+
+
+    - To render the score
+        - Remove the Vite generated JSX element <div>
+        - Replace it with a <Badge /> component from Chakra UI library
+        - Add the object containing the value of the property "score" as content
+
+            const CriticScore = ({ score }: Props) => {
+                return <Badge>{score}</Badge>;
+            };            
+
+        - Save the changes
+
+    
+    - Open the <GameCard /> component (GameCard.tsx)
+        - Below the <PlatformIconList /> component
+            - Add the <CriticScore /> component
+
+        - Declare the property "score"
+            - Assign the object "game.metacritic" as value
+
+            <Card borderRadius={10} overflow="hidden">
+                <Image src={game.background_image} />
+                <CardBody>
+                    <Heading fontSize="2xl">{game.name}</Heading>
+                    <PlatformIconList
+                    platforms={game.parent_platforms.map((p) => p.platform)}
+                    />
+                    <CriticScore score={game.metacritic} />
+                </CardBody>
+            </Card>
+
+        - Save the changes
+            - Vite reloads the React application
+            - The badges with the critic score are rendered below the supported platform icons
+
+
+        - Place both the platform icons & critic score in the same horizontal line
+            - After the <Heading /> component
+                - Add a new <HStack /> component
+                - Move both the <PlatformIconList /> & <CriticScore /> components into it
+
+            - Declare the property "justifyContent" on the <HStack /> component
+                - Assign the value "space-between"
+
+            <Card borderRadius={10} overflow="hidden">
+                <Image src={game.background_image} />
+                <CardBody>
+                    <Heading fontSize="2xl">{game.name}</Heading>
+                    <HStack justifyContent="space-between">
+                        <PlatformIconList
+                            platforms={game.parent_platforms.map((p) => p.platform)}
+                        />
+                        <CriticScore score={game.metacritic} />
+                    </HStack>
+                </CardBody>
+            </Card>
+
+        - Save the changes
+            - Vite reloads the React application
+            - The badges with the critic score & supported platform icons are rendered on the same row
+
+
+    - Next is to improve the look & feel of the badge
+        - Open the <CriticScore /> component (CriticScore.tsx)
+
+        - In the <Badge /> component
+            - Make the font size of the score is little bit larger
+                - Declare the property "fontSize"
+                - Assign the value of "14px"
+
+            - Add some horizontal padding
+                - Declare the property "paddingX"
+                - Assign the value of "2"
+
+            - Make the corners a little round
+                - Declare the property "borderRadius"
+                - Assign the value of "4px"
+
+            <Badge fontSize="14px" paddingX={2} borderRadius="4px">
+                {score}
+            </Badge>
+
+
+        - Implement the logic regarding the color of the badge
+            - Before the component's JSX mark-up
+
+            - Declare a variable named "color"
+                - Assign a unary operation as a value
+                    - If the "score" > 75 return the string value of "green"
+                    - If the "score" > 60 return the string value of "yellow"
+                    - Otherwise return an empty string
+
+            let color = score > 75 ? "green" : score > 60 ? "yellow" : "";
+
+
+            - In the <Badge /> component
+                - Declare the property "colorScheme"
+                    - Assign the variable "color" as value
+
+            <Badge colorScheme={color} fontSize="14px" paddingX={2} borderRadius="4px">
+                {score}
+            </Badge>
+
+
+            - Save the changes
+                - Vite reloads the React application
+                - Critic score is now colored according to its score
