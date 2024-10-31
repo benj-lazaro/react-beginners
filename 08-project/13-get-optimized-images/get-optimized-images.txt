@@ -1,0 +1,91 @@
+Getting Optimized Images
+------------------------
+- The images of the games retrieved from RAWG API are pretty big
+    - Users with slow connection
+        - Loading the page will take some time to complete
+
+    - Getting optimized images are considered
+        - To speed up the page load (i.e. loading time)
+
+    - The RAWG API offers cropping images on-the-fly by modifying the image's URL
+        - Inserting the "crop" right after "media/"
+        - Followed by the targeted dimension (width/height) of the image
+        
+            https://media.rawg.io/media/crop/<width>/<height>/games/<generated_name>/<generated_name>.jpg
+
+            https://media.rawg.io/media/crop/600/400/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg
+
+
+    - The logic that will handle the modification of the video game's image URL
+        - Will be placed on a separate service
+    
+
+- In the project code
+    - In the folder "src/services"
+        - Create a new file named "image-url.ts"
+
+    - In the file "image-url.ts"
+        - Define an anonymous arrow function
+            - Save it in a constant named "getCroppedImageUrl"
+
+        - In the arrow function
+            - It takes a parameter variable named "url"
+            - It is of data type "string"
+
+        - Export the function "getCroppedImageUrl" as a default object from this module
+
+            const getCroppedImageUrl = (url: string) => {};
+
+            export default getCroppedImageUrl;
+
+        
+        - In the body of the arrow function
+            - Create a constant named "target"
+                - Assign the string "media/" as value
+
+            - Create a constant named "index"
+                - Call the method ".indexOf()" on the parameter variable "url"
+                    - Pass the constant "target" as argument value
+                
+                - Chain the property ".length" on the constant "target"
+                    - Using "+" operator
+
+            const target = "media/";
+            const index = url.indexOf(target) + target.length;
+
+            
+            - To insert the word "crop" into the value stored in the parameter variable "url"
+                - Call the method ".slice()"
+                    - Pass the starting index of 0
+                    - Then pass the constant "index" as the end index
+
+                - Followed by the string value "crop/600/400/"
+
+                - Then calling the method ".slice()" again on the parameter variable "url"
+                    - To add the remaining URL of the video game's image
+
+                - Return the modified URL by prefixing the statement with the keyword "return"
+            
+            return url.slice(0, index) + "crop/600/400/" + url.slice(index);
+        
+
+    - Open the component <GameCard /> (GameCard.tsx)
+        - In the component <Image /> property "src"
+        
+        - Pass the object "game.background_image" as an argument value to the function getCroppedImageUrl()
+
+            <Image src={getCroppedImageUrl(game.background_image)} />
+
+ 
+        - Save the changes
+            - Vite reloads the React application
+
+            - To verify the dimensions of the game's images
+                - Launch Chrome Dev Tools
+                    - Click the tab "Network"
+                    - Click the button "Img"
+                
+                - Select & double-click any of the image
+                    - A new tab will be opened
+                    - Loads the resized image
+
