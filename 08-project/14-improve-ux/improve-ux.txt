@@ -1,0 +1,251 @@
+Improving User Experiencing with Loading Skeletons
+--------------------------------------------------
+- To improve User Experience (UX)
+    - Loading skeletons will be implemented on the application
+        - Runs while waiting for the API server to return requested list of games
+        - Instead of displaying a blank page
+    
+    - To implement
+        - Declare a new State Variable
+            - To keep track of the loading state of the State Hook
+            - Assign an initial boolean value of "false"
+            - Save the returned (deconstructed) object in a constant
+
+        - On the Effect Hook
+            - Prior to calling the service "apiClient"
+                - Call the corresponding set / update State Function
+                    - Update the value of the State Variable to "true"
+
+            - On the chained method ".then()" of the service "apiClient"
+                - After calling the set / update State Function "setGames()"
+
+                - Call the corresponding set / update State Function again
+                    - Update the value of the State Variable to "false"
+
+            - On the chained method ".catch()" of the service "apiClient"
+                - After the call to the set / update State Function "setError()"
+
+                - Call the corresponding set / update State Function again
+                    - Update the value of the State Variable to "false"
+
+
+        - On the "return" statement of the component Function
+            - Add the recently added State Variable that keeps track of the loading state
+
+        - To render the "skeleton"
+            - A separate React component will be needed
+                - It will be named "GameCardSkeleton.tsx"
+
+            - It is similar to the <GameCard /> component
+                - EXCEPT it ONLY renders the skeleton
+
+                - Using the Chakra UI library's <Skeleton /> component
+                    - A placeholder for an image that is being loaded
+
+        - Import the <GameCardSkeleton /> into the <GameGrid /> component
+
+
+- In the project code
+    - Open the custom hook "useGames.ts"
+    
+        - Define a new State Variable to keep track of the loading state of the State Hook
+            - Initialize the State Variable to a boolean value of "false"
+            - Save the returned (deconstructed) object in a constant
+
+            const [isLoading, setLoading] = useState(false);
+
+    
+        - On the Effect Hook
+            - Prior to calling the service "apiClient"
+                - Call the State Hook set / update function "setLoading()"
+                - Pass a boolean value of "true" as an argument value
+
+        - In the call to the service "apiClient"
+            - On the chained method ".then()"
+                - After the call to the State Hook set / update function "setGames()"
+                - Call the State Hook set / update function "setLoading()"
+                - Pass a boolean value of "false" as an argument value
+
+            - On the chained method ".catch()"
+                - After the call to the State Hook set / update function "setError()"
+                - Call the State Hook set / update function "setLoading()"
+                - Pass a boolean value of "false" as an argument value
+
+            setLoading(true);
+
+            apiClient
+            .get<FetchGamesResponse>("/games", { signal: controller.signal })
+            .then((res) => {
+                setGames(res.data.results);
+                setLoading(false);
+            })
+            .catch((err) => {
+                if (err instanceof CanceledError) return;
+                setError(err.message);
+                setLoading(false);
+            });
+
+
+        - On the "return" statement of "useGames.ts"
+            - Include the State Variable "isLoading"
+
+            return { games, error, isLoading };
+
+
+    - In the folder "components"
+        - Create a new component named "GameCardSkeleton.tsx"
+
+        - In the component's JSX mark-up
+            - Remove the Vite generated JSX element <div>
+            - Replace it with Chakra UI's <Card /> component 
+
+            import { Card } from '@chakra-ui/react'
+            import React from 'react'
+
+            const GameCardSkeleton = () => {
+                return (
+                    <Card></Card>
+                )
+            }
+
+            export default GameCardSkeleton
+
+
+        - Inside the <Card /> component
+            - Add a <Skeleton /> component as content
+            
+            - Declare the property "height"
+                - Assign a value of "200px"
+
+            import { Card, Skeleton } from '@chakra-ui/react'
+            import React from 'react'
+
+            const GameCardSkeleton = () => {
+                return (
+                    <Card>
+                        <Skeleton height="200px" />
+                    </Card>
+                )
+            }        
+
+        - After tne <Skeleton /> component
+            - Add a <CardBody /> component
+
+            import { Card, CardBody, Skeleton } from "@chakra-ui/react";
+            ...
+
+            return (
+                <Card>
+                    <Skeleton height="200px" />
+                    <CardBody></CardBody>
+                </Card>
+            );
+
+
+        - Inside the <CardBody /> component
+            - Add a <SkeletonText /> component
+
+            import { Card, CardBody, Skeleton, SkeletonText } from "@chakra-ui/react";
+            ...
+
+            return (
+                <Card>
+                    <Skeleton height="200px" />
+                    <CardBody>
+                        <SkeletonText />
+                    </CardBody>
+                </Card>
+            );
+
+
+        - Remove the "import" statement for React from the top of the code
+
+            import React from "react";
+
+
+        - Save the changes
+
+
+    - Open the <GameCard /> component (GameGrid.tsx)
+        - Add the State Variable "isLoading"
+            - In the deconstructed object returned by the custom hook "useGames"
+
+            const { games, error, isLoading } = useGames();
+
+        - To render the skeleton
+            - Define an array of (let's say) 6 items
+            - Initial with number values of 1, 2, 3, 4, 5 & 6
+            - Save it to a constant named "skeletons"
+
+            const skeletons = [1, 2, 3, 4, 5, 6];
+
+        - After the <SimpleGrid /> component
+            - Add an empty object
+
+            - Inside the empty object
+                - Check if the State Variable "isLoading" has a boolean value of "true"
+                - Then call the method ".map()" on the constant "skeleton"
+
+            - Pass the parameter variable "skeleton"
+                - Map out each value in the constant "skeletons"
+                - Into a <GameCardSkeleton /> component
+
+            - In the <GameCardSkeleton /> component
+                - Declare the property "key"
+                - Assign the value stored in the parameter "skeleton" as value
+
+            {isLoading &&
+                skeletons.map((skeleton) => <GameCardSkeleton key={skeleton} />)}
+        
+
+        - Save the changes
+            - Vite reloads the React application
+            - The layout of the Loading skeletons are squished towards the right-side of the DOM
+
+            - To address this concern
+                - Switch back to the <GameCardSkeleton /> component
+
+                - In the <Card /> component
+                    - Declare the property "width"
+                    - Assign the value of "300px"
+
+                <Card width="300px">
+                    <Skeleton height="200px" />
+                    <CardBody>
+                        <SkeletonText />
+                    </CardBody>
+                </Card>
+
+
+                - Open the <GameCard /> component (GameCard.tsx)
+                    - On the component <Card />
+                    - Assign the value of "300px"
+
+                    - NOTE: This is to ensure consistent 
+                        - Of the video game image & loading skeleton's width
+
+                <Card width="300px" borderRadius={10} overflow="hidden">
+                    ...
+                </Card>
+
+
+        - To further improve the look of the loading skeleton
+            - Switch back to the <GameCardSkeleton /> component (GameCardSkeleton.tsx)
+
+            - On the <Card /> component
+                - Declare the property "borderRadius"
+                    - Assign the value of {10}
+
+                - Declare the property "overflow"
+                    - Assign the value of "hidden"
+
+                <Card width="300px" borderRadius={10} overflow="hidden">
+                    ...
+                </Card>
+           
+
+           - Save the changes
+                - Vite reloads the React application
+
+                - The loading skeleton is now rendered
+                    - With an identical shape & size as of the video game's image
