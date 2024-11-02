@@ -1,0 +1,110 @@
+Refactor: Removing Duplicated Styles
+------------------------------------
+- Refactor the project code 
+    - Grab the duplicated styling properties from the components
+        - <GameCard />
+        - <GameCardSkeleton />
+
+    - Create a new component
+        - Add a Charkra UI's <Box /> component
+            - This will serve as a container for the aforementioned components
+
+        - Apply the grabbed styling properties into the <Box /> component
+
+    - Define an interface "Props"
+        - To pass the <GameCardSkeleton /> component as a child into the new component
+
+
+- In the project code
+    - In the folder "src/components" 
+        - Create a new component named "GameCardContainer.tsx"
+
+    - In the <GameCardContainer /> component
+        - In the JSX mark-up
+            - Remove the Vite generated JSX element <div>
+            - Replace it with a Charkra UI <Box /> component
+
+        - The Charkra UI <Box /> component is a primitive component
+            - When rendered in the DOM, it returns a JSX element <div>
+
+            import { Box } from "@chakra-ui/react";
+            import React from "react";
+
+            const GameCardContainer = () => {
+                return <Box></Box>;
+            };
+
+            export default GameCardContainer;
+
+
+    - Switch to the <GameCard /> component (GameCard.tsx)
+        - Grab the styling properties of the Charkra UI <Card /> component
+
+            <Card width="300px" borderRadius={10} overflow="hidden">
+            ...
+            </Card>
+
+        - Save the changes
+
+
+    - Switch back to the <GameCardContainer /> component
+        - Paste the properties in the <Box /> component
+
+            return <Box width="300px" borderRadius={10} overflow="hidden"></Box>;
+
+
+    - Switch to the <GameCardSkeleton /> component (GameCardSkeleton.tsx)
+        - Remove the duplicated styling properties
+        - Save the changes
+
+
+    - Switch back to the <GameCardContainer /> component
+        - Define an interface named "Props"
+            - In order to pass the <GameCardSkeleton /> component as a child into this component
+
+            interface Props {
+                children: ReactNode;
+            }
+
+        
+        - Pass the props "children" as an argument value to the component function
+
+            const GameCardContainer = ({ children }: Props) => {
+                ..
+            }
+
+
+        - Inside the <Box /> component
+            - Render the props "children" as content
+
+
+            <Box width="300px" borderRadius={10} overflow="hidden">
+                {children}
+            </Box>
+
+
+        - Save the changes
+  
+
+    - Open the <GameGrid /> component
+        - Wrap the <GameCardSkeleton /> and <GameCard /> components
+            - Inside the <GameCardContainer /> component
+
+            <GameCardContainer>
+              <GameCardSkeleton key={skeleton} />
+            </GameCardContainer>
+
+            ...
+
+            <GameCardContainer>
+                <GameCard key={game.id} game={game} />
+            </GameCardContainer>
+
+            ...
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The loading skeleton & video game images rendered
+                - Identical as the previous iteration of the code prior refactoring
