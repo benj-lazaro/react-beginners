@@ -1,0 +1,159 @@
+Fetching the Genres 
+-------------------
+- The next phase of this project is to be build the Aside Panel
+    - It will render a list of game genres
+    
+    - When a user clicks on a specific genre
+        - The Main Area will render games filtered by the selected genre
+    
+
+- In the project code
+    - In the folder "src/components"
+        - Create a new component named "GenreList.tsx"
+
+            import React from "react";
+
+            const GenreList = () => {
+                return <div>GenreList</div>;
+            };
+
+            export default GenreList;
+
+
+    - In the folder "src/hooks"
+        - Create a custom hook for fetching the genres named "useGenres.ts"
+
+    - Inside the custom hook "useGenres.ts"
+        - Define a constant named "useGenres"
+            - Assign an anonymous arrow function as value
+        
+        - Export the constant as a default JavaScript object from this module
+
+            const useGenres = () => {};
+
+            export default useGenres;
+
+
+    - Open the custom hook "useGames.ts"
+        - Copy the entire code base of the component's function
+            - Excluding the defined interfaces
+
+            - NOTE: The custom hook "useGenres" will be identical to "useGames"
+                - With the exception of defined interfaces
+                - This is done to save time
+                - Code duplication will be addressed in the following sections
+                - Goal is to get this "phase" operaitonal
+
+    - Switch back to the custom hook "useGenres.ts"
+        - Paste the code into the body of the arrow function
+
+        - Import the corresponding State Hook, Effect Hook, custom services & libraries
+            - To address TypeScript compilation errors
+
+            import { useEffect, useState } from "react";
+            import apiClient from "../services/api-client";
+            import { CanceledError } from "axios";
+
+
+        - Prior to the declaration of the constant "useGenres"
+            - Define interface "Genre"
+                - Add the following properties & corresponding data type
+                    - id : number
+                    - name : string
+
+                - Reference (https://api.rawg.io/docs/#operation/genres_list)
+
+        - On the first State Hook declaration
+            - Replace the interface "Game" with "Genre"
+            - Replace the State Variable "games" with "genres"
+            - Replace the State Hook set / update function "setGames" with "setGenres"
+
+            const useGenres = () => {
+                const [genre, setGenres] = useState<Genre[]>([]);
+                ...
+            }
+
+
+        - Define another interface named "FetchGenresResponse"
+            - Add the following properties & corresponding data type
+                    - count : number
+                    - results: Genre[]
+
+            interface FetchGenresresponse {
+                count: number;
+                results: Genre[];
+            }
+
+
+        - In the chained method ".then()" of the service "apiClient"
+            - Replace annotated interface <FetchGamesResponse> with <FetchGenresResponse>
+            - Replace the State Hook set / update function "setGames()" with "setGenres()"
+            - Replace the endpoint "/games" with "/genres"
+
+            apiClient
+                .get<FetchGenresresponse>("/games", { signal: controller.signal })
+                .then((res) => {
+                    setGenres(res.data.results);
+                    setLoading(false);
+                })
+
+
+
+
+        - On the "return" statement
+            - Replace the State Hook variable "games" with "genres"
+
+            return { genres, error, isLoading };
+
+
+        - Save the changes
+
+    
+    - Switch back to the <GenreList /> component (GenreList.tsx)
+        - Call the custom hook "useGenres" (useGenres.ts)
+            - Deconstruct the returned object in a constant
+
+            const { genres } = useGenres();
+
+
+        - In the JSX mark-up
+            - Declare a JSX element <ul>
+
+        - Inside the JSX element <ul>
+            - Add an empty object
+
+        - Inside the empty object
+            - Call the method ".map()" on the State Variable "genres"
+            
+            - Map each "genre" on a JSX element <li>
+                - Declare the property "key"
+                    - Assign {genre.id} as value
+            
+                - As content, add an object containing {genre.name}
+
+            <ul>
+                {genres.map((genre) => (
+                    <li key={genre.id}>{genre.name}</li>
+                ))}
+            </ul>
+
+
+        - Save the changes
+
+
+    - Open the <App /> component (App.tsx)
+        - Import the <GenreList /> component
+            - On the <GridItem /> component with the property "area" of "aside"
+            - Replace the content "Aside" with the <GenreList /> component
+        
+            <Show above="lg">
+                <GridItem area="aside">
+                    <GenreList />
+                </GridItem>
+            </Show>
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The "Aside" panel is now populated with a list of game genres
