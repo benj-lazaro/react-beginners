@@ -1,0 +1,204 @@
+Creating a Generic Data Fetching Hook
+-------------------------------------
+- The custom hooks "useGames.ts" and "useGenres.ts" are almost identical
+    - To address the duplication of code is by creating a genetic data fetching hook 
+
+
+- In the project code
+    - In the folder "src/hooks"
+        - Create a new custom hook named "useData.ts"
+
+    - Open the custom hook "useGenres.ts"
+        - Copy the entire codebase
+
+    - Open the custom hook "useData.ts"
+        - Paste the codebase
+
+        - Delete the interface "Genre"
+
+        - Rename the component function "useGenres" to "useData"
+
+        - Rename all instances of the State Hook variable "genres" to "data"
+
+        - Rename all instances of the State Hook set / update function "setGenres" to "setData"
+
+        - On coupled interface <Genre> of the State Hook 
+            - Rename it to a "generic data type" parameter named "T"
+
+            - Add a "<T>" prior to the () of the component function
+         
+            const useData = <T>() => {
+                const [data, setData] = useState<T[]>([]);
+                const [error, setError] = useState("");
+                ...
+            }
+
+
+        - Rename the interface "FetchGenresresponse" to "FetchResponse"
+            - On the chained method ".get()" of the custom service "api-Client.ts"
+                - Change the data type of the property "results"
+                - From "Genre[]" to "T[]"
+
+            - Add the generic type parameter <T> to the name of the interface "FetchResponse"
+
+            interface FetchResponse<T> {
+                count: number;
+                results: T[];
+            }
+
+        
+        - On the chained method ".get()" of the custom service "api-client.ts"
+            - Rename the annotated interface "FetchGenresresponse" to "FetchResponse"
+            - Then specify the generic data type parameter "T"
+
+            apiClient.get<FetchResponse<T>>("/genres", { signal: controller.signal })
+
+
+        - Define the parameter variable named "endpoint"
+            - Data type of string
+            - On the custom hook's parameter
+
+            const useData = <T>(endpoint: string) => {
+                ...
+            }
+
+
+        - Back on the chained method ".get()" of the custom service "api-client.ts"
+            - Change the 1st parameter value "/genres" with "endpoint"
+
+            apiClient.get<FetchResponse<T>>(endpoint, { signal: controller.signal })
+
+
+        - On the "return" statement
+            - Rename "genres" to "data"
+
+            return { data, error, isLoading };
+
+
+        - Save the changes
+
+
+    - Open the <GenreList /> component (GenreList.tsx)
+        - Rename the custom hook "useGenres()" to "useData()"
+            - As a genetic type arguement, specify <Genre> as a data type
+
+        - Switch back to the custom hook "useGenres.ts"
+            - Export the interface "Genre"
+
+            export interface Genre {
+                id: number;
+                name: string;
+            }
+
+        - Save the changes
+
+
+        - Switch back to the <GenreList /> component
+            - Followed by a pair of ()
+                - Pass the string value "/genres" as an arguement value (and endpoint)
+
+            - Rename the destructured property "genres" to "data"
+
+            const GenreList = () => {
+                const { data } = useData<Genre>("/genres");
+                ...
+            }
+
+
+        - On the method ".map()" change the object from "genres" to "data"
+
+             <ul>
+                {data.map((genre) => (
+                    <li key={genre.id}>{genre.name}</li>
+                ))}
+            </ul>
+
+
+        - Save the changes
+            - Vite reloads the React application
+            - List of video game genres is rendered on the Aside panel
+
+            - There is one problem
+                - The <GenreList /> component is aware of the endpoint "/genres" in its codebase
+
+            - To address this concern
+                - Switch back to the custom hook "useGenres.ts"
+
+                - Delete the interface "FetchGenresresponse"
+                    - As this is already defined in a generic manner on "useData.ts"
+                        - Under the interface name "FetchResponse"
+
+                - Delete the body the custom hook's function
+                    - As it is also re-implemented in a generic manner on "useData.ts"
+
+                    - Replace it with a call to the custom hook "useData"
+                        - Specify <Genre> as the generic type argument
+                        - Pass the string value "/genres" as an argument value
+
+                        - Doing so hides the "details" behind the custom hook "useGenres" 
+
+                    const useGenres = () => useData<Genre>("/genres");
+
+        
+                - Remove all unused "import" statements
+                    - Use "CTRL + ." 
+                    - Select menu item "Delete all unused imports"
+
+                - Save the changes
+
+                - Switch back to the <GenreList /> component
+                    - Replace the call to the custom hook "useData()" to "useGenres()"
+
+                    const { data } = useGenres();
+
+
+                - Remove all unused "import" statements
+                    - Use "CTRL + ." 
+                    - Select menu item "Delete all unused imports"
+
+                - Save the changes
+                    - Vite reloads the React application
+                    - List of video game genres is rendered on the Aside panel
+
+                - Next modify the custom hook for fetching the games (i.e. "useGames.ts")
+
+
+    - Open the custom hook "useGames.ts"
+        - Delete the interface "FetchGamesResponse"
+
+        - Delete the body the custom hook's function
+        
+        - Replace it with a call to the custom hook "useData"
+            - Specify <Game> as the generic type argument
+            - Pass the string value "/games" as an argument value
+
+            const useGames = () => useData<Game>("/games");
+
+
+        - Remove all unused "import" statements
+            - Use "CTRL + ." 
+            - Select menu item "Delete all unused imports"
+
+        - Save the changes
+
+
+    - Open the <GameGrid /> component (GameGrid.tsx)
+        - Rename the deconstructed property "games" to "data"
+
+            const { data, error, isLoading } = useGames();
+
+
+        - Rename the "games" object attached to the method ".map()" to "data"
+
+            {data.map((game) => (
+                <GameCardContainer>
+                    <GameCard key={game.id} game={game} />
+                </GameCardContainer>
+            ))}
+
+
+        - Save the changes
+            - Vite reloads the React application
+            - List of video genres rendered on the Aside panel
+            - List of video games images rendered on the Main already
+            
