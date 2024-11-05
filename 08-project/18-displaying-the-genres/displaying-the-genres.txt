@@ -1,0 +1,184 @@
+Displaying the Genres
+---------------------
+- Each genre rendered in the Aside panel has to have
+    - An image
+    - A label (already done)
+
+    - Inspecting the HTTP response for the "/genres" endpoint
+        - Each genre has a property named "image_background"
+        - The URL assigned value is of data type string
+
+
+- In the project code
+    - Open the custom hook "useGenres.ts"
+
+    - On the interface "Genres"
+        - Add the property "image_background"
+        - Assign the data type of string
+
+    - Open the <GenreList /> component (GenreList.tsx)
+        - Replace the JSX element <ul> 
+            - With the Chakra UI <List /> component
+            - To render a list without bullet points
+
+        - Replace the JSX element <li> 
+            - With the Chakra UI <ListItem /> component
+
+            <List>
+                {data.map((genre) => (
+                    <ListItem key={genre.id}>{genre.name}</ListItem>
+                ))}
+            </List>
+
+
+        - Inside the <ListItem /> component
+            - Add a <HStack /> component
+            - To line the Genre image & name horizontally
+
+        - As content for the <HStack /> component
+            - Add a Chakra UL <Image /> component
+                - Declare the property "src"
+                    - Pass the object to custom service "getCroppedImageUrl()" (image-url.ts) as an argument value
+                    - Assign the returned object {genre.image_background} as value to "src"
+
+                - Declare the property "boxSize"
+                    - Assign the value of "32px"
+
+                - Declare the property "borderRadius"
+                    - Assign the value of 8
+
+            - Next add a Chakra UI <Text /> component
+                - Move the object {genre.name} as content
+
+            <ListItem key={genre.id}>
+                <HStack>
+                    <Image
+                        src={getCroppedImageUrl(genre.image_background)}
+                        boxSize="32px"
+                        borderRadius={8}
+                    />
+                    <Text>{genre.name}</Text>
+                </HStack>
+        </ListItem>
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The list of genre images & text are rendered on the Aside panel
+                - Noted that the images are vertically too close
+                - The size of the text is a bit small
+                - The list is close to the left-hand edge of the browser screen
+
+
+    - Switch back to the <GenreList /> component
+        - On the Chakra UI <ListItem /> component
+            - Declare the property "paddingY"
+            - Assign the value "5px"
+
+            <ListItem key={genre.id} paddingY="5px">
+                ...
+            </ListItem>
+
+
+        - On the Chakra UI <Text /> component
+            - Declare the property "fontSize"
+            - Assign the value "lg"
+
+            <Text fontSize="lg">{genre.name}</Text>
+
+
+        - Save the changes
+            - Vite reloads the React application
+            - The genre images are now well-spaced vertically
+            - The genre text are now bigger than earlier
+
+    
+    - Open the <App /> component (App.tsx)
+        - This component contains the layout arragement of the application
+
+        - On the Chakra UI <GridItem /> with the property "area" assign with the value of "aside"
+            - Declare the property "paddingX"
+                - Assign the value to 5
+
+            <GridItem area="aside" paddingX={5}>
+                ...
+            </GridItem>
+
+
+        - Implement a fixed width to the Aside panel
+            - On the Chakra UI <Grid /> component
+                - Declare the property "templateColumns"
+                - Assign an empty object as value
+
+            - Inside the empty object
+                - Add the property named "base"
+                - Assign the value of "1fr"
+                    - On "base" devices (i.e. mobile)
+                    - The column (Main area) stretches & takes up ALL of the available space 
+
+                - Add the property named "lg"
+                - Assign the value of "200px 1fr"
+                    - On "large" devices
+                    - The 1st column (Aside panel) takes 200px
+                    - The 2nd column (Main area) takes up ALL of the available space 
+
+            <Grid
+                templateAreas={{
+                    base: `"nav" "main"`,
+                    lg: `"nav nav" "aside main"`,
+                }}
+
+                templateColumns={{
+                    base: "1fr",
+                    lg: "200px 1fr",
+                 }}
+            >
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The genre list is spaced well from the left-hand side of the browser screen
+                - However this resulted to the video game images in the Main area to be squished
+
+                - This is due to the declared fixed width of "300px" in the <GameCardContainer /> component
+
+
+    - Open the <GameCardContainer /> component (GameCardContainer.tsx)
+        - On the Chakra UI <Box /> container
+            - Remove the property "width" assigned with the value of "300px"
+
+            <Box borderRadius={10} overflow="hidden">
+                {children}
+            </Box>
+
+
+            - This allows the component to "stretch" and takes up the available space in the Main area
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The images are now NOT squished anymore
+                - But there is a considerable amount of space between the images
+
+    
+    - Open the <GameGrid /> component
+        - On the Chakra UI <SimpleGrid />
+            - Reduce the value of the property "spacing" down to 3
+
+            <SimpleGrid
+                columns={{ sm: 1, md: 2, lg: 3, xl: 5 }}
+                padding="10px"
+                spacing={3}
+            >
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - The space between video game images in the Main area is now reduced
+
+
+    - Launch Chrome Dev Tools
+        - Test the React application on various device screens
+
