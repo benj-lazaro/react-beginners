@@ -1,0 +1,57 @@
+Showing a Spinner
+-----------------
+- Display a spinner while waiting for the genre list to be rendered completely
+
+
+- On the project code
+    - Open the <GenreList /> component (GenreList.tsx)
+
+    - Grab the properties "isLoading" and "error" from returned object by the custom hook "useGenres"
+
+        const { data, isLoading, error } = useGenres();
+
+
+    - Check if the property "isLoading" is true
+        - Return a Chakra UI <Spinner /> component if true
+
+            if (isLoading) return <Spinner />;
+
+
+    - Check if the property "error" is true
+        - Return "null" if true
+        
+        - This will prevent the list of genres from being rendered on the Aside panel
+            - Renders the Aside panel with no content
+
+            if (error) return null;
+
+    
+    - Save the changes
+        - Vite reloads the React application
+
+        - A spinner is rendered
+            - While wating to receive the HTTP request from the RAWG API server 
+        
+    
+    - Open the custom hook "useGenres.ts"
+        - Deliberately modify the endpoint "/genres" to "/xgenres"
+
+            const useGenres = () => useData<Genre>("/xgenres");
+
+        - NOTE: This is to simulate an error encountered when requesting for the list of genres
+            - The Aside panel should render a blank (or null) list
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - A spinner is rendered
+            - Then followed by an empty Aside panel
+    
+    - Switch back to the custom hook "useGenres.ts"
+        - Restore the changes made on the endpoint "/xgenres" back to "/genres"
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Hit the "reload" button of the browser
+            - The Aside panel renders a list of video game genres        
