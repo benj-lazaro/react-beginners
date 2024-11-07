@@ -1,0 +1,331 @@
+Filtering Games by Genre
+------------------------
+- Implement filtering by genre
+    - Clicking a genre from the Aside panel
+    - The Main area will ONLY show games matching the genre
+
+
+- In the project code
+    - Open the <GenreList /> component (GenreList.tsx)
+
+    - Replace the <Text /> component with a Chakra UI <Button />
+        - Declare the property "variant"
+            - Assign the value "link"
+            - This enables the <Button /> component to behave like am HTML hyperlink
+
+            <Button fontSize="lg" variant="link">
+              {genre.name}
+            </Button>
+
+    
+    - Handle the "click" event & log the selected genre in the browser's JavaScript console
+        - Declare the property "onClick"
+            - Assign an anonymous arrow function as value
+
+        - In the body of the arrow function
+            - Pass the selected object "genre" to "console.log()"
+
+            <Button
+              onClick={() => console.log(genre)}
+              fontSize="lg"
+              variant="link"
+            >
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Clicking a genre from the Aside panel
+                - Log the selected "genre" object on the browser's JavaScript console
+
+            - Noted a list of warnings from a render method of the <GameGrid /> component
+                - Specifically the <GameCardContainer />
+
+        - To address this concern
+            - Open the <GameGrid /> component
+
+            - On the 1st instance of the <GameCardContainer /> component
+                - Move the property "key" with the value of "{skeleton}"
+                    - From the content <GameSkeleton /> to the <GameCardContainer />
+
+                    <GameCardContainer key={skeleton}>
+                        ...
+                    </GameCardContainer>
+
+
+            - Repeat this action on the 2nd instance of the <GameCardContainer /> component
+                - Move the property "key" with the value of "{game.id}"
+
+                    <GameCardContainer key={game.id}>
+                        ...
+                    </GameCardContainer>
+
+
+            - Save the changes
+                - Vite reloads the React application
+                - Click the browser's "Reload" button
+                - Previous warning have been addressed
+                - A new list of similar warning on the <PlatformIconList /> component
+        
+        - To address this concern
+            - Open the <PlatformIconList /> component
+
+            - On the <Icon /> component
+                - Declare the property "key"
+                - Assign the object "platform.id" as value
+
+                <Icon key={platform.id} as={iconMap[platform.slug]} color="gray.500" />
+
+
+            - Save the changes
+                - Vite reloads the React application
+                - Click the browser's "Reload" button
+                - Previous warning have been addressed
+
+
+        - Swinging back to the <GenreList /> component (GenreList.tsx)
+            - The <Button /> component's property "onClick"
+                - Returns the selected "genre" object on the browser's JavaScript console
+
+                - Noted that the object has the property "games"
+                    - Contains an array of objects
+                    - Each object refers to other video games titles of the selected genre
+
+            - Next step is to share the selected "genre" object with the <GameGrid /> component
+                - This is sharing the state between two components
+
+                - To do is to "lift" the state of the two components
+                    - To the closest parent component namely the <App /> component
+
+                - In the <App /> component
+                    - Declare a new State Hook Variable for storing the selected "genre" object
+
+
+    - Open the <App /> component
+        - Declare a new State Hook & initially assign the value of "null"
+            - Save the deconstructed 
+                - State variable named "selectedGenre"
+                - Set / update function named "setSelectedGenre"
+                - In a constant variable
+
+            import { useState } from "react";
+            ...
+
+            const [selectedGenre, setSelectedGenre] = useState(null);
+
+
+        - Declare the the state variable "selectedGenre" will store a "genre" object or a null
+            - Add the interface "Genre" & a null on the State Hook function "useState()"
+           
+            ...
+            import { Genre } from "./hooks/useGenres";
+
+            const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+
+
+        - The <GenreList /> component should notify the <App /> component 
+            - To use the state set/update function "setSelectedGenre"
+            - To assign a new value to the state variable "selectedGenre"
+
+            - The component that holds some state (i.e. <App /> component)
+                - Should be the one updating the state
+  
+        - Swing back the to the <GenreList /> component
+            - Define a prop for passing a callback function
+
+            - Define an interface named "Prop"
+                - Declare the property "onSelectGenre"
+                    - Assign an anonymous arrow function as value
+
+            - On the arrow function
+                - Declare a parameter value named "genre"
+                - Assign the data type of interface "Genre" (custom hook useGenres.ts)
+
+                interface Prop {
+                    onSelectGenre: (genre: Genre) => void;
+                }
+
+
+            - On component's function declaration
+                - Pass the interface property "onSelectGenre" of data type "Props"
+                    - As an argument value
+
+                const GenreList = ({onSelectGenre}: Prop) => {
+                    ...
+                }
+
+
+            - On the <Button /> component's property "onClick"
+                - Remove the "console.log"
+                - Pass the object "genre" as an argument value to "onSelectGenre()"
+
+                <Button
+                    onClick={() => onSelectGenre(genre)}
+                    fontSize="lg"
+                     variant="link"
+                >
+
+
+        - Switch back to the <App /> component
+            - On the <GenreList /> component
+                - Declare the property "onSelectGenre"
+                - Pass an anonymous arrow function as value
+
+            - In the arrow function
+                - Declare the parameter variable named "genre"
+
+            - In the body of the arrow function
+                - Call the state set/update function "setSelectedGenre()"
+                - Assign the object "genre" as an argument value
+
+                <GenreList onSelectGenre={(genre) => setSelectedGenre(genre)} />
+
+
+            - Save the changes
+                - Vite reloads the React application
+
+                - Click the browser's "Reload" button
+
+                - Launch the Chrome Dev Tools
+                    - Click the tab "Components"
+                    - Search for the component named "App"
+
+                - Click a genre on the Aside panel
+                    - Expand "hooks"
+
+                    - Expand "State"             
+                        - Look at the property "name"
+                        - Should reflect the selected genre from the Aside panel
+
+                - Next is to pass this to the <GameGrid /> component
+                    - So that it could be passed to the backend
+                    - While fetching the list of games
+
+
+    - Switch back to the <GameGrid /> component (GameGrid.tsx)
+        - Define an interface "Props"
+            - Declare the property named "selectedGenre"
+            - Assign the data type of "Genre" or null
+
+            interface Props {
+                selectedGenre: Genre | null;
+            }
+
+
+        - On the component's fun pass the property "selectedGenre" as an argument value
+
+            const GameGrid = ({ selectedGenre }: Props) => {
+                ...
+            }
+
+
+        - Pass the property "selectedGenre" as argument value to the custom hook "useGames()"
+
+            const { data, error, isLoading } = useGames(selectedGenre);
+
+
+        - Switch to the custom hook "useGames.ts"
+            - On the arrow function assign the constant "useGames"
+
+            - Declare the parameter variable "selectedGenre"
+                - Assign it with a data type of interface "Genre" or null
+
+                const useGames = (selectedGenre: Genre | null) => useData<Game>("/games");
+            
+            - Pass the "selectedGenre" to the custom hook "useData"
+                - Modify the custom hook by giving it an Axios config request object
+
+        
+        - Open the custom hook "useData.ts"
+            - Add an optional 2nd parameter variable to the component's function declaration
+                - Named "requestConfig"
+                - Data type of "AxiosRequestConfig"
+
+                const useData = <T>(endpoint: string, requestConfig?: AxiosRequestConfig) => {
+                    ...
+                }
+
+            
+            - To filter the games by genre
+                - Pass the object "genre" as a string parameter
+
+
+        - Switch back to the custom hook "useGames.ts"
+            - On the call to the custom hook "useData"
+                - Pass an empty object as 2nd argument value
+
+            - Inside the object
+                - Declare the property "params"
+                - Assign the object { genres: selectedGenre?.id } as value
+
+                const useGames = (selectedGenre: Genre | null) =>
+                    useData<Game>("/games", { params: { genres: selectedGenre?.id } });
+
+        
+        - Switch back to the custom hook "useData.ts"
+            - On the chained method ".get()" of the object "apiClient"
+            
+            - On the object containing { signal: controller.signal }
+                - As a 2nd argument value
+                - Spread the content of the requestConfig object
+                    - In order to add additional properties for this request to the API server
+            
+                    apiClient
+                        .get<FetchResponse<T>>(endpoint, {
+                            signal: controller.signal,
+                            ...requestConfig,
+                        })
+
+
+            - Add an optional 3rd parameter to the component's function declaration
+                - Named "deps"
+                - Assigned with the data type of "any[]"
+
+                - This will contain an array of dependencies
+                    - When the selected genre changes
+
+                    const useData = <T>(
+                        endpoint: string,
+                        requestConfig?: AxiosRequestConfig,
+                        deps?: any[]
+                    ) => {...}
+            
+
+                - On the Effect Hook's array of dependencies
+                    - Modify the array of dependencies
+                        - Using a Ternary operator
+                    
+                    - If the parameter "deps" is truthy
+                        - Spread the content of the "deps" array
+                        - Otherwise, return an empty array
+
+                    deps ? [...deps] : []
+
+
+        - Switch back to the custom hook "useGames.ts"
+            - On the call to the custom hook "useData.ts"
+
+            - After passing the "request config" object
+                - Add the array of dependences as the 3rd argument value
+                - Based on the "selectedGenre?.id"
+
+                const useGames = (selectedGenre: Genre | null) =>
+                    useData<Game>("/games", { params: { genres: selectedGenre?.id } }, [
+                    selectedGenre?.id,
+                ]);
+
+        
+        - Switch back to the <App /> component
+            - Pass the object "selectedGenre" to the <GameGrid /> component
+
+            <GenreList onSelectGenre={(genre) => setSelectedGenre(genre)} />
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Click the browser's "Reload" button
+
+        - Click a genre on the Aside panel
+            - The Main area re-renders with video games associated to the genre
+            
