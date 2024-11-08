@@ -1,0 +1,71 @@
+Highlighting the Selected Genre
+-------------------------------
+- To improve the user experience (UX)
+    - Highlight the selected genre in the Aside panel
+
+    - Have the <App /> component pass the selected genre to the <GenreList />
+    
+
+- In the project code
+    - Open the <GenreList /> component (GenreList.tsx)
+
+    - In the interface "Props"
+        - Add a new property named "selectedGenre" 
+        - With data type of "Genre" or null
+
+            interface Prop {
+                onSelectGenre: (genre: Genre) => void;
+                selectedGenre: Genre | null;
+            }
+
+
+    - On the component's function declaration
+        - Add the Props "selectedGenre" as an argument value
+
+            const GenreList = ({ selectedGenre, onSelectGenre }: Prop) => {
+                ...
+            }
+
+
+    - On the component's JSX mark-up
+        - On the <Button /> component
+
+        - Declare the property "fontWeight"
+            - Assign the following expression as value
+
+            - Check if the object "genre.id" is strictly equal to "selectedGenre.id"
+                - If truthy, assign the value of "bold"
+                - Otherwise, assign the value of "normal"
+        
+            <Button
+              fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
+              onClick={() => onSelectGenre(genre)}
+              fontSize="lg"
+              variant="link"
+            >
+
+    
+    - Open the <App /> component (App.tsx)
+        - On the <GenreList /> component
+            - Declare the property "selectedGenre"
+            - Assign the object "selectedGenre" as value
+
+            <Show above="lg">
+                <GridItem area="aside" paddingX={5}>
+                    <GenreList
+                        selectedGenre={selectedGenre}
+                        onSelectGenre={(genre) => setSelectedGenre(genre)}
+                    />
+                </GridItem>
+            </Show>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Clicking a genre at the Aside panel
+            - Highlights the Genre text
+
+            - List of related games are updated in the Main area
+
+    
