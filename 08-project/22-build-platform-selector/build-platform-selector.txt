@@ -1,0 +1,188 @@
+Building Platform Selector
+--------------------------
+- Next is to implement a Platform selector
+    - To render a drop-down list of (gaming) platforms e.g. PC, playstation, Xbox, etc.
+
+
+- In the project code
+    - In the folder "src/component"
+
+    - Create a new component named "PlatformSelector.tsx"
+        - This component returns a Chakra UI <Menu /> component
+            - This renders a beautiful drop-down list
+
+            - This is a "composite" component
+                - Comprised of different children components
+
+        - Inside the <Button /> component
+            - Add a <MenuButton /> component
+
+        - On the <MenuButton />
+            - Declare the property "as"
+                - Assign the Chakra UI alias "Button" as value
+
+            - Declare the property "rightIcon"
+                - Assign the <BsChevronDown /> component as value
+
+            - Add the string content "Platforms"
+
+        - After the <MenuButton /> component
+            - Add the <MenuList /> component 
+
+        - On the <MenuList /> component
+            - Add a <MenuItem /> component
+
+            - For this iteration
+                - Create three (3) <MenuItem /> components
+                - Successively assign the values "Item 1", "Item 2" & "Item 3", respectively
+
+            import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+            import { BsChevronDown } from "react-icons/bs";
+
+            const PlatformSelector = () => {
+                return (
+                    <Menu>
+                        <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+                            Platform
+                        </MenuButton>
+                        <MenuList>
+                            <MenuItem>Item 1</MenuItem>
+                            <MenuItem>Item 2</MenuItem>
+                            <MenuItem>Item 3</MenuItem>
+                        </MenuList>
+                    </Menu>
+                );
+            };
+
+        - Remove the unused "import" statement
+
+            import React from "react";
+
+
+        - Save the changes
+
+
+    - Open the <App /> component (App.tsx)
+        - Add the <PlatformSelector /> component
+            - Right above the <GameGrid /> component
+
+            import PlatformSelector from "./components/PlatformSelector";
+            ...
+
+            <GridItem area="main">
+                <PlatformSelector />
+                <GameGrid selectedGenre={selectedGenre} />
+            </GridItem>
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - The <PlatformSelector /> component is rendered
+
+            - Next is to render the items dynamically
+                - Using a different endpoint from RAWG's API server
+                    - Endpoint: /platforms/lists/parents
+
+                - Returns a list of "parent platforms"
+
+            - Create a custom hook to fetch data from the said endpoint
+
+
+    - In the "src/hooks" folder
+        - Create a new custom hook named "usePlatforms.ts"
+
+        - Define a new interface named "Platform"
+        
+        - Declare the following properties on the interface "Platform"
+            - id    = string
+            - name  = string
+            - slug  = string
+
+            interface Platform {
+                id: number;
+                name: string;
+                slug: string;
+            }
+
+
+        - Define a custom hook
+            - Declare a constant named "usePlatforms"
+                - Assign an anonymous arrow function as value
+
+            - Inside the arrow function
+                - Call the custom hook "useData()"
+                - Pass the endpoint "/platforms/lists/parents" as value
+
+            - Insert the interface "Platform"
+                - In-between the custom hook name "useData" & ()
+                - To "shape" the returned object
+
+            const usePlatforms = () => useData<Platform>("/platforms/lists/parents");
+
+
+        - Export the module as a default JavaScript object
+
+            export default usePlatforms;
+
+    
+    - Switch back to the <PlatformSelector /> component (PlatformSelector.tsx)
+        - Before the component's JSX mark-up
+            - Call the custom hook "usePlatforms()"
+            - Save the deconstructed data into a constant
+
+            const {data} = usePlatforms();
+
+
+        - In the <MenuList /> component
+            - Remove previous <MenuItem /> components
+
+            - Replace it with an empty object
+
+            - Inside the empty object
+                - Call the method ".map()" on the deconstructed object "data"
+                - Map each "platform" into a <MenuItem /> component
+
+            - On the <MenuItem /> component
+                - Declare the property "key"
+                - Assign the value "platform.id"
+
+            - As content of the <MenuItem /> component
+                - Add the object "platform.name"
+
+            <MenuList>
+                {data.map((platform) => (
+                    <MenuItem key={platform.id}>{platform.name}</MenuItem>
+                ))}
+            </MenuList>
+
+
+        - Grab the "error" object from the custom hook "useData()"
+            - Prior to the component's JSX mark-up
+            - Declare an "if" statement
+                - When the object "error" is truthy
+                    - Return a null
+                    - Resulting to the <PlatformSelector /> component NOT being rendered on the DOM
+
+            const PlatformSelector = () => {
+                const { data, error } = usePlatforms();
+
+                if (error) return null;
+                ...
+            }
+
+
+        - Save the changes
+            - Vite reloads the React application
+            
+            - The <PlatformSelector /> component
+                - Dynamically renders a list of gaming platforms
+
+            - To simulate an error
+                - Deliberately provide an incorrect endpoint in the custom hook "usePlatforms.ts"
+                
+                - Save the changes
+                    - Vite reloads the React application
+                    - The <PlatformSelector /> component is NOT rendered in the DOM
+
+            
