@@ -1,0 +1,217 @@
+Filtering Games by Platform
+---------------------------
+- Implement code that filters the list of games by platform
+
+
+- In the project code
+    - Open the <App /> component (App.tsx)
+
+    - Declare another State variable of data type "Platform" or null
+        - Initializes with a null
+        - Named as "selectedPlatform"
+
+        - Name the corresponding State set/update function as "setSelectedPlatform"
+
+        - This is responsible for keeping track of the selected platform
+            - When the platform changes
+            - The chosen "platform" is passed to the <GameGrid /> component for filtering
+
+        - Save the deconstructed object in a constant
+
+            const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(
+                null
+            );
+
+    
+    - Open <PlatformSelector /> component (PlatformSelector.tsx)
+        - Define an interface named "Props"
+            - Declare a property named "onSelectPlatform"
+                - Assign an anonymous arrow function
+
+            - It takes a parameter variable named "platform"
+                - Of data type "Platform"
+
+            - It returns void
+
+            interface Props {
+                onSelectPlatform: (platform: Platform) => void;
+            }
+
+
+        - Pass the props "onSelectPlatform" as argument value to the component's function declaration
+
+            const PlatformSelector = ({onSelectPlatform}: Props) => {
+                ...
+            }
+
+        
+        - In the component's JSX mark-update
+            - On the <MenuItem /> component
+                - Declare the property "onClick"
+                - Assign an anonymous arrow function as value
+
+            - On the arrow function
+                 - Call the "onSelectPlatform()"
+                 - Pass the current "platform" being rendered
+
+            <MenuItem
+                onClick={() => onSelectPlatform(platform)}
+                key={platform.id}
+            >
+                {platform.name}
+            </MenuItem>
+        
+
+    - Switch back to the <App /> component
+        - Declare the property "onSelectPlatform"
+            - Assign an anonymous arrow function as value
+
+        - In the arrow function
+            - Pass the object "platform" as an argument value
+
+        - In the body of the arrow function
+            - Call the State set/update function "setSelectedPlatform()"
+            - Pass the object "platform" as an argument value
+
+            <PlatformSelector onSelectPlatform={(platform) => setSelectedPlatform(platform)} />
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - Launch the Chrome Dev Tools
+                - Click the tab "Components"
+                - Click "App"
+                - Look at the "hooks" State
+
+            - When a platform is selected
+                - The State hook "2" is updated
+
+            - Now the selected "platform" needs to be passed to the <GameGrid /> component
+
+
+    - Switch back to the <GameGrid /> component
+        - Add a new property on the interface "Props"
+            - Named "selectedPlatform"
+            - It can be a "Platform" object or null
+
+
+            interface Props {
+                selectedGenre: Genre | null;
+                selectedPlatform: Platform | null;
+            }
+
+        
+        - Pass the Props "selectedPlatform" as a 2nd argument value to the custom hook "useGames()"
+
+            const { data, error, isLoading } = useGames(selectedGenre, selectedPlatform);
+
+
+        - Open the custom hook "useGames.ts"
+            - Pass "selectedPlatform" as a 2nd argument to the hook's function declaration
+            - Assign the data type "Platform" or null
+
+            const useGames = (
+                selectedGenre: Genre | null,
+                selectedPlatform: Platform | null
+            ) =>
+                useData<Game>("/games", { params: { genres: selectedGenre?.id } }, [
+                    selectedGenre?.id,
+            ]);
+
+
+        - In the call to the custom hook "useData.ts"
+            - Pass "platform: selectedPlatform?.id" as a 2nd argument to the property "params"
+
+            const useGames = (
+                selectedGenre: Genre | null,
+                selectedPlatform: Platform | null
+            ) =>
+                useData<Game>(
+                    "/games",
+                    { params: { genres: selectedGenre?.id, platform: selectedPlatform?.id } },
+                    [selectedGenre?.id]
+            );
+            
+
+        - Add "selectedPlatform?.id" an item in the dependency array
+
+            const useGames = (
+                selectedGenre: Genre | null,
+                selectedPlatform: Platform | null
+            ) =>
+                useData<Game>(
+                    "/games",
+                    {
+                        params: {
+                            genres: selectedGenre?.id,
+                            platform: selectedPlatform?.id,
+                        },
+                    },
+                    [selectedGenre?.id, selectedPlatform?.id]
+                );
+            
+
+    - Switch back to the <App /> component
+        - In the <GameGrid /> component
+            - Declare the property "selectedPlatform"
+            - Assign the value "selectedPlatform"
+
+            <GameGrid
+                selectedPlatform={selectedPlatform}
+                selectedGenre={selectedGenre}
+            />
+
+
+    - Switch back to the <GameGrid /> component
+        - Add the Props "selectedPlatform" as a 2nd argument value to the component's function declaration
+
+            const GameGrid = ({ selectedGenre, selectedPlatform }: Props) => {
+                ...
+            }
+
+
+    - Switch back to the <App /> component
+        - On the <PlatformSelector /> component 
+            - Declare the property "selectedPlatform"
+            - Assign the object "selectedPlatform" as value
+
+            <PlatformSelector
+                selectedPlatform={selectedPlatform}
+                onSelectPlatform={(platform) => setSelectedPlatform(platform)}
+            />
+
+
+        - Open the <PlatformSelector /> component
+            - On the interface "Props"
+                - Add the property "selectedPlatform"
+                - Assign the data type of "Platform" or null
+
+                interface Props {
+                    onSelectPlatform: (platform: Platform) => void;
+                    selectedPlatform: Platform | null;
+                }
+
+
+            - Pass the Props "selectedPlatform" as a 2nd property of the object
+                - The object is passed as an argument value to the component's function declaration
+
+                const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
+                    ...
+                }
+
+            
+            - On the <MenuButton /> component
+                - Replace the content "Platforms"
+                    - With an expression "selectedPlatform?.name || 'Platforms'" enclosed in an object
+
+                <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+                    {selectedPlatform?.name || "Platforms"}
+                </MenuButton>
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Selecting a platform from the menu
+                - Updates the Main area with the corresponding games for that selected platform
