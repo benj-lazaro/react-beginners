@@ -1,0 +1,172 @@
+Refactoring: Extracting a Query Object
+--------------------------------------
+- In the previous iteration
+    - There are two (2) State Hook variables defined in the <App /> component
+        - selectedGenre
+        - selectedPlatform
+
+    - As new feature are implemented
+        - It will require new State Hook variables for tracking things such as
+            - Sort order
+            - Search phrases
+
+        - Then passing around to other compoents and custom hooks
+            - Doing so is just "ugly"
+            - It clutters the code & makes it "stink"
+
+    - To address this concern
+        - Pack related State Hook variables inside an object
+            - Doing so will employ the "query object" pattern
+
+        - This object will contain all the infomation needed to query the games
+            - From the RAWG API server
+
+        - Doing so the code will be cleaner & easier to read / understand
+
+
+- In the project code
+    - Open the <App /> component (App.tsx)
+
+    - Define an interface named "GameQuery"
+        - Add two (2) properties namely
+            - "genre" which can be a "Genre" object data type or null
+            - "platform" which can be a "Platform" object data type or null
+
+        - Export the interface "GameQuery"
+
+            export interface GameQuery {
+                genre: Genre | null;
+                platform: Platform | null;
+            }
+
+    
+    - Delete the previous State Hooks variables (i.e. selectedGenre & selectedPlatform)
+        - As well as their corresponding State Hook set / update functions
+
+    - Replace it with a new State Hook of data type "GameQuery"
+        - Initialize it with an empty object as a "GameQuery" data type
+            - NOT null
+            - This is because it will ALWAYS have a query object
+
+        - Name the State Hook variable "gameQuery"
+            - Name the State Hook set / update function "setGameQuery"
+
+            const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
+
+
+    - Move to the JSX mark-up's <GenreList /> component
+        - Refactor the value assigned to the property "selectedGenre" to "gameQuery.genre"
+
+        - Refactor the call to the "setSelectedGenre()" to "setGameQuery()"
+            - Change passing the object "genre" with a new object
+                - Spreading the content of the State Hook variable "gameQuery"
+                - Followed by "genre"
+
+            <GenreList
+                selectedGenre={gameQuery.genre}
+                onSelectGenre={(genre) => setGameQuery({...gameQuery, genre})}
+            />
+        
+
+    - On the JSX mark-up's <PlatformSelector /> component
+        - Refactor the value assigned to the property "selectedPlatform" to "gameQuery.platform"
+
+        - Refactor the call of the "setselectedPlatform()" to "setGameQuery()"
+            - Change passing the object "platform" with a new object
+                - Spreading the content of the State Hook variable "gameQuery"
+                - Followed by "platform"
+
+            <PlatformSelector
+                selectedPlatform={gameQuery.platform}
+                onSelectPlatform={(platform) => setGameQuery({...gameQuery, platform})}
+            />
+
+
+    - On the JSX mark-up's <GameGrid /> component
+        - Refactor the value assigned to the property "selectedPlatform" to "gameQuery.platform"
+        - Refactor the value assigned to the property "selectedGenre" to "gameQuery.genre"
+
+            <GameGrid
+                selectedPlatform={gameQuery.platform}
+                selectedGenre={gameQuery.genre}
+            />
+
+
+    - Open the <GameGrid /> component (GameGrid.tsx)
+        - On the interface "Props"
+            - Remove the previously defined properties   
+
+            - Add the property "gameQuery"
+                - Assign the data type of "GameQuery"  
+
+            import { GameQuery } from "../App";
+
+            interface Props {
+                gameQuery: GameQuery;
+            }
+
+
+        - On the component's function declaration
+            - Pass the interface "gameQuery" property from Props as an argument value
+
+            const GameGrid = ({ gameQuery }: Props) => {
+                ...
+            }
+
+
+        - On the call to the custom hook "useGames()"
+            - Pass the object "gameQuery" as an argument value
+
+            const { data, error, isLoading } = useGames(gameQuery);
+
+            - Triggers a TypeScript compilation error
+
+        
+    - Open the custom hook "useGames.ts"
+        - On the constant "useGames"
+            - Remove the previous parameters with "gameQuery" of data type "GameQuery"
+
+            const useGames = (gameQuery: GameQuery) => ...
+
+
+            - Modify the data types of the object "params" properties
+
+            params: {
+                genres: gameQuery.genre?.id,
+                platforms: gameQuery.platform?.id,
+            },
+
+
+        - Replace the previous content of the dependency array with "gameQuery"
+
+            const useGames = (gameQuery: GameQuery) =>
+                useData<Game>(
+                    "/games",
+                    {
+                        params: {
+                            genres: gameQuery.genre?.id,
+                            platforms: gameQuery.platform?.id,
+                        },
+                    },
+                    [gameQuery]
+                )
+
+
+        - Save the changes
+
+
+    - Switch back to the <App /> component (App.tsx)
+        - In the JSX mark-up <GameGrid /> component
+
+        - Remove the properties "selectedPlatform" & "selectedGenre"
+            - Replace with property "gameQuery"
+            - Assign "{gameQuery}" as value
+
+            <GameGrid gameQuery={gameQuery} />
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Both genre & platform selections are working as expected
+        
