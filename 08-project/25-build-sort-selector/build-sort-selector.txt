@@ -1,0 +1,121 @@
+Building Sort Selector
+----------------------
+- Next is to implement a drop-down list for sorting the games in the Main area
+    - This section focused on implementing the component
+    - NOT the sorting mechanism
+
+
+- In the project code
+    - In the folder "src/component"
+        - Create a new file named "SortSelector.tsx"
+
+        - The <SortSelector /> component is very similar to that of the <PlatformSelector />
+            - To save time copy the "return" statement of the said component 
+
+    - Open <PlatformSelector /> component (PlatformSelector.tsx)
+        - Copy the component's "return" statement
+
+    - Switch back to the <SortSelector /> component
+        - Select the component's "return" statement
+            - Then paste the copied codebase
+
+        - Import the corresponding components from the Chakra UI library
+            - In order to address the TypeScript compilation errors
+
+        - For the <MenuButton /> component
+            - Replace the existing content with a string "Order by: Relevance"
+
+        - For the <MenuList /> component
+            - Replace the existing <MenuItem /> component
+            - With six (6) static <MenuItem /> components with the corresponding content
+                - Relevance
+                - Date added
+                - Name
+                - Release date
+                - Popularity
+                - Average rating 
+
+            return (
+                <Menu>
+                    <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+                        Order by: Relevance
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem>Relevance</MenuItem>
+                        <MenuItem>Date added</MenuItem>
+                        <MenuItem>Name</MenuItem>
+                        <MenuItem>Release date</MenuItem>
+                        <MenuItem>Popularity</MenuItem>
+                        <MenuItem>Average rating</MenuItem>
+                    </MenuList>
+                </Menu>
+            );
+
+
+        - Remove the "import" statement for React
+
+            import React from "react";
+
+
+        - Save the changes
+            - Next is to import the <SortSelector /> to the <App /> component
+
+
+    - Open the <App /> component (App.tsx)
+        - Insert the <SortSelector /> in-between the <PlatformSelector /> & <GameGrid /> components
+
+            <GridItem area="main">
+                <PlatformSelector
+                selectedPlatform={gameQuery.platform}
+                onSelectPlatform={(platform) =>
+                    setGameQuery({ ...gameQuery, platform })
+                }
+                />
+
+                <SortSelector />
+                
+                <GameGrid gameQuery={gameQuery} />
+            </GridItem>
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - The <SortSelector /> component is rendered on the DOM
+                - It is rendered too close to the <PlatformSelector /> component
+                - Needed to add space between the two components
+
+
+        - Place both the <PlatformSelector /> & <SortSelector /> components inside a <HStack /> component
+            - Declare the property "spacing"
+                - Assign the value of "5"
+                - This is the provide some space in-between the <PlatformSelector /> & <SortSelector /> components
+
+            - Declare the property "paddingLeft"
+                - Assign the value of "2"
+                - This is to align the <PlatformSelector /> component 
+                    - With the left-hand column of the rendered list of video games in the Main area
+
+            - Declare the property "marginBottom"
+                - Assign the value of "5"
+                - This is to provide some space between the rendered components & the list in the Main area
+
+            <HStack spacing={5} paddingLeft={2} marginBottom={5}>
+                <PlatformSelector
+                    selectedPlatform={gameQuery.platform}
+                    onSelectPlatform={(platform) =>
+                    setGameQuery({ ...gameQuery, platform })
+                    }
+                />
+
+                <SortSelector />
+            </HStack>
+
+
+        - Save the changes
+            - Vite reloads the React application
+            
+            - Both <PlatformSelector /> & <SortSelector /> components
+                - Are properly spaced from each other
+                - As well as from the rendered list of video games in the Main area
+                
