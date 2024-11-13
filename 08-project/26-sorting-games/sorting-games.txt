@@ -1,0 +1,289 @@
+Sorting Games
+-------------
+- To sort the games in the Main area
+    - The approach will be the same as filtering the games
+
+    - When a user selects the sort order using the <SortSelector /> component
+        - It notifies the <App /> component 
+        - The <App /> component then pass the new sort order to the <GameGrid /> component
+
+    - For sorting data
+        - In the RAWG API documentation
+            - It uses the query parameter "ordering" (string)
+            - The order can be set using the values:
+                - name
+                - released
+                - added
+                - created
+                - updated
+                - rating
+                - metacritic
+            
+            - NOTE: Prefixing the values with a hypen "-", reverses the sort order
+
+    
+- In the project code
+    - Open the <SortSelector /> component (SortSelector.tsx)
+
+    - Create a new array named "sortOrders"
+        - Each element is an object with two properties
+            - value (string)
+            - label (string)
+
+    - Create six (6) elements
+        - value: "", label: "Relevance"
+        - value: "-added", label: "Date added"
+            - NOTE: It is intentionally reversed in order to list the recently added game first
+
+        - value: "name", label: "Name"
+        - value: "-released", label: "Release date"
+            - NOTE: It is intentionally reversed in order to list the recently released game first
+
+        - value: "-metacritic", label: "Popularity"
+        - value: "-rating", label: "Average rating"
+
+            const sortOrders = [
+                { value: "", label: "Relevance" },
+                { value: "-added", label: "Date added" },
+                { value: "name", label: "Name" },
+                { value: "-released", label: "Release date" },
+                { value: "-metacritic", label: "Popularity" },
+                { value: "-rating", label: "Average rating" },
+            ];
+
+    
+    - Remove the <MenuItem /> components from the JSX mark-up
+        - Replace it with an empty object
+
+    - Inside the empty object
+        - Call the method ".map()" on the constant "sortOrders"
+        
+        - Map out each array element inside a <MenuItem /> component
+            - Declare the property "key"
+                - Assign the object "{order.value}" as value
+
+            - Declare the property "value"
+                - Assign the object "{order.value} "as value
+
+            - As content for the <MenuItem />
+                - Assign the object "{order.label}" as content
+
+            {sortOrders.map((order) => (
+                <MenuItem key={order.value} value={order.value}>
+                    {order.label}
+                </MenuItem>
+            ))}
+
+
+    - Create a new interface named "Props"
+        - Declare the property "onSelectSortOrder"
+            - Assign an anonymous arrow function
+
+            - It takes a parameter named "sortOrder"
+                - Data type of string
+
+            - It returns "void"
+
+            interface Props {
+                onSelectSortOrder: (sortOrder: string) => void;
+            }
+
+    
+    - On the component's function declaration
+        - Pass an objec containing the interface property "onSelectSortOrder"
+            - Of data type "Props" as an argument value
+
+            const SortSelector = ({onSelectSortOrder}: Props) => {
+                ...
+            }
+
+
+    - Swing back to the <MenuItem /> component in the JSX mark-up
+        - Declare the property "onClick"
+            - Assign an anonymous arrow function
+
+        - Inside the body of the arrow function
+            - Calls "onSelectSortOrder()" interface property
+            - Pass the object "order.value" as value
+
+            <MenuItem
+                onClick={() => onSelectSortOrder(order.value)}
+                key={order.value}
+                value={order.value}
+            >
+                {order.label}
+            </MenuItem>            
+
+        - Save the changes
+
+
+    - Open the <App /> component (App.tsx)      
+        - In the interface "GameQuery"
+            - Add a new property named "sortOrder"
+            - Assign the data type of string
+
+            export interface GameQuery {
+                genre: Genre | null;
+                platform: Platform | null;
+                sortOrder: string;
+            }
+
+
+        - In the <SortSelector /> component
+            - Declare the property "onSelectSortOrder"
+                - Assign an anonymous arrow function
+
+            - In the arrow function
+                - Passes "sortOrder" as an argument value
+
+            - Inside the arrow function
+                - Call the State Hook set/update function "setGameQuery()"
+                - Pass an empty object as a value
+
+            - Inside the empty object
+                - Use the spread operator (...) on the object "gameQuery" as the 1st argument value
+                - Followed by the object "sortOrder" as 2nd argument value
+                - NOTE: This triggers the <App /> component to re-render
+
+            <SortSelector
+                onSelectSortOrder={(sortOrder) =>
+                    setGameQuery({ ...gameQuery, sortOrder })
+                    }
+            />
+
+    
+    - Open the custom hook "useGames.ts"
+        - In the object assigned to property "params"
+        
+        - Declare a new property named "ordering"
+            - Assign the value "gameQuery.sortOrder"
+
+            const useGames = (gameQuery: GameQuery) =>
+                useData<Game>(
+                    "/games",
+                    {
+                    params: {
+                        genres: gameQuery.genre?.id,
+                        platforms: gameQuery.platform?.id,
+                        ordering: gameQuery.sortOrder,
+                    },
+                    },
+                    [gameQuery]
+                );
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Selecting the sort order of the video games in the Main area
+            - Resulted to an application crash
+
+            - TypeScript compilation error
+                - Cannot read properties of null (reading "indexOf")
+                - Points to the custom service "image-url.ts"
+                - Triggered by some of the video games do NOT come with an image
+
+        - To address (tentatively) this issue
+            - Open the custom service "image-url.ts"
+
+            - On the first line of code
+                - Check if the parameter variable "url" is falsy
+                - Return an empty string if it is
+
+            const getCroppedImageUrl = (url: string) => {
+                if (!url) return "";
+                ...
+            }
+
+
+        - Save the changes
+            - Vite reloads the React application
+
+            - Selecting the sort order of the video games in the Main area
+                - Renders the sorted list of video games
+
+            - Launch the Chrome Dev Tools
+                - Click the tab "Network"
+
+                - Sort the list of games
+                    - Click "Release date"
+
+                - Click the tab "Payload"
+                    - Look at the field "ordering" 
+                    - It should have the value "-released"
+
+            - The one thing that is currently missing
+                - Dynamically render the current sort order (by relevance)
+
+                - The <App /> component MUST pass the "sort by relevance"
+                    - To the <SortSelector /> component 
+
+
+    - Switch back to the <SortSelector /> component
+        - On the interface "Props"
+            - Add the property "sortOrder"
+            - Assign with the data type of string
+
+            interface Props {
+                onSelectSortOrder: (sortOrder: string) => void;
+                sortOrder: string;
+            }
+
+
+        - On the component's function declaration
+            - Add the property "sortOrder" inside the object that is passed as an argument value
+
+            const SortSelector = ({ onSelectSortOrder, sortOrder }: Props) => {
+                ...
+            }
+
+
+        - Right after the declaration of the constant "sortOrders"
+            - Declare a new constant named "currentSortOrder"
+                - Call the method ".find()" on the interface Props "sortOrders
+                - Pass an anonymous arrow function as value
+
+            - In the arrow function
+                - Pass the parameter variable "order"
+
+            - Inside the arrow function
+                 - Find the value in "order.value" that is strictly equal to the interface prop "sortOrder"
+  
+            const currentSortOrder = sortOrders.find(
+                (order) => order.value === sortOrder
+            );
+
+    
+        - In the content of the <MenuButton /> component
+            - Replace the string "Relevance" with an empty object
+
+            - Inside the empty object
+                - Optionally call "currentSortOrder?.label"
+                - Since the value can be a null
+
+            <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+                Order by: {currentSortOrder?.label || "Relevance"}
+            </MenuButton>
+
+        - Save the changes
+
+
+    - Switch back to the <App /> component
+        - On the <SortSelector /> component in the JSX mark-up
+            - Declare the property "sortOrder"
+            - Pass "gameQuery.sortOrder" as value
+
+            <SortSelector
+                sortOrder={gameQuery.sortOrder}
+                onSelectSortOrder={(sortOrder) =>
+                setGameQuery({ ...gameQuery, sortOrder })
+                }
+            />
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Selecting the sort order
+            - The type of sort is now rendered on the <SortSelector /> component
+
