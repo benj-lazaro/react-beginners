@@ -1,0 +1,26 @@
+Handling Games Without An Image
+-------------------------------
+- To address the recent implemented workaround
+    - On games that didn't come with a preview Image
+    
+    - Using a default image placeholder
+        - An image file (no-image-placeholder.webp)
+        - That came with the project's startup files
+
+    - Copy the image file to the folder "src/assets"
+
+
+- On the project code
+    - Open that custom service "image-url.ts"
+
+    - Import the image file using the alias "noImage"
+
+        import noImage from "../assets/no-image-placeholder.webp"
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Sort the video games in the Main area by name
+            - Video games without images are now rendered with a placeholder image
+    
