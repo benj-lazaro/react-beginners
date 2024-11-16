@@ -1,0 +1,108 @@
+Building Search Input
+---------------------
+- Implement a new component (i.e. an input box) for searching games
+
+
+- On the project code
+    - In the folder "src/components"
+        - Create a new component named "SearchInput.tsx"
+
+    - In the <SearchInput /> component
+        - Add a Chakra UI component <Input />
+
+        - Declare the property "borderRadius"
+            - Assign "{20}" as value
+
+            - NOTE: This is to provide round corners for the component
+
+        - Declare the property "placeholder"
+            - Assign the string "Search games..." as value
+
+        - Declare the property "variant"
+            - Assign "filled" as value
+
+            - NOTE: This is to make the component to look a little bit nicer
+
+            const SearchInput = () => {
+                return (
+                    <Input borderRadius={20} placeholder="Search games..." variant="filled" />
+                );
+            };
+
+
+        - Remove the Vite generated "import" statement for React
+
+            import React from "react";
+
+
+        - Save the changes
+
+
+    - Open the <NavBar /> component (NavBar.tsx)
+        - Import and insert the <SearchInput /> right after the <Image /> component
+
+            const NavBar = () => {
+                return (
+                    <HStack justifyContent="space-between" padding="10px">
+                        <Image src={logo} boxSize="60px" />
+                        <SearchInput />
+                        <ColorModeSwitch />
+                    </HStack>
+                );
+            };
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - The <SearchInput /> component is rendered
+            - The text of the <ColorModeSwitch /> component is squished on the Main area's right
+
+
+    - To address this concern
+        - Open the <ColorModeSwitch /> component
+
+        - On the Chakra UI's <Text /> component
+            - Declare the property "whiteSpace"
+            - Assign "nowrap" as value
+
+            <Text whiteSpace="nowrap">Dark Mode</Text>
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - The text of the <ColorModeSwitch /> component is NOT squished anymore
+
+    
+    - Switch back to the <NavBar /> component
+        - Remove the property "justifyContent"
+            - The change will NOT impact the UI
+            - NOTE: This will make the code cleaner
+
+    
+    - Switch back to the <SearchInput /> component
+        - Add an <InputGroup />  component in the JSX mark-up
+
+        - Move the <Input /> component in <InputGroup />
+
+        - Above the <Input /> component
+            - Add a new Chakra UI component <InputLeftElement />
+
+        - In the <InputLeftElement /> component
+            - Declare the property "children"
+            - Assign <BsSearch /> as value
+            
+            - NOTE: This add a "magnifying class" icon 
+
+            const SearchInput = () => {
+                return (
+                    <InputGroup>
+                        <InputLeftElement children={<BsSearch />} />
+                        <Input borderRadius={20} placeholder="Search games..." variant="filled" />
+                    </InputGroup>
+                );
+            };
+
+    
+    - Save the changes
