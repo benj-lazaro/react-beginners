@@ -1,0 +1,251 @@
+Searching Games
+---------------
+- Implementing game search capabilities
+    - The when user types something in the <SearchInput /> component 
+        - It notifies the <App /> component
+
+    - The <App /> component take the searched text
+        - Stores it on the object "query"
+        - Passes the object to the <GameGrid /> component
+        
+
+- On the project code
+    - Open the <SearchInput /> component (SearchInput.tsx)
+
+    - In the JSX mark-up
+        - Wrap the existing Chakra UI components inside a JSX mark-up <form>
+
+    - In the JSX mark-up <form>
+        - Declare the property "submit"
+        - Assign an anonymous arrow function as a value
+
+    - In the arrow function
+        - Declare the parameter variable named "event"
+
+    - In the body of the arrow function
+        - Call the method "event.preventDefault()"
+        - This is to prevent the form from being sent to the RAWG API server
+
+            return (
+                <form
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                    }}
+                >
+                    <InputGroup>
+                        <InputLeftElement children={<BsSearch />} />
+                        <Input
+                        borderRadius={20}
+                        placeholder="Search games..."
+                        variant="filled"
+                        />
+                    </InputGroup>
+                </form>
+            );
+
+    
+    - Declare a Reference Hook
+        - This is to gain access to the value of the <Input /> component
+        
+        - Call function "useRef()"
+            - Reference a <HTMLInputElement>
+            - Initialize it with a value of null
+            - Save the returned object to a constant named "ref"
+
+            const ref = useRef<HTMLInputElement>(null);
+
+
+    - Associate the object "ref" with the <Input /> component
+        - Declare the property "ref"
+        - Assign the object "ref" as value
+
+            <Input
+                ref={ref}
+                borderRadius={20}
+                placeholder="Search games..."
+                variant="filled"
+            />
+
+
+    - Switch back to the JSX element <form>
+        - Check if the object "ref.current" is truthy
+        - If it is then log the value of "ref.current.value" in the browser's JavaScript console
+
+            <form
+                onSubmit={(event) => {
+                    event.preventDefault();
+
+                    if (ref.current) console.log(ref.current.value);
+                }}
+            >
+
+    
+    - Save the changes
+        - Vite reloads the React application
+
+        - The typed string in the <SearchInput /> component
+            - Returned on the browser's JavaScript console
+            - Next is to pass this value to the <App /> component
+
+        - The <SearchInput /> component is rendered shorter
+            - This is due to the implemented JSX mark-up <form>
+
+
+    - To address this concern
+        - Open the file "index.css"
+
+        - Add the CSS element selector "form"
+            - Declare the property "width"
+            - Assign the value of "100%"
+
+        - Save the changes
+            - Addresses the length of the rendered <SearchInput /> component in the DOM
+
+
+    - Switch back to the <SearchInput /> component
+        - Define an interface named "Props"
+            - Declare a property "onSearch"
+            - Assign an anonymous arrow function as value
+
+        - In the arrow function
+            - Declare the parameter variable named "searchText"
+            - Assign the data type of "string"
+
+        - In the body of the arrow function
+            - Returns void
+
+            interface Props {
+                onSearch: (searchText: string) => void;
+            }
+
+
+        - Pass the "onSearch" as an argument value to the component's function declaration
+
+            const SearchInput = ({ onSearch }: Props) => {
+                ...
+            }
+
+
+        - On the JSX element <form>
+            - Instead of logging the object "ref.current.value" to the browser's JavaScript console
+            - Pass it as an argument value to "onSearch()"
+
+            <form
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    if (ref.current) onSearch(ref.current.value);
+                }}
+            >
+
+    
+    - Open the <App /> component (App.tsx)
+        - Add the property "searchText" to the interface named "GameQuery"
+            - Assign the data type of string
+
+            export interface GameQuery {
+                genre: Genre | null;
+                platform: Platform | null;
+                sortOrder: string;
+                searchText: string;
+            }
+
+
+        - The <App /> component has NO access to the <SearchInput />
+            - However the <NavBar /> component inside the <GridItem /> does have access to <SearchInput />
+
+
+
+    - Open the <SearchInput /> component
+        - Copy the interface "Props"
+
+
+    - Open the <NavBar /> component (NavBar.tsx)
+        - Paste the interface "Props"
+
+            interface Props {
+                onSearch: (searchText: string) => void;
+            }
+
+
+        - Pass the "onSearch" as an argument value to the component's function declaration
+        
+            const NavBar = ({onSearch}: Props) => {
+                ...
+            }
+
+
+        - On the <SearchInput /> component
+            - Declare the property "onSearch"
+            - Assign the value "onSearch"
+
+            const NavBar = ({onSearch}: Props) => {
+                return (
+                    <HStack padding="10px">
+                        <Image src={logo} boxSize="60px" />
+                        <SearchInput onSearch={onSearch} />
+                        <ColorModeSwitch />
+                    </HStack>
+                );
+            };
+
+
+        - Save the changes
+
+
+    - Switch back to the <App /> component
+        - On the <NavBar /> component
+            - Declare the property "onSearch"
+            - Assign an anonymous arrow function as value
+        
+        - In the arrow function
+            - Declare the parameter variable "searchText"
+
+        - In the body of the arrow function
+            - Calls the State Hook set / update function "setGameQuery()"
+            - Pass an object containing the deconstructed object "GameQuery"
+                - Followed by "searchText" as value
+
+            <NavBar
+                onSearch={(searchText) => setGameQuery({ ...gameQuery, searchText })}
+            />
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - Type a name on the <SearchInput /> component
+                - Press ENTER to submit
+
+            - Launch the Chrome Dev Tools
+                - Click the tab "Components"
+                - Click the component "App"
+                - Look at "hooks"
+                    - Check the value of "State"
+
+    
+    - Open the custom hook "useGames.ts"
+        - In the "params" of "useData()"
+            - Add a new property named "search"
+            - Set it to "gameQuery.searchText"
+
+            useData<Game>(
+                "/games",
+                {
+                    params: {
+                        genres: gameQuery.genre?.id,
+                        platforms: gameQuery.platform?.id,
+                        ordering: gameQuery.sortOrder,
+                        search: gameQuery.searchText,
+                    },
+                },
+                [gameQuery]
+            );
+
+
+    - Save the changes
+        - Vite reloads the Reacct application
+
+        - Typing a search text on <SearchInput /> component
+            - Returns a list of video games whose name contains elements of the search text
+
+        
