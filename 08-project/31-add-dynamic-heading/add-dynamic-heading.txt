@@ -1,0 +1,157 @@
+Adding Dynamic Heading
+----------------------
+- Implement a dynamic heading on the Main area
+    - Changes based on the current filter (i.e. Genre & Platform)
+
+
+- On the project code
+    - In the folder "src/components"
+        - Create a new component named "GameHeading.tsx"
+
+    - In the <GameHeading /> component
+        - Remove the generated JSX element <div> in the component's JSX mark-up
+        - Replace it with a Chakra UI component <Heading />
+
+    - In the <Heading /> component
+        - Declare the property "as"
+        - Assign "h1" as value
+        - NOTE: This meant to render the <Heading /> component as an HTML element <h1>
+
+            const GameHeading = () => {
+                return <Heading as="h1"></Heading>;
+            };
+
+
+    - To render the content of the <Heading /> component dynamically
+        - It should receive the object "gameQuery" as a Prop to this component
+
+        - Define an interface named "Props"
+            - Declare the property named "gameQuery"
+            - Assign the data type of "gameQuery" imported from the <App /> component
+
+            interface Props {
+                gameQuery: GameQuery;
+            }
+
+
+        - Pass the Props "gameQuery" as an argument value to the component's function declaration
+
+            const GameHeading = ({ gameQuery }: Props) => {
+                ...
+            }
+
+
+        - Declare a constant named "heading"
+            - Assign an empty template literal 
+
+        - Inside the template literal
+            - Add the placeholders "${gameQuery.platform?.name}" & "${gameQuery.genre?.name}"
+            - Concluded with a string "Games"
+
+            const heading = `${gameQuery.platform?.name} ${gameQuery.genre?.name} Games`;
+
+
+        - Render the const "heading" as content to the <Heading /> component in the JSX mark-up
+
+            const GameHeading = ({ gameQuery }: Props) => {
+                const heading = `${gameQuery.platform?.name} ${gameQuery.genre?.name} Games`;
+
+                return <Heading as="h1">{heading}</Heading>;
+            };
+
+
+    - Open the <App /> component (App.tsx)
+        - Add the <GameHeading /> as the 1st component in the <GridItem area="main" />  component
+
+            <GridItem area="main">
+                <GameHeading gameQuery={gameQuery} />
+                <Flex paddingLeft={2} marginBottom={5}>
+                    ...
+                </Flex>
+                ...
+            </GridItem>
+
+
+        - Save the changes
+            - Vite reloads the React application
+            - The <GameHeading /> component renders "undefined undefined Games" heading
+
+        - To address this concern
+            - Switch back to the <GameHeading /> component
+
+            - Refactor the expression stored in the constant "heading"
+                - If the "gameQuery.platform?.name" and/or "gameQuery.genre?.name" is undefined
+                    - Render an empty string
+                    - Otherwise render the corresponding name
+        
+            const heading = `${gameQuery.platform?.name || ""} ${gameQuery.genre?.name || ""} Games`;
+
+        
+    - Save the changes
+        - Vite reloads the React application
+
+        - The content of the <GameHeading /> component is dynamically updated
+            - After selecting a Genre and/or Platform
+
+        - The dynamic heading is a bit close to the filters (i.e. Platform & Sort order drop-down menus)
+            - Needed to add a vertical margin
+
+    
+    - Switch back to the <GameHeading /> component
+        - On the <Heading /> component
+        
+        - Declare the property "marginY"
+            - Assign "{5}" as value
+      
+        - Declare the property "fontSize"
+            - Assign "5xl" as value
+
+            return (
+                <Heading as="h1" marginY={5} fontSize="5xl">
+                    {heading}
+                </Heading>
+            );
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Vertical space rendered between the dynamic heading of the <GameHeading /> & filters
+        - Font size of the dynamic heading increased
+        - The left-hand side of the dynamic heading is slightly NOT aligned with the content of the Main area
+
+    - To address this concern
+        - Switch back to the <App /> component
+
+        - Declare the Chakra UI component <Box />
+            - Move the components <GameHeading /> & <Flex /> (& its childern) inside the <Box />
+    
+        - Grab the property "paddingLeft={2}" from the <Flex /> component
+            - Paste it as property of the <Box /> component
+
+            <Box paddingLeft={2}>
+                <GameHeading gameQuery={gameQuery} />
+                <Flex marginBottom={5}>
+                    <Box marginRight={5}>
+                        <PlatformSelector
+                            selectedPlatform={gameQuery.platform}
+                            onSelectPlatform={(platform) =>
+                            setGameQuery({ ...gameQuery, platform })
+                            }
+                        />
+                    </Box>
+
+                    <SortSelector
+                    sortOrder={gameQuery.sortOrder}
+                    onSelectSortOrder={(sortOrder) =>
+                        setGameQuery({ ...gameQuery, sortOrder })
+                    }
+                    />
+                </Flex>
+            </Box>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - The left-hand side of the dynamic heading NOW aligned with the content of the Main area
