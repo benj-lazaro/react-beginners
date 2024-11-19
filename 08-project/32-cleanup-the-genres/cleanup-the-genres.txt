@@ -1,0 +1,135 @@
+Cleaning Up the Genres 
+----------------------
+- Improve the look & feel of the list of Genres
+    - There are genre text that overlaps the corresponding image
+    
+    - This is due to Chakra UI's <Button /> component
+        - As it does NOT wrap text content
+
+        - Using the property "whiteSpace"
+            - Assign it with the value of "normal"
+            - NOTE: By default it uses the value "nowrap"
+
+
+- On the project code
+    - Open the <GenreList /> component (GenreList.tsx)
+    
+    - On the component's JSX mark-up
+        - Head to the <Button /> component
+        - Declare the property "whiteSpace"
+        - Assign "normal" as value
+
+            <Button
+              whiteSpace="normal"
+              fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
+              onClick={() => onSelectGenre(genre)}
+              fontSize="lg"
+              variant="link"
+            >
+              {genre.name}
+            </Button>
+
+
+    - Save the changes
+        - Vite reloads the React application
+        
+        - The genre title is rendered with NO overlapping text
+            - Genre title is wrapped around & center-aligned
+
+    
+    - To address this concern
+        - Declare the property "textAlign"
+        - Assign "left" as value
+
+            <Button
+              whiteSpace="normal"
+              textAlign="left"
+              fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
+              onClick={() => onSelectGenre(genre)}
+              fontSize="lg"
+              variant="link"
+            >
+              {genre.name}
+            </Button>
+
+    
+    - Save the changes
+        - Vite reload the React application
+
+        - The genre title is rendered with now left-aligned
+
+        - The next is to address the aspect ratio of the genre's images
+            - Looking closely, they are distorted
+            - This is due to forcing the images that are 600x400 resolution
+                - Down to 32x32 resolution
+
+    
+    - To address this concern
+        - On the <Image /> component
+            - Declare the property "objectFit"
+            - Assign "cover" as value
+
+            <Image
+              objectFit="cover"
+              src={getCroppedImageUrl(genre.image_background)}
+              boxSize="32px"
+              borderRadius={8}
+            />
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Genres' images are NOT distorted
+            - Images fill the 32x32 container
+            - While preserving its original aspect ratio
+    
+
+    - Next is to add a <Heading /> component above the list of genres
+        - On the <GenreList /> component's JSX mark-up
+            - Add a <Heading /> component just above the <List /> component
+
+        - On the <Heading /> component
+            - Declare the property "fontSize"
+                - Assign "2xl" as value
+
+            - Declare the property "marginBottom"
+                - Assign "{3}" as value
+        
+        - Move both <Heading /> & <List /> components as children to a fragment <></>
+
+            <>
+                <Heading fontSize="2xl" marginBottom={3}>
+                    Genres
+                </Heading>
+                <List>
+                    {data.map((genre) => (
+                    <ListItem key={genre.id} paddingY="5px">
+                        <HStack>
+                        <Image
+                            objectFit="cover"
+                            src={getCroppedImageUrl(genre.image_background)}
+                            boxSize="32px"
+                            borderRadius={8}
+                        />
+                        <Button
+                            whiteSpace="normal"
+                            textAlign="left"
+                            fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
+                            onClick={() => onSelectGenre(genre)}
+                            fontSize="lg"
+                            variant="link"
+                        >
+                            {genre.name}
+                        </Button>
+                        </HStack>
+                    </ListItem>
+                    ))}
+                </List>
+            </>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Genre list has now a heading 
