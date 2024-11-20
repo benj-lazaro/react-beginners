@@ -1,0 +1,71 @@
+Cleaning Up the Game Cards
+--------------------------
+- Clean up the game cards rendered in the Main area
+    - Move the platform icons & metacritic score above the name of the game
+    - Increase the space between game cards
+
+
+- On the project code
+    - Open the <GameCard /> component (GameCard.tsx)
+    
+    - Move the <Heading /> component right after the <HStack /> component
+
+            return (
+                <Card>
+                    <Image src={getCroppedImageUrl(game.background_image)} />
+                    <CardBody>
+                        <HStack justifyContent="space-between">
+                            <PlatformIconList
+                                platforms={game.parent_platforms.map((p) => p.platform)}
+                            />
+                            <CriticScore score={game.metacritic} />
+                        </HStack>
+                        <Heading fontSize="2xl">{game.name}</Heading>
+                    </CardBody>
+                </Card>
+            );
+
+
+    - Add a bottom margin on the <HStack /> component
+        - Declare the property "marginBottom"
+        - Assign "{3}" as value
+
+            <HStack justifyContent="space-between" marginBottom={3}>
+                ...
+            </HStack>
+
+
+    - Save the changes
+
+
+    - Open the <GameGrid /> component (GameGrid.tsx)
+        - On the <SimpleGrid /> component
+            - Change the current assigned value of "{3}" to "{6}"
+
+            <SimpleGrid
+                columns={{ sm: 1, md: 2, lg: 3, xl: 5 }}
+                padding="10px"
+                spacing={6}
+            >
+                ...
+            </SimpleGrid>
+
+
+        - On the property "columns"
+            - Change the current assigned value for "xl" from 5 down to 4
+
+            <SimpleGrid
+                columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+                padding="10px"
+                spacing={6}
+            >
+                ...
+            </SimpleGrid>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - The games in the Main area
+            - Have their supported platform icons & metacritic score re-arranged
+            - Images of between rendered games are well-spaced on a large screen devices
