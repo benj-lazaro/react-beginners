@@ -28,4 +28,163 @@ Adding Emojis
         - meh.webp
         - thumbs-up.webp
 
+    - On the folder "src/components"
+        - Create a new component named "Emoji.tsx"
+
+    - On the <Emoji /> component
+        - Define a new interface named "Props"
+            - In order to receive the rating of the games
+
+        - Declare the property named "rating"
+            - Assign the data type of number
+
+            interface Props {
+                rating: number;
+            }
+
+
+    - On the component's function declaration
+        - Pass the property "rating" of data type "Props"
+
+            const Emoji = ({ rating }: Props) => {
+                return <div>Emoji</div>;
+            };
+
+
+    - If the returned value of "rating" is less than 3
+        - Return a null
+        - Otherwise, render emojis based on the value of "rating"
+
+            const Emoji = ({ rating }: Props) => {
+                if (rating < 3) return null;
+
+                return <div>Emoji</div>;
+            };
     
+
+    - Import the provided image files into the component
+
+            import bullsEye from "../assets/bulls-eye.webp";
+            import meh from "../assets/meh.webp";
+            import thumbsUp from "../assets/thumbs-up.webp";
+
+
+    - Create a map object
+        - Declare a constant named "emojiMap"
+        - Assign an object as value
+            - Where the properties (keys) are numbers
+
+        - Each number represent the rating of a game
+            - Each number is assigned with an object
+
+        - The object contain the following properties
+            - Property named "src"
+                - Assign the imported "alias" of the corresponding image files
+
+            - Property named "alt"
+                - Assign a string value inspired by the name of the image file's "alias"
+
+            const emojiMap = {
+                3: { src: meh, alt: "meh" },
+                4: { src: thumbsUp, alt: "recommended" },
+                5: { src: bullsEye, alt: "exceptional" },
+            };
+
+        
+    - On the component's JSX mark-up
+        - Return a Chakra UI <Image /> component
+
+    - On the <Image /> component
+        - Add an empty object
+
+        - In the empty object
+            - Spread value of the constant "emojiMap" based on the specified key passed as an argument value
+
+            return <Image {...emojiMap[rating]} />;
+
+
+        - This triggers a TypeScript compilation error
+            - Element implicitly has an 'any' type because expression of type 'number' can't be used to index TypeScript
+
+        - To address this concern
+            - Annotate the constant "emojiMap" with an "index signature"
+
+            - Map each key or "index signature" with a Chakra UI object "ImageProps"
+
+            import { Image, ImageProps } from "@chakra-ui/react";
+            ...
+
+            const Emoji = ({ rating }: Props) => {
+                if (rating < 3) return null;
+
+                const emojiMap: { [key: number]: ImageProps } = {
+                    3: { src: meh, alt: "meh" },
+                    4: { src: thumbsUp, alt: "recommended" },
+                    5: { src: bullsEye, alt: "exceptional" },
+                };
+
+                return <Image {...emojiMap[rating]} />;
+            };
+
+
+            - Save the changes
+
+
+    - Back to the <Image /> component in the JSX mark-up
+        - Declare the property "boxSize"
+        - Assign "25px" as value
+
+            return <Image {...emojiMap[rating]} boxSize="25px" />;
+
+
+        - Save the changes
+
+
+    - Open the <GameCard /> component (GameCard.tsx)
+        - On the <Heading /> component's content
+            - Right after the object "game.name"
+            - Insert the <Emoji /> component
+
+        - On the <Emoji /> component
+            - Declare the property "rating"
+            - Assign "game.rating_top" as value
+
+            <Heading fontSize="2xl">
+                {game.name} <Emoji rating={game.rating_top} />
+            </Heading>
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - Corresponding emojis are rendered on each game card
+            - The sizes of the emojis does NOT size well
+
+    - To address this concern
+        - Switch back to the <Emoji /> component
+
+        - On the object assigned to each key stored in the constant "emojiMap"
+            - Declare a new property named "boxSize"
+            - Assign the corresponding size based on the key value
+                - 3: 25px
+                - 4: 25px
+                - 5: 35px
+
+            const emojiMap: { [key: number]: ImageProps } = {
+                3: { src: meh, alt: "meh", boxSize: "25px" },
+                4: { src: thumbsUp, alt: "recommended", boxSize: "25px" },
+                5: { src: bullsEye, alt: "exceptional", boxSize: "35px" },
+            };
+
+
+        - Remove the property "boxSize" from the <Image /> component
+            - Replace with the property "marginTop"
+            - Assign "{1}" as value
+
+            return <Image {...emojiMap[rating]} />;
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - Rendered emojis are properly sized and spaced with a top marginTop
