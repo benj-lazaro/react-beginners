@@ -1,0 +1,31 @@
+Adding Emojis
+-------------
+- Add emojis to the rendered game cards in the Main area
+
+
+- On the project code
+    - Open the custom hook "useGames.ts"
+
+    - On the interface "Game"
+        - Add a new property named "rating_top"
+            - Assign the data type of number
+        
+        - NOTE: The property "rating_top" is a whole number
+            - Rendered emojis will be dependent on the assigned number value of this property
+    
+            export interface Game {
+                id: number;
+                name: string;
+                background_image: string;
+                parent_platforms: { platform: Platform }[];
+                metacritic: number;
+                rating_top: number;
+            }
+
+
+    - Move the provided emoji images to the folder "src/assets"
+        - bullseye.webp
+        - meh.webp
+        - thumbs-up.webp
+
+    
