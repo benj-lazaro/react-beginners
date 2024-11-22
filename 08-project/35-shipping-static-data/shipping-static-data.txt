@@ -1,0 +1,86 @@
+Shipping Static Data
+--------------------
+- Since the list of game genres hardly ever changes
+    - They are to be treated as static data
+
+    - To be included (shipped) with the application
+        - As opposed to fetching them from the RAWG API server after lauching
+        - This removes the extra HTTP request to the remote server
+        - Eliminates the need to show an animated spinner
+
+    - To implement this
+        - Launch Chrome Dev Tools
+        - Click on the recent HTTP response from the RAWG API server
+        - Click the tab "Network"
+        - Click the tab "Preview"
+        - Expand "Results"
+            - Right-click on the "Results"
+            - Click "Copy value"
+    
+
+- On the project code
+    - In the folder "src"
+        - Create a new folder named "data"
+        
+    - In the folder "data"
+        - Create a new file named "genres.ts"
+
+    - In the file "genres.ts"
+        - Type "export default"
+        - Followed by pasting the copied value from the Chrome Dev Tools
+
+    - Save the changes
+        - This file contains the static data taken from RAWG's remote API server
+
+    - Open the custom hook "useGenre.ts"
+        - On the constant "useGenre"
+            - Instead of calling the custom hook "useData.ts"
+            
+            - It should return an object containing three (3) properties
+                - Property "data" assigned with the value of "null"
+                - Property "isLoading" assigned with the boolean value of "false"
+                - Property "error" assigned with the value of "null"
+
+            const useGenres = () => ({ data: null, isLoading: false, error: null});
+
+
+            - Save the changes
+            
+            - The reason behind returning this object
+                - Is to minimize the impact of the implemented changes on the consumers of this hook (useGenre.ts)
+    
+
+    - Open the <GenreList /> component (GenreList.tsx)
+        - This component is a consumer of the custom hook "useGenre.ts"
+
+            const { data, isLoading, error } = useGenres();
+
+        
+        - The <GenreList /> component expects to receive an object 
+            - With the aforementioned properties defined in the custom hook "useGenre.ts"
+
+        
+    - Switch back to the custom hook "useGenres.ts"
+        - Set the property "data"
+            - With the genre data stored in the file "genres.ts"
+
+        - Remove the "import" statement for the custom hook "useData.ts"
+            - Import "genres.ts" as genre
+
+            import genres from "../data/genres";
+
+
+        - Replace the value "null" assigned to the property "data"
+            - With the alias "genres"
+
+            const useGenres = () => ({ data: genres, isLoading: false, error: null });
+
+        
+        - Save the changes
+            - Vite reloads the React application
+
+            - The list of genres in the Aside panel are immediately rendered
+                - NO more wanting for the list to be fetched from the remote API server
+
+            - NO impact on the components that uses the custom hook "useGenres.ts"
+
