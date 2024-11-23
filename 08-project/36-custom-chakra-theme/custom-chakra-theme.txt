@@ -1,0 +1,53 @@
+Customizing the Chakra Theme
+----------------------------
+- To copy the darker shade of gray (i.e. #121212) of the RAWG website
+    - By customizing Charka UI's theme in order to get these colors
+        - Reference (https://v2.chakra-ui.com/docs/styled-system/theme)
+
+    - Use an online color palette app
+        - To get a palette of colors based on a given base color
+        - Smart Swatch Generator (https://smart-swatch.netlify.app/#121212)
+
+
+- On the project code
+    - In the folder "src"
+        - Open the file "theme.ts"
+
+    - In the file "theme.ts"
+        - On the object containing a property named "config"
+
+        - Add a new property named "colors"
+            - Assign an empty object as value
+
+        - Inside the empty object
+            - Add a property named "gray"
+            - Assign an empty object as value
+    
+        - Inside the empty object
+            - Map out the number values from 50 to 900
+            - Assign each number with their corresponding hex color value
+
+        
+            const theme = extendTheme({
+                config,
+                colors: {
+                    gray: {
+                    50: "#f9f9f9",
+                    100: "#ededed",
+                    200: "#d3d3d3",
+                    300: "#b3b3b3",
+                    400: "#a0a0a0",
+                    500: "#898989",
+                    600: "#6c6c6c",
+                    700: "#202020",
+                    800: "#121212",
+                    900: "#111",
+                    },
+                },
+            });
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - The dark Gray color scheme implemented on the application
