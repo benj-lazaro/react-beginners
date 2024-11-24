@@ -1,0 +1,60 @@
+Refactoring Game Grid
+---------------------
+- Refactoring the JSX mark-up of the <GameGrid /> component
+    - That contains a fragment that houses
+        - An object that check for the presence of the object "error" for connectivity issues
+            - Then render the corresponding <Text /> component
+        
+        - A <SimpleGrid /> component that renders the data in the Main area
+
+    - Refactor to remove the fragment by
+        - Separating the aforementioned object from the JSX mark-up
+            - Into a separate line of code
+
+        - Leaving the <SimpleGrid /> component in the JSX mark-up
+            - Effectively removing the fragment
+
+
+- On the project code
+    - Open the <GameGrid /> component (GameGrid.tsx)
+
+    - Prior to the JSX mark-up
+        - Use an "if" statement to check for the presence of an object "error"
+        - Return a Chakra UI <Text /> component with the object "error" as content if truthy
+
+            if (error) return <Text>{error}</Text>;
+
+    
+    - On the component's JSX mark-up
+        - Delete the object containing the object "error"
+            - Along with its corresponding <Text /> component
+
+        - Then remove the fragment tags
+            - Leaving the <SimpleGrid /> component behind
+
+            return (
+                <SimpleGrid
+                columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+                padding="10px"
+                spacing={6}
+                >
+                {isLoading &&
+                    skeletons.map((skeleton) => (
+                    <GameCardContainer key={skeleton}>
+                        <GameCardSkeleton />
+                    </GameCardContainer>
+                    ))}
+
+                {data.map((game) => (
+                    <GameCardContainer key={game.id}>
+                    <GameCard game={game} />
+                    </GameCardContainer>
+                ))}
+                </SimpleGrid>
+            );
+
+
+    - Save the changes
+        - Vite reloads the React application
+
+        - NO visible changes on the application
