@@ -1,0 +1,28 @@
+Building for Production
+-----------------------
+- Prior to deploying an application for production
+    - First, it has to be built locally (via terminal or VS Code command palette)
+        - It is faster & easier to discovery & fix errors respectively
+
+    - To build locally (via terminal)
+
+        npm run build
+
+    
+    - NOTE: The warning "Some chunks are larget than 500kbBs after minification"
+        - This is due to the bundle "index-<characters>.js is > 500kBs
+        - Bundle optimization will be addressed on the following section
+
+    
+    - To build via VS Code command palette (CTRL + SHIFT + P)
+        - Type "build"
+        - Select "Tasks: Run Build Task" (CTRL + SHIFT + B)
+        - Select "npm: build tsc && vite build"
+        - A terminal window opens and performs the same tasks as building via terminal
+
+    - After the build
+        - A new folder is created named "dist" (i.e. distributable)
+        - Contains the app's assets (i.e. images), CSS, HTML & JavaScript files
+        - Contents of this folder will be deployed for production
+        
+
