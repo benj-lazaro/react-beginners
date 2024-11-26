@@ -1,0 +1,52 @@
+Deploying to Vercel
+-------------------
+- To deploy the application to a platform called Vercel
+    - Website (https://vercel.com/)
+
+
+- To deploy a static site using Vite
+    - Vercel is one of the supported sites
+    - Reference (https://vite.dev/guide/static-deploy.html)
+
+
+- Before deploying the application
+    - Build a corresponding GitHub repository
+        - Repository name "game-hub"
+
+    - NOTE: It is assumed that an existing account is already created
+
+    - Everytime a push to the repository is made
+        - Vercel grabs the latest codebase from the GitHub repository
+        - Builds it
+        - Then deploys the application to production
+
+
+- Install Vercel cli locally via terminal
+    
+    sudo npm i -g vercel
+
+
+- To deploy the application to vercel via terminal
+
+    vercel
+
+    - It will ask for GitHub credentials
+        - Login using credentials
+
+    - Then will ask to setup & deployment the application
+        - Select default answers
+
+    
+- Link the project (deployed in Vercel) to the application's GitHub repository
+    - Login to Vercel with GitHub account
+
+    - Click the button "Connect Git Repository"
+        - Click the button "GitHub"
+
+    - Search for corresponding repository
+        - Click the button "Connect"
+
+    - New push to the GitHub repository
+        - Vercel will grab the latest changes
+        - Build it
+        - Then deploy to production    
