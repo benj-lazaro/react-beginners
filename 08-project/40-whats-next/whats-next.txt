@@ -1,0 +1,10 @@
+What's Next
+-----------
+- For the next (intermediate) course discusses about
+    - Routing
+    - State management
+    - Fetching data with React Query
+    - Authentication
+    - Error handling
+    - Performance optimization
+    
